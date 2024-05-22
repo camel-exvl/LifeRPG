@@ -8,13 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		D3AC14892BFCCBC400FB598D /* LifeRPGApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3AC14882BFCCBC400FB598D /* LifeRPGApp.swift */; };
-		D3AC148B2BFCCBC400FB598D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3AC148A2BFCCBC400FB598D /* ContentView.swift */; };
-		D3AC148D2BFCCBC400FB598D /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3AC148C2BFCCBC400FB598D /* Item.swift */; };
 		D3AC148F2BFCCBC500FB598D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D3AC148E2BFCCBC500FB598D /* Assets.xcassets */; };
 		D3AC14922BFCCBC500FB598D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D3AC14912BFCCBC500FB598D /* Preview Assets.xcassets */; };
 		D3AC149C2BFCCBC500FB598D /* LifeRPGTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3AC149B2BFCCBC500FB598D /* LifeRPGTests.swift */; };
 		D3AC14A62BFCCBC500FB598D /* LifeRPGUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3AC14A52BFCCBC500FB598D /* LifeRPGUITests.swift */; };
 		D3AC14A82BFCCBC500FB598D /* LifeRPGUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3AC14A72BFCCBC500FB598D /* LifeRPGUITestsLaunchTests.swift */; };
+		D3AC2E7F2BFD8C0300F84EA7 /* Habit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3AC2E7E2BFD8C0300F84EA7 /* Habit.swift */; };
+		D3AC2E832BFD8CF900F84EA7 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3AC2E822BFD8CF900F84EA7 /* MainView.swift */; };
+		D3AC2E862BFD8D2900F84EA7 /* HabitViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3AC2E852BFD8D2900F84EA7 /* HabitViewModel.swift */; };
+		D3AC2E882BFD955300F84EA7 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = D3AC2E872BFD955300F84EA7 /* Localizable.xcstrings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,8 +39,6 @@
 /* Begin PBXFileReference section */
 		D3AC14852BFCCBC400FB598D /* LifeRPG.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LifeRPG.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3AC14882BFCCBC400FB598D /* LifeRPGApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifeRPGApp.swift; sourceTree = "<group>"; };
-		D3AC148A2BFCCBC400FB598D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		D3AC148C2BFCCBC400FB598D /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		D3AC148E2BFCCBC500FB598D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D3AC14912BFCCBC500FB598D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		D3AC14972BFCCBC500FB598D /* LifeRPGTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LifeRPGTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -46,6 +46,10 @@
 		D3AC14A12BFCCBC500FB598D /* LifeRPGUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LifeRPGUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3AC14A52BFCCBC500FB598D /* LifeRPGUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifeRPGUITests.swift; sourceTree = "<group>"; };
 		D3AC14A72BFCCBC500FB598D /* LifeRPGUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifeRPGUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		D3AC2E7E2BFD8C0300F84EA7 /* Habit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Habit.swift; sourceTree = "<group>"; };
+		D3AC2E822BFD8CF900F84EA7 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		D3AC2E852BFD8D2900F84EA7 /* HabitViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitViewModel.swift; sourceTree = "<group>"; };
+		D3AC2E872BFD955300F84EA7 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,10 +100,12 @@
 		D3AC14872BFCCBC400FB598D /* LifeRPG */ = {
 			isa = PBXGroup;
 			children = (
+				D3AC2E842BFD8D1400F84EA7 /* ViewModel */,
+				D3AC2E812BFD8CE900F84EA7 /* View */,
+				D3AC2E7D2BFD8B5C00F84EA7 /* Model */,
 				D3AC14882BFCCBC400FB598D /* LifeRPGApp.swift */,
-				D3AC148A2BFCCBC400FB598D /* ContentView.swift */,
-				D3AC148C2BFCCBC400FB598D /* Item.swift */,
 				D3AC148E2BFCCBC500FB598D /* Assets.xcassets */,
+				D3AC2E872BFD955300F84EA7 /* Localizable.xcstrings */,
 				D3AC14902BFCCBC500FB598D /* Preview Content */,
 			);
 			path = LifeRPG;
@@ -128,6 +134,30 @@
 				D3AC14A72BFCCBC500FB598D /* LifeRPGUITestsLaunchTests.swift */,
 			);
 			path = LifeRPGUITests;
+			sourceTree = "<group>";
+		};
+		D3AC2E7D2BFD8B5C00F84EA7 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				D3AC2E7E2BFD8C0300F84EA7 /* Habit.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		D3AC2E812BFD8CE900F84EA7 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				D3AC2E822BFD8CF900F84EA7 /* MainView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		D3AC2E842BFD8D1400F84EA7 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				D3AC2E852BFD8D2900F84EA7 /* HabitViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -216,6 +246,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hans",
 			);
 			mainGroup = D3AC147C2BFCCBC400FB598D;
 			productRefGroup = D3AC14862BFCCBC400FB598D /* Products */;
@@ -236,6 +267,7 @@
 			files = (
 				D3AC14922BFCCBC500FB598D /* Preview Assets.xcassets in Resources */,
 				D3AC148F2BFCCBC500FB598D /* Assets.xcassets in Resources */,
+				D3AC2E882BFD955300F84EA7 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,8 +292,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D3AC148B2BFCCBC400FB598D /* ContentView.swift in Sources */,
-				D3AC148D2BFCCBC400FB598D /* Item.swift in Sources */,
+				D3AC2E7F2BFD8C0300F84EA7 /* Habit.swift in Sources */,
+				D3AC2E862BFD8D2900F84EA7 /* HabitViewModel.swift in Sources */,
+				D3AC2E832BFD8CF900F84EA7 /* MainView.swift in Sources */,
 				D3AC14892BFCCBC400FB598D /* LifeRPGApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
