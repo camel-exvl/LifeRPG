@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D38175892BFDD16A00C48EAB /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38175882BFDD16A00C48EAB /* OnboardingView.swift */; };
+		D38175982BFF191000C48EAB /* fusion-pixel-12px-proportional-zh_hant.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D38175972BFF191000C48EAB /* fusion-pixel-12px-proportional-zh_hant.ttf */; };
 		D3AC14892BFCCBC400FB598D /* LifeRPGApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3AC14882BFCCBC400FB598D /* LifeRPGApp.swift */; };
 		D3AC148F2BFCCBC500FB598D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D3AC148E2BFCCBC500FB598D /* Assets.xcassets */; };
 		D3AC14922BFCCBC500FB598D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D3AC14912BFCCBC500FB598D /* Preview Assets.xcassets */; };
@@ -37,6 +39,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D38175882BFDD16A00C48EAB /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		D381758F2BFF095200C48EAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		D38175972BFF191000C48EAB /* fusion-pixel-12px-proportional-zh_hant.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "fusion-pixel-12px-proportional-zh_hant.ttf"; sourceTree = "<group>"; };
 		D3AC14852BFCCBC400FB598D /* LifeRPG.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LifeRPG.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3AC14882BFCCBC400FB598D /* LifeRPGApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifeRPGApp.swift; sourceTree = "<group>"; };
 		D3AC148E2BFCCBC500FB598D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -77,6 +82,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D38175992BFF198100C48EAB /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				D38175972BFF191000C48EAB /* fusion-pixel-12px-proportional-zh_hant.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
 		D3AC147C2BFCCBC400FB598D = {
 			isa = PBXGroup;
 			children = (
@@ -100,6 +113,8 @@
 		D3AC14872BFCCBC400FB598D /* LifeRPG */ = {
 			isa = PBXGroup;
 			children = (
+				D38175992BFF198100C48EAB /* Fonts */,
+				D381758F2BFF095200C48EAB /* Info.plist */,
 				D3AC2E842BFD8D1400F84EA7 /* ViewModel */,
 				D3AC2E812BFD8CE900F84EA7 /* View */,
 				D3AC2E7D2BFD8B5C00F84EA7 /* Model */,
@@ -148,6 +163,7 @@
 			isa = PBXGroup;
 			children = (
 				D3AC2E822BFD8CF900F84EA7 /* MainView.swift */,
+				D38175882BFDD16A00C48EAB /* OnboardingView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -265,6 +281,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D38175982BFF191000C48EAB /* fusion-pixel-12px-proportional-zh_hant.ttf in Resources */,
 				D3AC14922BFCCBC500FB598D /* Preview Assets.xcassets in Resources */,
 				D3AC148F2BFCCBC500FB598D /* Assets.xcassets in Resources */,
 				D3AC2E882BFD955300F84EA7 /* Localizable.xcstrings in Resources */,
@@ -295,6 +312,7 @@
 				D3AC2E7F2BFD8C0300F84EA7 /* Habit.swift in Sources */,
 				D3AC2E862BFD8D2900F84EA7 /* HabitViewModel.swift in Sources */,
 				D3AC2E832BFD8CF900F84EA7 /* MainView.swift in Sources */,
+				D38175892BFDD16A00C48EAB /* OnboardingView.swift in Sources */,
 				D3AC14892BFCCBC400FB598D /* LifeRPGApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -461,6 +479,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"LifeRPG/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = LifeRPG/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -489,6 +508,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"LifeRPG/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = LifeRPG/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
