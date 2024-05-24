@@ -90,9 +90,9 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
   fonts:
-    - family: Fusion Pixel 10px Proportional zh_hant Regular
+    - family: Fusion Pixel 10px Proportional zh_hans Regular
       fonts:
-        - asset: res/fonts/fusion-pixel-10px-proportional-zh_hant.ttf
+        - asset: res/fonts/fusion-pixel-10px-proportional-zh_hans.ttf
 
 # The following section is specific to flutter_launcher_icons.
 flutter_icons:
