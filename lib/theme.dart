@@ -132,7 +132,7 @@ class MaterialTheme {
       ),
       scaffoldBackgroundColor: colorScheme.surface,
       canvasColor: colorScheme.surface,
-      fontFamily: 'Fusion Pixel 10px Proportional zh_hant Regular');
+      fontFamily: 'Fusion Pixel 10px Proportional zh_hans Regular');
 
   List<ExtendedColor> get extendedColors => [];
 }
