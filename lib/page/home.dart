@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -28,33 +29,35 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('LifeRPG'),
+        title: Text(AppLocalizations.of(context)!.appName),
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.star),
-            label: 'Targets',
+            icon: const Icon(Icons.star),
+            label: AppLocalizations.of(context)!.targetsTab,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.emoji_events),
-            label: 'Challenge',
+            icon: const Icon(Icons.emoji_events),
+            label: AppLocalizations.of(context)!.challengeTab,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: 'Shop',
+            icon: const Icon(Icons.shopping_cart),
+            label: AppLocalizations.of(context)!.shopTab,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.check_circle),
-            label: 'Status',
+            icon: const Icon(Icons.check_circle),
+            label: AppLocalizations.of(context)!.statusTab,
           ),
         ],
         currentIndex: _selectedIndex,
-        unselectedItemColor: Colors.grey[600],
-        selectedItemColor: Colors.amber[800],
+        unselectedItemColor: Theme.of(context).colorScheme.onSurface,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
         onTap: _onItemTapped,
       ),
     );
