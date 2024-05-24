@@ -31,6 +31,7 @@ class LifeRPG extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
+        fontFamily: 'Fusion Pixel 10px Proportional zh_hant Regular'
       ),
       home: const HomePage(),
     );
