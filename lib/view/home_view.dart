@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:liferpg/view/target_view.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomeView extends StatefulWidget {
+  const HomeView({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomeView> createState() => _HomeViewState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomeViewState extends State<HomeView> {
   int _selectedIndex = 0;
 
   // TODO: Replace this with actual pages
   static const List<Widget> _widgetOptions = <Widget>[
-    Placeholder(),
+    TargetView(),
     Placeholder(),
     Placeholder(),
     Placeholder()

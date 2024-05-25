@@ -3,5 +3,21 @@
   "targetsTab": "Targets",
   "challengeTab": "Challenge",
   "shopTab": "Shop",
-  "statusTab": "Status"
+  "statusTab": "Status",
+  "habitsTab": "Habits",
+  "tasksTab": "Tasks",
+  "addHabit": "Add Habit",
+  "title": "Title",
+  "titleRequired": "Title is required",
+  "description": "Description",
+  "descriptionRequired": "Description is required",
+  "cancel": "Cancel",
+  "add": "Add",
+  "difficulty": "Difficulty",
+  "difficultyRequired": "Difficulty is required",
+  "easy": "Easy",
+  "medium": "Medium",
+  "hard": "Hard",
+  "category": "Category",
+  "categoryRequired": "Category is required"
 }

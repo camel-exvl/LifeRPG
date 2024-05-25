@@ -3,5 +3,21 @@
   "targetsTab": "目标",
   "challengeTab": "挑战",
   "shopTab": "商店",
-  "statusTab": "状态"
+  "statusTab": "状态",
+  "habitsTab": "习惯",
+  "tasksTab": "任务",
+  "addHabit": "添加习惯",
+  "title": "标题",
+  "titleRequired": "标题是必须的",
+  "description": "描述",
+  "descriptionRequired": "描述是必须的",
+  "cancel": "取消",
+  "add": "添加",
+  "difficulty": "难度",
+  "difficultyRequired": "难度是必须的",
+  "easy": "简单",
+  "medium": "中等",
+  "hard": "困难",
+  "category": "类别",
+  "categoryRequired": "类别是必须的"
 }
