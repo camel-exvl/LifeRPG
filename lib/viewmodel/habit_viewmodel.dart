@@ -18,4 +18,9 @@ class HabitViewModel extends ChangeNotifier {
     _habits.remove(habit);
     notifyListeners();
   }
+
+  void editHabit(HabitModel habit) {
+    _habits[_habits.indexWhere((element) => element.id == habit.id)] = habit;
+    notifyListeners();
+  }
 }

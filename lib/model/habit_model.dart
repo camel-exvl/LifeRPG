@@ -9,9 +9,10 @@ class HabitModel {
   final Category category;
 
   HabitModel({
+    String? id,
     required this.title,
     required this.description,
     required this.difficulty,
     required this.category,
-  }) : id = UniqueKey().toString();
+  }) : id = id ?? UniqueKey().toString();
 }

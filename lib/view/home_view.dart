@@ -12,8 +12,7 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   int _selectedIndex = 0;
 
-  // TODO: Replace this with actual pages
-  static const List<Widget> _widgetOptions = <Widget>[
+  final List<Widget> _views = const <Widget>[
     TargetView(),
     Placeholder(),
     Placeholder(),
@@ -34,8 +33,10 @@ class _HomeViewState extends State<HomeView> {
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+      body: IndexedStack(
+        // use IndexedStack can keep the state of the widgets
+        index: _selectedIndex,
+        children: _views,
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[

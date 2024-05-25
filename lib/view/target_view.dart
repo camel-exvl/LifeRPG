@@ -10,6 +10,14 @@ class TargetView extends StatefulWidget {
 }
 
 class _TargetViewState extends State<TargetView> {
+  final PageStorageBucket _bucket = PageStorageBucket();
+  final List<Widget> _views = const <Widget>[
+    HabitView(
+      key: PageStorageKey('HabitView'),
+    ),
+    Placeholder(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -24,8 +32,13 @@ class _TargetViewState extends State<TargetView> {
             ],
           ),
         ),
-        body: const TabBarView(
-          children: <Widget>[HabitView(), Placeholder()],
+        body: TabBarView(
+          children: _views.map((Widget view) {
+            return PageStorage(
+              bucket: _bucket,
+              child: view,
+            );
+          }).toList(),
         ),
       ),
     );
