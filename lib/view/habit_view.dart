@@ -21,11 +21,12 @@ class _HabitViewState extends State<HabitView>
         create: (context) => HabitViewModel(),
         child: Consumer<HabitViewModel>(builder: (context, viewModel, child) {
           return Scaffold(
-            body: ListView.builder(
+            body: ReorderableListView.builder(
               itemCount: viewModel.habits.length,
               itemBuilder: (context, index) {
                 HabitModel habit = viewModel.habits[index];
                 return ListTile(
+                  key: ValueKey(habit.id),
                   title: Text(habit.title),
                   subtitle: Text(habit.description),
                   onTap: () {
@@ -38,6 +39,9 @@ class _HabitViewState extends State<HabitView>
                     onPressed: () {},
                   ),
                 );
+              },
+              onReorder: (int oldIndex, int newIndex) {
+                viewModel.reorderHabit(oldIndex, newIndex);
               },
             ),
             floatingActionButton: FloatingActionButton(

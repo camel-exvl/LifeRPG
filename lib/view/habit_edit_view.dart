@@ -41,6 +41,14 @@ class _HabitEditViewState extends State<HabitEditView> {
             ? AppLocalizations.of(context)!.addHabit
             : AppLocalizations.of(context)!.editHabit),
         actions: <Widget>[
+          if (!widget.isAdd)
+            TextButton(
+              onPressed: () {
+                widget.viewModel.removeHabit(widget.habit!);
+                Navigator.of(context).pop();
+              },
+              child: Text(AppLocalizations.of(context)!.delete),
+            ),
           TextButton(
             onPressed: () {
               if (_globalKey.currentState!.validate()) {

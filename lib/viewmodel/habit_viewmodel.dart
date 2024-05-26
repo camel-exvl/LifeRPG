@@ -19,6 +19,15 @@ class HabitViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void reorderHabit(int oldIndex, int newIndex) {
+    if (oldIndex < newIndex) {
+      newIndex -= 1;
+    }
+    final HabitModel habit = _habits.removeAt(oldIndex);
+    _habits.insert(newIndex, habit);
+    notifyListeners();
+  }
+
   void editHabit(HabitModel habit) {
     _habits[_habits.indexWhere((element) => element.id == habit.id)] = habit;
     notifyListeners();

@@ -19,12 +19,6 @@ class _HomeViewState extends State<HomeView> {
     Placeholder()
   ];
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +54,12 @@ class _HomeViewState extends State<HomeView> {
         currentIndex: _selectedIndex,
         unselectedItemColor: Theme.of(context).colorScheme.onSurface,
         selectedItemColor: Theme.of(context).colorScheme.primary,
-        onTap: _onItemTapped,
+        showUnselectedLabels: true,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
       ),
     );
   }

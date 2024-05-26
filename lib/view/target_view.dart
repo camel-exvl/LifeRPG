@@ -12,10 +12,10 @@ class TargetView extends StatefulWidget {
 class _TargetViewState extends State<TargetView> {
   final PageStorageBucket _bucket = PageStorageBucket();
   final List<Widget> _views = const <Widget>[
+    Placeholder(),
     HabitView(
       key: PageStorageKey('HabitView'),
     ),
-    Placeholder(),
   ];
 
   @override
@@ -27,8 +27,8 @@ class _TargetViewState extends State<TargetView> {
           title: Text(AppLocalizations.of(context)!.targetsTab),
           bottom: TabBar(
             tabs: <Widget>[
-              Tab(text: AppLocalizations.of(context)!.habitsTab),
               Tab(text: AppLocalizations.of(context)!.tasksTab),
+              Tab(text: AppLocalizations.of(context)!.habitsTab),
             ],
           ),
         ),
