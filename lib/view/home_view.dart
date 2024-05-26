@@ -35,19 +35,31 @@ class _HomeViewState extends State<HomeView> {
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: const Icon(Icons.star),
+            icon: Image(
+                image: const AssetImage('res/icons/target.png'),
+                width: Theme.of(context).iconTheme.size,
+                height: Theme.of(context).iconTheme.size),
             label: AppLocalizations.of(context)!.targetsTab,
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.emoji_events),
+            icon: Image(
+                image: const AssetImage('res/icons/challenge.png'),
+                width: Theme.of(context).iconTheme.size,
+                height: Theme.of(context).iconTheme.size),
             label: AppLocalizations.of(context)!.challengeTab,
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.shopping_cart),
+            icon: Image(
+                image: const AssetImage('res/icons/shop.png'),
+                width: Theme.of(context).iconTheme.size,
+                height: Theme.of(context).iconTheme.size),
             label: AppLocalizations.of(context)!.shopTab,
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.check_circle),
+            icon: Image(
+                image: const AssetImage('res/icons/status.png'),
+                width: Theme.of(context).iconTheme.size,
+                height: Theme.of(context).iconTheme.size),
             label: AppLocalizations.of(context)!.statusTab,
           ),
         ],
