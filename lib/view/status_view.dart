@@ -1,8 +1,8 @@
 
 import 'package:flutter/material.dart';
-import 'package:liferpg/model/attribute_model.dart';
+import '../model/attribute_model.dart';
 import 'package:provider/provider.dart';
-import 'package:liferpg/viewmodel/status_viewmodel.dart';
+import '../viewmodel/status_viewmodel.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class StatusView extends StatefulWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:liferpg/model/status_model.dart';
-import 'package:liferpg/model/attribute_model.dart';
+import '../model/status_model.dart';
+import '../model/attribute_model.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class StatusViewModel extends ChangeNotifier {
