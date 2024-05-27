@@ -3,5 +3,18 @@
   "targetsTab": "Targets",
   "challengeTab": "Challenge",
   "shopTab": "Shop",
-  "statusTab": "Status"
+  "statusTab": "Status",
+  "lifeLevel": "Life Level",
+  "lv": "Lv",
+  "lifeLevelExperienceBar": "Life Level Experience Bar",
+  "lifeCompletedTargets": "So far, you have achieved 2 targets!",
+  "workHard": "Please continue to work hard!",
+  "attributes": "Attributes",
+  "strength": "Strength",
+  "talent": "Talent",
+  "intellect": "Intelligence",
+  "environment": "Environment",
+  "culture": "Culture",
+  "charisma": "Charisma",
+  "attributeLevelExperienceBar": "Attribute Level Experience Bar"
 }

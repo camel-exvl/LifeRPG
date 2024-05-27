@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:liferpg/view/status_view.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,7 +17,7 @@ class _HomePageState extends State<HomePage> {
     Placeholder(),
     Placeholder(),
     Placeholder(),
-    Placeholder()
+    StatusView()
   ];
 
   void _onItemTapped(int index) {
