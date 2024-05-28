@@ -1,18 +1,17 @@
-import 'package:flutter/cupertino.dart';
+import 'package:drift/drift.dart';
 import 'package:liferpg/model/common_model.dart';
 
-class HabitModel {
-  final String id;
-  final String title;
-  final String description;
-  final Difficulty difficulty;
-  final Category category;
+@DataClassName("HabitModel")
+class HabitTable extends Table {
+  IntColumn get id => integer().autoIncrement()();
 
-  HabitModel({
-    String? id,
-    required this.title,
-    required this.description,
-    required this.difficulty,
-    required this.category,
-  }) : id = id ?? UniqueKey().toString();
+  IntColumn get order => integer()();
+
+  TextColumn get title => text()();
+
+  TextColumn get description => text()();
+
+  IntColumn get difficulty => intEnum<Difficulty>()();
+
+  IntColumn get category => intEnum<Category>()();
 }

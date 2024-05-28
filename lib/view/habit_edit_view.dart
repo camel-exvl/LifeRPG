@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../database/habit_database.dart';
 import '../model/common_model.dart';
-import '../model/habit_model.dart';
 import '../viewmodel/habit_viewmodel.dart';
 
 class HabitEditView extends StatefulWidget {
-  const HabitEditView(
-      {super.key, required this.viewModel, required this.isAdd, this.habit});
+  const HabitEditView({super.key,
+    required this.viewModel,
+    required this.isAdd,
+    this.order,
+    this.habit});
 
   final HabitViewModel viewModel;
   final bool isAdd;
+  final int? order;
   final HabitModel? habit;
 
   @override
@@ -53,14 +57,17 @@ class _HabitEditViewState extends State<HabitEditView> {
             onPressed: () {
               if (_globalKey.currentState!.validate()) {
                 if (widget.isAdd) {
-                  widget.viewModel.addHabit(HabitModel(
+                  widget.viewModel.insertHabit(HabitModel(
+                      id: 0,
+                      order: widget.order!,
                       title: _titleController.text,
                       description: _descriptionController.text,
                       difficulty: _difficultyValue,
                       category: _categoryValue));
                 } else {
-                  widget.viewModel.editHabit(HabitModel(
+                  widget.viewModel.updateHabit(HabitModel(
                       id: widget.habit!.id,
+                      order: widget.habit!.order,
                       title: _titleController.text,
                       description: _descriptionController.text,
                       difficulty: _difficultyValue,
