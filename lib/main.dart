@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:liferpg/page/home.dart';
 import 'package:liferpg/theme.dart';
+import 'package:liferpg/view/home_view.dart';
 
 void main() {
   runApp(const LifeRPG());
@@ -20,7 +20,7 @@ class LifeRPG extends StatelessWidget {
       theme: MaterialTheme().light(),
       darkTheme: MaterialTheme().dark(),
       themeMode: ThemeMode.system,
-      home: const HomePage(),
+      home: const HomeView(),
     );
   }
 }
