@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
-import 'package:liferpg/database/habit_database.dart';
+import 'package:liferpg/database/database.dart';
 
 class HabitViewModel extends ChangeNotifier {
   final database = AppDatabase();

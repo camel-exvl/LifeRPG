@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/view/habit_view.dart';
+import 'package:liferpg/view/task_view.dart';
 
 class TargetView extends StatefulWidget {
   const TargetView({super.key});
@@ -12,7 +13,9 @@ class TargetView extends StatefulWidget {
 class _TargetViewState extends State<TargetView> {
   final PageStorageBucket _bucket = PageStorageBucket();
   final List<Widget> _views = const <Widget>[
-    Placeholder(),
+    TaskView(
+      key: PageStorageKey('TaskView'),
+    ),
     HabitView(
       key: PageStorageKey('HabitView'),
     ),

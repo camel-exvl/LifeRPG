@@ -9,16 +9,22 @@ import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
 
 import '../model/common_model.dart';
 import '../model/habit_model.dart';
+import '../model/task_model.dart';
 
-part 'habit_database.g.dart';
+part 'database.g.dart';
 
-@DriftDatabase(tables: [HabitTable])
+@DriftDatabase(tables: [HabitTable, TaskTable])
 class AppDatabase extends _$AppDatabase {
-  AppDatabase() : super(_openConnection());
+  static final AppDatabase instance = AppDatabase._internal();
+
+  AppDatabase._internal() : super(_openConnection());
+
+  factory AppDatabase() => instance;
 
   @override
   int get schemaVersion => 1;
 
+  // Habit
   Future<List<HabitModel>> getAllHabits() async {
     return (select(habitTable)
           ..orderBy([(t) => OrderingTerm(expression: t.order)]))
@@ -33,6 +39,22 @@ class AppDatabase extends _$AppDatabase {
 
   Future<void> deleteHabit(HabitModel habit) =>
       delete(habitTable).delete(habit);
+
+  // Task
+  Future<List<TaskModel>> getAllTasks() async {
+    return (select(taskTable)
+          ..orderBy([(t) => OrderingTerm(expression: t.order)]))
+        .get();
+  }
+
+  Future<int> insertTask(TaskTableCompanion task) =>
+      into(taskTable).insert(task);
+
+  Future<void> updateTask(TaskModel task) =>
+      update(taskTable).replace(task);
+
+  Future<void> deleteTask(TaskModel task) =>
+      delete(taskTable).delete(task);
 }
 
 LazyDatabase _openConnection() {

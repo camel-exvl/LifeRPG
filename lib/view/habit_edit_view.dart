@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../database/habit_database.dart';
+import '../database/database.dart';
 import '../model/common_model.dart';
 import '../viewmodel/habit_viewmodel.dart';
 

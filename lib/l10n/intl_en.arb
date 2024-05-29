@@ -29,5 +29,7 @@
   "social": "Social",
   "habitType": "Habit Type",
   "good": "Good",
-  "bad": "Bad"
+  "bad": "Bad",
+  "addTask": "Add Task",
+  "editTask": "Edit Task"
 }

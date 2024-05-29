@@ -29,5 +29,7 @@
   "social": "社交",
   "habitType": "习惯类型",
   "good": "好",
-  "bad": "坏"
+  "bad": "坏",
+  "addTask": "添加任务",
+  "editTask": "编辑任务"
 }
