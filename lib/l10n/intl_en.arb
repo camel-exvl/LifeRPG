@@ -26,5 +26,8 @@
   "health": "Health",
   "fun": "Fun",
   "learning": "Learning",
-  "social": "Social"
+  "social": "Social",
+  "habitType": "Habit Type",
+  "good": "Good",
+  "bad": "Bad"
 }

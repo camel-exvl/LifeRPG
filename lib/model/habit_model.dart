@@ -14,4 +14,12 @@ class HabitTable extends Table {
   IntColumn get difficulty => intEnum<Difficulty>()();
 
   IntColumn get category => intEnum<Category>()();
+
+  IntColumn get type => intEnum<HabitType>()();
+
+  IntColumn get finishedCount => integer()();
+
+  DateTimeColumn get lastFinishedAt => dateTime()();
+
+  DateTimeColumn get createdAt => dateTime()();
 }

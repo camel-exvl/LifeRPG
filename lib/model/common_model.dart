@@ -4,6 +4,8 @@ enum Difficulty { easy, medium, hard }
 
 enum Category { general, art, career, health, fun, learning, social }
 
+enum HabitType { good, bad }
+
 extension DifficultyExtension on Difficulty {
   String localizedString(context) {
     switch (this) {
@@ -34,6 +36,17 @@ extension CategoryExtension on Category {
         return AppLocalizations.of(context)!.learning;
       case Category.social:
         return AppLocalizations.of(context)!.social;
+    }
+  }
+}
+
+extension HabitTypeExtension on HabitType {
+  String localizedString(context) {
+    switch (this) {
+      case HabitType.good:
+        return AppLocalizations.of(context)!.good;
+      case HabitType.bad:
+        return AppLocalizations.of(context)!.bad;
     }
   }
 }

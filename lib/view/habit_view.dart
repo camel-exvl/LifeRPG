@@ -3,6 +3,7 @@ import 'package:liferpg/viewmodel/habit_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 import '../database/habit_database.dart';
+import '../model/common_model.dart';
 import 'habit_edit_view.dart';
 
 class HabitView extends StatefulWidget {
@@ -53,7 +54,9 @@ class _HabitViewState extends State<HabitView>
                                 habit: habit)));
                       },
                       trailing: IconButton(
-                        icon: const Icon(Icons.add),
+                        icon: habit.type == HabitType.good
+                            ? const Icon(Icons.add)
+                            : const Icon(Icons.remove),
                         onPressed: () {},
                       ),
                     );
