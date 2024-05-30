@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../database/habit_database.dart';
+import '../database/database.dart';
 import '../model/common_model.dart';
+import '../model/habit_model.dart';
 import '../viewmodel/habit_viewmodel.dart';
 
 class HabitEditView extends StatefulWidget {
-  const HabitEditView({super.key,
-    required this.viewModel,
-    required this.isAdd,
-    this.order,
-    this.habit});
+  const HabitEditView(
+      {super.key,
+      required this.viewModel,
+      required this.isAdd,
+      this.order,
+      this.habit});
 
   final HabitViewModel viewModel;
   final bool isAdd;
@@ -27,6 +29,7 @@ class _HabitEditViewState extends State<HabitEditView> {
   final _descriptionController = TextEditingController();
   late Difficulty _difficultyValue;
   late Category _categoryValue;
+  late HabitType _habitTypeValue;
 
   @override
   void initState() {
@@ -35,6 +38,7 @@ class _HabitEditViewState extends State<HabitEditView> {
     _descriptionController.text = widget.habit?.description ?? '';
     _difficultyValue = widget.habit?.difficulty ?? Difficulty.easy;
     _categoryValue = widget.habit?.category ?? Category.general;
+    _habitTypeValue = widget.habit?.type ?? HabitType.good;
   }
 
   @override
@@ -63,7 +67,11 @@ class _HabitEditViewState extends State<HabitEditView> {
                       title: _titleController.text,
                       description: _descriptionController.text,
                       difficulty: _difficultyValue,
-                      category: _categoryValue));
+                      category: _categoryValue,
+                      type: _habitTypeValue,
+                      finishedCount: 0,
+                      lastFinishedAt: DateTime(0),
+                      createdAt: DateTime.now()));
                 } else {
                   widget.viewModel.updateHabit(HabitModel(
                       id: widget.habit!.id,
@@ -71,7 +79,11 @@ class _HabitEditViewState extends State<HabitEditView> {
                       title: _titleController.text,
                       description: _descriptionController.text,
                       difficulty: _difficultyValue,
-                      category: _categoryValue));
+                      category: _categoryValue,
+                      type: _habitTypeValue,
+                      finishedCount: widget.habit!.finishedCount,
+                      lastFinishedAt: widget.habit!.lastFinishedAt,
+                      createdAt: widget.habit!.createdAt));
                 }
                 Navigator.of(context).pop();
               }
@@ -132,6 +144,23 @@ class _HabitEditViewState extends State<HabitEditView> {
                   onSelectionChanged: (selected) {
                     setState(() {
                       _difficultyValue = selected.first;
+                    });
+                  },
+                  showSelectedIcon: false),
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: Text(AppLocalizations.of(context)!.habitType),
+              ),
+              SegmentedButton<HabitType>(
+                  segments: HabitType.values
+                      .map((habitType) => ButtonSegment(
+                          value: habitType,
+                          label: Text(habitType.localizedString(context))))
+                      .toList(),
+                  selected: <HabitType>{_habitTypeValue},
+                  onSelectionChanged: (selected) {
+                    setState(() {
+                      _habitTypeValue = selected.first;
                     });
                   },
                   showSelectedIcon: false),

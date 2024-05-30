@@ -26,5 +26,10 @@
   "health": "健康",
   "fun": "娱乐",
   "learning": "学习",
-  "social": "社交"
+  "social": "社交",
+  "habitType": "习惯类型",
+  "good": "好",
+  "bad": "坏",
+  "addTask": "添加任务",
+  "editTask": "编辑任务"
 }

@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
-import 'package:liferpg/database/habit_database.dart';
+import 'package:liferpg/database/database.dart';
 
 class HabitViewModel extends ChangeNotifier {
   final database = AppDatabase();
@@ -24,6 +24,10 @@ class HabitViewModel extends ChangeNotifier {
       description: Value(habit.description),
       difficulty: Value(habit.difficulty),
       category: Value(habit.category),
+      type: Value(habit.type),
+      finishedCount: Value(habit.finishedCount),
+      lastFinishedAt: Value(habit.lastFinishedAt),
+      createdAt: Value(habit.createdAt),
     ))
         .then((value) {
       habit = habit.copyWith(id: value);
