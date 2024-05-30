@@ -1,5 +1,4 @@
 import 'dart:collection';
-import 'dart:math';
 
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
@@ -55,10 +54,7 @@ class TaskViewModel extends ChangeNotifier {
     final task = _tasks.removeAt(oldIndex);
     _tasks.insert(newIndex, task);
 
-    for (var i = min(oldIndex, newIndex); i <= max(oldIndex, newIndex); i++) {
-      _tasks[i] = _tasks[i].copyWith(order: i);
-      database.updateTask(_tasks[i]);
-    }
+    database.reorderTasks(_tasks, oldIndex, newIndex);
     notifyListeners();
   }
 }

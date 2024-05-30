@@ -1,5 +1,4 @@
 import 'dart:collection';
-import 'dart:math';
 
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
@@ -56,10 +55,7 @@ class HabitViewModel extends ChangeNotifier {
     final habit = _habits.removeAt(oldIndex);
     _habits.insert(newIndex, habit);
 
-    for (var i = min(oldIndex, newIndex); i <= max(oldIndex, newIndex); i++) {
-      _habits[i] = _habits[i].copyWith(order: i);
-      database.updateHabit(_habits[i]);
-    }
+    database.reorderHabits(_habits, oldIndex, newIndex);
     notifyListeners();
   }
 }

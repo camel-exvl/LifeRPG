@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:liferpg/view/habit_view.dart';
-import 'package:liferpg/view/task_view.dart';
+import 'package:liferpg/view/target/habit/habit_view.dart';
+import 'package:liferpg/view/target/task/task_view.dart';
 
 class TargetView extends StatefulWidget {
   const TargetView({super.key});

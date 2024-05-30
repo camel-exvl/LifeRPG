@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:liferpg/view/target/target_view.dart';
 import 'package:liferpg/view/target_view.dart';
 import 'package:liferpg/view/status_view.dart';
 
@@ -28,7 +29,6 @@ class _HomeViewState extends State<HomeView> {
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-
       body: IndexedStack(
         // use IndexedStack can keep the state of the widgets
         index: _selectedIndex,
