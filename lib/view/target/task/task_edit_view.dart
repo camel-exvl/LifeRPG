@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/model/task_model.dart';
+import 'package:liferpg/view/target/confirm_dialog.dart';
 import 'package:liferpg/view/target/task/task_repeat_edit_view.dart';
 
 import '../../../database/database.dart';
@@ -28,6 +29,8 @@ class _TaskEditViewState extends State<TaskEditView> {
   final _globalKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
+
+  late TaskModel _initialTask;
   late Difficulty _difficultyValue;
   late Category _categoryValue;
   late RepeatType _repeatTypeValue;
@@ -46,11 +49,33 @@ class _TaskEditViewState extends State<TaskEditView> {
     _repeatTypeValue = widget.task?.scheduleType ?? RepeatType.none;
     _repeatValue = widget.task?.scheduleValue ?? 1;
     _repeatDaysOfWeek = _repeatTypeValue == RepeatType.weekly
-        ? widget.task?.scheduleDays ?? [date.weekday == 7 ? 0 : date.weekday]
+        ? List.from(
+            widget.task?.scheduleDays ?? [date.weekday == 7 ? 0 : date.weekday])
         : [date.weekday == 7 ? 0 : date.weekday];
     _repeatDaysOfMonth = _repeatTypeValue == RepeatType.monthly
-        ? widget.task?.scheduleDays ?? [date.day]
+        ? List.from(widget.task?.scheduleDays ?? [date.day])
         : [date.day];
+    _initialTask = _getCurrentTask();
+  }
+
+  TaskModel _getCurrentTask() {
+    return TaskModel(
+        id: widget.task?.id ?? 0,
+        order: widget.order ?? 0,
+        title: _titleController.text,
+        description: _descriptionController.text,
+        difficulty: _difficultyValue,
+        category: _categoryValue,
+        scheduleType: _repeatTypeValue,
+        scheduleValue: _repeatValue,
+        scheduleDays: _repeatTypeValue == RepeatType.weekly
+            ? List.from(_repeatDaysOfWeek)
+            : _repeatTypeValue == RepeatType.monthly
+                ? List.from(_repeatDaysOfMonth)
+                : [],
+        finishedCount: widget.task?.finishedCount ?? 0,
+        lastFinishedAt: widget.task?.lastFinishedAt ?? DateTime(0),
+        createdAt: widget.task?.createdAt ?? DateTime.now());
   }
 
   @override
@@ -60,12 +85,25 @@ class _TaskEditViewState extends State<TaskEditView> {
         title: Text(widget.isAdd
             ? AppLocalizations.of(context)!.addTask
             : AppLocalizations.of(context)!.editTask),
+        leading: BackButton(
+          onPressed: () {
+            if (!_initialTask.isEqual(_getCurrentTask())) {
+              DiscardChangeDialog(onDiscard: () {
+                Navigator.of(context).pop();
+              }).show(context);
+            } else {
+              Navigator.of(context).pop();
+            }
+          },
+        ),
         actions: <Widget>[
           if (!widget.isAdd)
             TextButton(
               onPressed: () {
-                widget.viewModel.removeTask(widget.task!);
-                Navigator.of(context).pop();
+                DeleteDialog(onDelete: () {
+                  widget.viewModel.removeTask(widget.task!);
+                  Navigator.of(context).pop();
+                }).show(context);
               },
               child: Text(AppLocalizations.of(context)!.delete),
             ),

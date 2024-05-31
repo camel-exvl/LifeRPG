@@ -1,6 +1,9 @@
 import 'package:drift/drift.dart';
+import 'package:flutter/foundation.dart' hide Category;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/model/common_model.dart';
+
+import '../database/database.dart';
 
 enum RepeatType { none, daily, weekly, monthly, yearly }
 
@@ -46,6 +49,18 @@ class TaskTable extends Table {
   DateTimeColumn get lastFinishedAt => dateTime()();
 
   DateTimeColumn get createdAt => dateTime()();
+}
+
+extension TaskModelExtension on TaskModel {
+  bool isEqual(TaskModel other) {
+    return title == other.title &&
+        description == other.description &&
+        difficulty == other.difficulty &&
+        category == other.category &&
+        scheduleType == other.scheduleType &&
+        scheduleValue == other.scheduleValue &&
+        listEquals(scheduleDays, other.scheduleDays);
+  }
 }
 
 extension RepeatTypeExtension on RepeatType {
