@@ -1,9 +1,9 @@
 
 import 'package:flutter/material.dart';
-import '../model/attribute_model.dart';
 import 'package:provider/provider.dart';
 import '../viewmodel/status_viewmodel.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:liferpg/database/database.dart';
 
 class StatusView extends StatefulWidget {
   const StatusView({super.key});
@@ -12,29 +12,48 @@ class StatusView extends StatefulWidget {
   State<StatusView> createState() => _StatusViewState();
 }
 
-class _StatusViewState extends State<StatusView> {
+class _StatusViewState extends State<StatusView> with AutomaticKeepAliveClientMixin {
+  final viewModel = StatusViewModel();
+  Future<bool>? loadResult;  // 声明 future 变量
+
+  @override
+  void initState() {
+    super.initState();
+    loadResult = loadData(); // 在initState函数中加载数据
+  }
+
+  Future<bool> loadData() async {
+    await viewModel.loadStatus();
+    await viewModel.loadAttributes();
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => StatusViewModel(),
-      child: Consumer<StatusViewModel>(
-        builder: (context, viewModel, child) {
-          return Column(
-            children: [
-              SingleChildScrollView(
-                  child: Column (
-                    children: [
-                      StatusCard(viewModel: viewModel),
-                      AttributesCard(viewModel: viewModel),
-                    ],
-                  )
+    super.build(context);
+    return FutureBuilder<bool>(
+      future: loadResult,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          return SingleChildScrollView(
+              child: Column(
+                children: [
+                  StatusCard(viewModel: viewModel),
+                  AttributesCard(viewModel: viewModel),
+                ],
               )
-            ],
           );
-        },
-      ),
+        }
+      },
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class StatusCard extends StatelessWidget {
@@ -52,7 +71,7 @@ class StatusCard extends StatelessWidget {
             color: Theme.of(context).colorScheme.primaryContainer,
             child: ListTile(
               title: Text(
-                '${AppLocalizations.of(context)!.lifeLevel}  ${AppLocalizations.of(context)!.lv}${viewModel.statusModel.level}',
+                '${AppLocalizations.of(context)!.lifeLevel}  ${AppLocalizations.of(context)!.lv}${viewModel.status.level}',
                 style: TextStyle(
                   fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
                   fontWeight: FontWeight.bold,
@@ -78,7 +97,7 @@ class StatusCard extends StatelessWidget {
                         Align(
                           alignment: Alignment.centerRight,
                           child: Text(
-                              '${viewModel.statusModel.exp}/${viewModel.statusModel.levelExpMap[viewModel.statusModel.level] ?? 99999}',
+                              '${viewModel.status.exp}/${viewModel.getLifeLevelMaxExp(viewModel.status.level)}',
                               style: TextStyle(
                                 fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize,
                               )
@@ -89,7 +108,7 @@ class StatusCard extends StatelessWidget {
                   ),
                   ListTile(
                     title: Text(
-                      '${AppLocalizations.of(context)!.lifeCompletedTargets}\n${AppLocalizations.of(context)!.workHard}',
+                      '${AppLocalizations.of(context)!.lifeChickenSoup}\n${AppLocalizations.of(context)!.workHard}',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onSecondaryContainer,
                       ),
@@ -128,8 +147,8 @@ class AttributesCard extends StatelessWidget {
                 ),
               ),
               Column(
-                children: viewModel.statusModel.attributes.entries.map((attribute) {
-                  return AttributeRow(viewModel: viewModel, attribute: attribute.value);
+                children: viewModel.attributes.map((attribute) {
+                  return AttributeRow(viewModel: viewModel, attribute: attribute);
                 }).toList(),
               )
             ]
@@ -178,7 +197,7 @@ class AttributeRow extends StatelessWidget {
                 child: Column(
                   children: [
                     LinearProgressIndicator(
-                      value: attribute.exp / (attribute.levelExpMap[attribute.level] ?? 99999),
+                      value: attribute.exp / (viewModel.getAttributeMaxExp(attribute.level)),
                       semanticsLabel: AppLocalizations.of(context)!.attributeLevelExperienceBar,
                       color: Theme.of(context).colorScheme.onTertiaryContainer,
                       backgroundColor: Theme.of(context).colorScheme.outlineVariant,
@@ -186,7 +205,7 @@ class AttributeRow extends StatelessWidget {
                     Align(
                       alignment: Alignment.centerRight,
                       child: Text(
-                          '${attribute.exp}/${attribute.levelExpMap[attribute.level] ?? 99999}',
+                          '${attribute.exp}/${viewModel.getAttributeMaxExp(attribute.level)}',
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.onTertiaryContainer,
                           )

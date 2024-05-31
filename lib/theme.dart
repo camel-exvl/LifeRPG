@@ -1,7 +1,8 @@
 import "package:flutter/material.dart";
 
-// add text theme here
 const textTheme = TextTheme();
+
+const iconTheme = IconThemeData(size: 32);
 
 class MaterialTheme {
   static MaterialScheme lightScheme() {
@@ -130,6 +131,7 @@ class MaterialTheme {
         bodyColor: colorScheme.onSurface,
         displayColor: colorScheme.onSurface,
       ),
+      iconTheme: iconTheme,
       scaffoldBackgroundColor: colorScheme.surface,
       canvasColor: colorScheme.surface,
       fontFamily: 'Fusion Pixel 10px Proportional zh_hans Regular');
