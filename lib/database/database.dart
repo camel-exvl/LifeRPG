@@ -10,10 +10,13 @@ import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
 import '../model/common_model.dart';
 import '../model/habit_model.dart';
 import '../model/task_model.dart';
+import '../model/status_model.dart';
+import '../model/attribute_model.dart';
 
 part 'database.g.dart';
 
-@DriftDatabase(tables: [HabitTable, TaskTable])
+@DriftDatabase(tables: [HabitTable, TaskTable, StatusTable, AttributeTable])
+
 class AppDatabase extends _$AppDatabase {
   static final AppDatabase instance = AppDatabase._internal();
 
@@ -55,6 +58,37 @@ class AppDatabase extends _$AppDatabase {
 
   Future<void> deleteTask(TaskModel task) =>
       delete(taskTable).delete(task);
+
+  // Status
+  Future<StatusModel?> getStatus(int statusId) async {
+    return (select(statusTable)..where((t) => t.id.equals(statusId))).getSingleOrNull();
+  }
+
+  Future<int> insertStatus(StatusTableCompanion status) =>
+      into(statusTable).insert(status);
+
+  Future<void> updateStatus(StatusModel status) =>
+      update(statusTable).replace(status);
+
+  Future<void> deleteStatus(StatusModel status) =>
+      delete(statusTable).delete(status);
+
+  // Attribute
+  Future<List<AttributeModel>> getAllAttributes(int statusId) async {
+    return (select(attributeTable)
+          ..where((t) => t.statusId.equals(statusId))
+          ..orderBy([(t) => OrderingTerm(expression: t.id)]))
+        .get();
+  }
+
+  Future<int> insertAttribute(AttributeTableCompanion attribute) =>
+      into(attributeTable).insert(attribute);
+
+  Future<void> updateAttribute(AttributeModel attribute) =>
+      update(attributeTable).replace(attribute);
+
+  Future<void> deleteAttribute(AttributeModel attribute) =>
+      delete(attributeTable).delete(attribute);
 }
 
 LazyDatabase _openConnection() {
