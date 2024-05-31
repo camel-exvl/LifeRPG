@@ -8,11 +8,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqlite3/sqlite3.dart';
 import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
 
+import '../model/attribute_model.dart';
 import '../model/common_model.dart';
 import '../model/habit_model.dart';
-import '../model/task_model.dart';
 import '../model/status_model.dart';
-import '../model/attribute_model.dart';
+import '../model/task_model.dart';
 
 part 'database.g.dart';
 
@@ -75,8 +75,6 @@ class AppDatabase extends _$AppDatabase {
       }
     });
   }
-  Future<void> deleteTask(TaskModel task) =>
-      delete(taskTable).delete(task);
 
   // Status
   Future<StatusModel?> getStatus(int statusId) async {

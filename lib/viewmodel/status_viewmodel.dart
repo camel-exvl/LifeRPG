@@ -1,8 +1,9 @@
+import 'dart:collection';
+
+import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/database/database.dart';
-import 'package:drift/drift.dart';
-import 'dart:collection';
 
 class StatusViewModel extends ChangeNotifier {
   static StatusViewModel? _instance;
@@ -89,7 +90,7 @@ class StatusViewModel extends ChangeNotifier {
           statusId: Value(1),
           iconPath: Value("res/icons/attribute_intellect.png"),
           name: Value("Intellect"),
-          level: Value(2),
+          level: Value(1),
           exp: Value(0),
         ),
       ];

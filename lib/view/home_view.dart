@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:liferpg/view/target/target_view.dart';
-import 'package:liferpg/view/target_view.dart';
 import 'package:liferpg/view/status_view.dart';
+import 'package:liferpg/view/target/target_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
