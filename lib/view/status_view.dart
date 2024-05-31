@@ -39,12 +39,13 @@ class _StatusViewState extends State<StatusView> with AutomaticKeepAliveClientMi
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
-          return SingleChildScrollView(
-              child: Column(
-                children: [
-                  StatusCard(viewModel: viewModel),
-                  AttributesCard(viewModel: viewModel),
-                ],
+          return RefreshIndicator(
+              onRefresh: loadData,
+              child: ListView(  // 使用 ListView 来替换 Column
+                  children: [
+                    StatusCard(viewModel: viewModel),
+                    AttributesCard(viewModel: viewModel),
+                  ]
               )
           );
         }
@@ -64,60 +65,63 @@ class StatusCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            color: Theme.of(context).colorScheme.primaryContainer,
-            child: ListTile(
-              title: Text(
-                '${AppLocalizations.of(context)!.lifeLevel}  ${AppLocalizations.of(context)!.lv}${viewModel.status.level}',
-                style: TextStyle(
-                  fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+      child: ClipRRect( // 为 Column 的子项包裹一个 ClipRRect
+        borderRadius: BorderRadius.circular(10.0), // 圆角半径和卡片相同
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              color: Theme.of(context).colorScheme.primaryContainer,
+              child: ListTile(
+                title: Text(
+                  '${AppLocalizations.of(context)!.lifeLevel}  ${AppLocalizations.of(context)!.lv}${viewModel.status.level}',
+                  style: TextStyle(
+                    fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  ),
                 ),
               ),
             ),
-          ),
-          Container(
-            color: Theme.of(context).colorScheme.secondaryContainer,
-            child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(15.0, 10.0, 50.0, 0.0),
-                    child: Column(
-                      children: [
-                        LinearProgressIndicator(
-                          value: viewModel.getExpPercent(),
-                          semanticsLabel: AppLocalizations.of(context)!.lifeLevelExperienceBar,
-                          color: Theme.of(context).colorScheme.onSecondaryContainer,
-                          backgroundColor: Theme.of(context).colorScheme.outlineVariant,
-                        ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                              '${viewModel.status.exp}/${viewModel.getLifeLevelMaxExp(viewModel.status.level)}',
-                              style: TextStyle(
-                                fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize,
-                              )
+            Container(
+              color: Theme.of(context).colorScheme.secondaryContainer,
+              child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(15.0, 10.0, 50.0, 0.0),
+                      child: Column(
+                        children: [
+                          LinearProgressIndicator(
+                            value: viewModel.getExpPercent(),
+                            semanticsLabel: AppLocalizations.of(context)!.lifeLevelExperienceBar,
+                            color: Theme.of(context).colorScheme.onSecondaryContainer,
+                            backgroundColor: Theme.of(context).colorScheme.outlineVariant,
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  ListTile(
-                    title: Text(
-                      '${AppLocalizations.of(context)!.lifeChickenSoup}\n${AppLocalizations.of(context)!.workHard}',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSecondaryContainer,
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                                '${viewModel.status.exp}/${viewModel.getLifeLevelMaxExp(viewModel.status.level)}',
+                                style: TextStyle(
+                                  fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize,
+                                )
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ]
+                    ListTile(
+                      title: Text(
+                        '${AppLocalizations.of(context)!.lifeChickenSoup}\n${AppLocalizations.of(context)!.workHard}',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSecondaryContainer,
+                        ),
+                      ),
+                    ),
+                  ]
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -131,27 +135,31 @@ class AttributesCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Container(
-        color: Theme.of(context).colorScheme.tertiaryContainer,
-        child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                title: Text(
-                  AppLocalizations.of(context)!.attributes,
-                  style: TextStyle(
-                    fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.onTertiaryContainer,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10.0),
+        child: Container(
+          color: Theme.of(context).colorScheme.tertiaryContainer,
+          child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  title: Text(
+                    AppLocalizations.of(context)!.attributes,
+                    style: TextStyle(
+                      fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onTertiaryContainer,
+                    ),
                   ),
                 ),
-              ),
-              Column(
-                children: viewModel.attributes.map((attribute) {
-                  return AttributeRow(viewModel: viewModel, attribute: attribute);
-                }).toList(),
-              )
-            ]
+                Column(
+                  children: viewModel.attributes.map((attribute) {
+                    return AttributeRow(viewModel: viewModel, attribute: attribute);
+                  }).toList(),
+                )
+              ]
+          ),
         ),
       ),
     );
