@@ -8,7 +8,7 @@ enum HabitType { good, bad }
 class HabitTable extends Table {
   IntColumn get id => integer().autoIncrement()();
 
-  IntColumn get order => integer()();
+  IntColumn get order => integer()(); // order of the habit in the list
 
   TextColumn get title => text()();
 
@@ -18,9 +18,10 @@ class HabitTable extends Table {
 
   IntColumn get category => intEnum<Category>()();
 
-  IntColumn get type => intEnum<HabitType>()();
+  IntColumn get type => intEnum<HabitType>()(); // good or bad habit
 
-  IntColumn get finishedCount => integer()();
+  IntColumn get finishedCount =>
+      integer()(); // how many times the habit has been finished
 
   DateTimeColumn get lastFinishedAt => dateTime()();
 
