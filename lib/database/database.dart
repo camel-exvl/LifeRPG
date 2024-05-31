@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
@@ -7,11 +8,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqlite3/sqlite3.dart';
 import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
 
+import '../model/attribute_model.dart';
 import '../model/common_model.dart';
 import '../model/habit_model.dart';
-import '../model/task_model.dart';
 import '../model/status_model.dart';
-import '../model/attribute_model.dart';
+import '../model/task_model.dart';
 
 part 'database.g.dart';
 
@@ -43,6 +44,15 @@ class AppDatabase extends _$AppDatabase {
   Future<void> deleteHabit(HabitModel habit) =>
       delete(habitTable).delete(habit);
 
+  Future<void> reorderHabits(
+      List<HabitModel> habits, int oldIndex, int newIndex) async {
+    transaction(() async {
+      for (var i = min(oldIndex, newIndex); i <= max(oldIndex, newIndex); i++) {
+        await update(habitTable).replace(habits[i].copyWith(order: i));
+      }
+    });
+  }
+
   // Task
   Future<List<TaskModel>> getAllTasks() async {
     return (select(taskTable)
@@ -53,11 +63,18 @@ class AppDatabase extends _$AppDatabase {
   Future<int> insertTask(TaskTableCompanion task) =>
       into(taskTable).insert(task);
 
-  Future<void> updateTask(TaskModel task) =>
-      update(taskTable).replace(task);
+  Future<void> updateTask(TaskModel task) => update(taskTable).replace(task);
 
-  Future<void> deleteTask(TaskModel task) =>
-      delete(taskTable).delete(task);
+  Future<void> deleteTask(TaskModel task) => delete(taskTable).delete(task);
+
+  Future<void> reorderTasks(
+      List<TaskModel> tasks, int oldIndex, int newIndex) async {
+    transaction(() async {
+      for (var i = min(oldIndex, newIndex); i <= max(oldIndex, newIndex); i++) {
+        await update(taskTable).replace(tasks[i].copyWith(order: i));
+      }
+    });
+  }
 
   // Status
   Future<StatusModel?> getStatus(int statusId) async {

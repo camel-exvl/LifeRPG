@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:liferpg/viewmodel/task_viewmodel.dart';
+import 'package:liferpg/viewmodel/habit_viewmodel.dart';
 import 'package:provider/provider.dart';
 
-import '../database/database.dart';
-import 'task_edit_view.dart';
+import '../../../database/database.dart';
+import '../../../model/habit_model.dart';
+import 'habit_edit_view.dart';
 
-class TaskView extends StatefulWidget {
-  const TaskView({super.key});
+class HabitView extends StatefulWidget {
+  const HabitView({super.key});
 
   @override
-  State<TaskView> createState() => _TaskViewState();
+  State<HabitView> createState() => _HabitViewState();
 }
 
-class _TaskViewState extends State<TaskView>
+class _HabitViewState extends State<HabitView>
     with AutomaticKeepAliveClientMixin {
   final _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
 
@@ -29,47 +30,49 @@ class _TaskViewState extends State<TaskView>
   Widget build(BuildContext context) {
     super.build(context);
     return ChangeNotifierProvider(
-        create: (context) => TaskViewModel(),
-        child: Consumer<TaskViewModel>(builder: (context, viewModel, child) {
+        create: (context) => HabitViewModel(),
+        child: Consumer<HabitViewModel>(builder: (context, viewModel, child) {
           return Scaffold(
             body: RefreshIndicator(
                 key: _refreshIndicatorKey,
                 onRefresh: () {
-                  return viewModel.loadTasks();
+                  return viewModel.loadHabits();
                 },
                 child: ReorderableListView.builder(
-                  itemCount: viewModel.tasks.length,
+                  itemCount: viewModel.habits.length,
                   itemBuilder: (context, index) {
-                    TaskModel task = viewModel.tasks[index];
+                    HabitModel habit = viewModel.habits[index];
                     return ListTile(
-                      key: ValueKey(task.id),
-                      title: Text(task.title),
-                      subtitle: Text(task.description),
+                      key: ValueKey(habit.id),
+                      title: Text(habit.title),
+                      subtitle: Text(habit.description),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => TaskEditView(
+                            builder: (context) => HabitEditView(
                                 viewModel: viewModel,
                                 isAdd: false,
-                                task: task)));
+                                habit: habit)));
                       },
                       trailing: IconButton(
-                        icon: const Icon(Icons.add),
+                        icon: habit.type == HabitType.good
+                            ? const Icon(Icons.add)
+                            : const Icon(Icons.remove),
                         onPressed: () {},
                       ),
                     );
                   },
                   onReorder: (int oldIndex, int newIndex) {
-                    viewModel.reorderTasks(oldIndex, newIndex);
+                    viewModel.reorderHabits(oldIndex, newIndex);
                   },
                 )),
             floatingActionButton: FloatingActionButton(
-              heroTag: 'TaskView',
+              heroTag: 'HabitView',
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => TaskEditView(
+                    builder: (context) => HabitEditView(
                         viewModel: viewModel,
                         isAdd: true,
-                        order: viewModel.tasks.length)));
+                        order: viewModel.habits.length)));
               },
               child: const Icon(Icons.add),
             ),

@@ -545,6 +545,26 @@ class $TaskTableTable extends TaskTable
       GeneratedColumn<int>('category', aliasedName, false,
               type: DriftSqlType.int, requiredDuringInsert: true)
           .withConverter<Category>($TaskTableTable.$convertercategory);
+  static const VerificationMeta _scheduleTypeMeta =
+      const VerificationMeta('scheduleType');
+  @override
+  late final GeneratedColumnWithTypeConverter<RepeatType, int> repeatType =
+      GeneratedColumn<int>('schedule_type', aliasedName, false,
+              type: DriftSqlType.int, requiredDuringInsert: true)
+          .withConverter<RepeatType>($TaskTableTable.$converterscheduleType);
+  static const VerificationMeta _scheduleValueMeta =
+      const VerificationMeta('scheduleValue');
+  @override
+  late final GeneratedColumn<int> repeatValue = GeneratedColumn<int>(
+      'schedule_value', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _scheduleDaysMeta =
+      const VerificationMeta('scheduleDays');
+  @override
+  late final GeneratedColumnWithTypeConverter<List<int>, String> repeatDays =
+      GeneratedColumn<String>('schedule_days', aliasedName, false,
+              type: DriftSqlType.string, requiredDuringInsert: true)
+          .withConverter<List<int>>($TaskTableTable.$converterscheduleDays);
   static const VerificationMeta _finishedCountMeta =
       const VerificationMeta('finishedCount');
   @override
@@ -571,6 +591,9 @@ class $TaskTableTable extends TaskTable
         description,
         difficulty,
         category,
+        repeatType,
+        repeatValue,
+        repeatDays,
         finishedCount,
         lastFinishedAt,
         createdAt
@@ -610,6 +633,16 @@ class $TaskTableTable extends TaskTable
     }
     context.handle(_difficultyMeta, const VerificationResult.success());
     context.handle(_categoryMeta, const VerificationResult.success());
+    context.handle(_scheduleTypeMeta, const VerificationResult.success());
+    if (data.containsKey('schedule_value')) {
+      context.handle(
+          _scheduleValueMeta,
+          repeatValue.isAcceptableOrUnknown(
+              data['schedule_value']!, _scheduleValueMeta));
+    } else if (isInserting) {
+      context.missing(_scheduleValueMeta);
+    }
+    context.handle(_scheduleDaysMeta, const VerificationResult.success());
     if (data.containsKey('finished_count')) {
       context.handle(
           _finishedCountMeta,
@@ -655,6 +688,14 @@ class $TaskTableTable extends TaskTable
       category: $TaskTableTable.$convertercategory.fromSql(attachedDatabase
           .typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}category'])!),
+      scheduleType: $TaskTableTable.$converterscheduleType.fromSql(
+          attachedDatabase.typeMapping.read(
+              DriftSqlType.int, data['${effectivePrefix}schedule_type'])!),
+      scheduleValue: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}schedule_value'])!,
+      scheduleDays: $TaskTableTable.$converterscheduleDays.fromSql(
+          attachedDatabase.typeMapping.read(
+              DriftSqlType.string, data['${effectivePrefix}schedule_days'])!),
       finishedCount: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}finished_count'])!,
       lastFinishedAt: attachedDatabase.typeMapping.read(
@@ -673,6 +714,10 @@ class $TaskTableTable extends TaskTable
       const EnumIndexConverter<Difficulty>(Difficulty.values);
   static JsonTypeConverter2<Category, int, int> $convertercategory =
       const EnumIndexConverter<Category>(Category.values);
+  static JsonTypeConverter2<RepeatType, int, int> $converterscheduleType =
+      const EnumIndexConverter<RepeatType>(RepeatType.values);
+  static TypeConverter<List<int>, String> $converterscheduleDays =
+      repeatDaysConverter;
 }
 
 class TaskModel extends DataClass implements Insertable<TaskModel> {
@@ -682,6 +727,9 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
   final String description;
   final Difficulty difficulty;
   final Category category;
+  final RepeatType scheduleType;
+  final int scheduleValue;
+  final List<int> scheduleDays;
   final int finishedCount;
   final DateTime lastFinishedAt;
   final DateTime createdAt;
@@ -692,6 +740,9 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
       required this.description,
       required this.difficulty,
       required this.category,
+      required this.scheduleType,
+      required this.scheduleValue,
+      required this.scheduleDays,
       required this.finishedCount,
       required this.lastFinishedAt,
       required this.createdAt});
@@ -710,6 +761,15 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
       map['category'] =
           Variable<int>($TaskTableTable.$convertercategory.toSql(category));
     }
+    {
+      map['schedule_type'] = Variable<int>(
+          $TaskTableTable.$converterscheduleType.toSql(scheduleType));
+    }
+    map['schedule_value'] = Variable<int>(scheduleValue);
+    {
+      map['schedule_days'] = Variable<String>(
+          $TaskTableTable.$converterscheduleDays.toSql(scheduleDays));
+    }
     map['finished_count'] = Variable<int>(finishedCount);
     map['last_finished_at'] = Variable<DateTime>(lastFinishedAt);
     map['created_at'] = Variable<DateTime>(createdAt);
@@ -724,6 +784,9 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
       description: Value(description),
       difficulty: Value(difficulty),
       category: Value(category),
+      scheduleType: Value(scheduleType),
+      scheduleValue: Value(scheduleValue),
+      scheduleDays: Value(scheduleDays),
       finishedCount: Value(finishedCount),
       lastFinishedAt: Value(lastFinishedAt),
       createdAt: Value(createdAt),
@@ -742,6 +805,10 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
           .fromJson(serializer.fromJson<int>(json['difficulty'])),
       category: $TaskTableTable.$convertercategory
           .fromJson(serializer.fromJson<int>(json['category'])),
+      scheduleType: $TaskTableTable.$converterscheduleType
+          .fromJson(serializer.fromJson<int>(json['scheduleType'])),
+      scheduleValue: serializer.fromJson<int>(json['scheduleValue']),
+      scheduleDays: serializer.fromJson<List<int>>(json['scheduleDays']),
       finishedCount: serializer.fromJson<int>(json['finishedCount']),
       lastFinishedAt: serializer.fromJson<DateTime>(json['lastFinishedAt']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
@@ -759,6 +826,10 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
           .toJson<int>($TaskTableTable.$converterdifficulty.toJson(difficulty)),
       'category': serializer
           .toJson<int>($TaskTableTable.$convertercategory.toJson(category)),
+      'scheduleType': serializer.toJson<int>(
+          $TaskTableTable.$converterscheduleType.toJson(scheduleType)),
+      'scheduleValue': serializer.toJson<int>(scheduleValue),
+      'scheduleDays': serializer.toJson<List<int>>(scheduleDays),
       'finishedCount': serializer.toJson<int>(finishedCount),
       'lastFinishedAt': serializer.toJson<DateTime>(lastFinishedAt),
       'createdAt': serializer.toJson<DateTime>(createdAt),
@@ -772,6 +843,9 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
           String? description,
           Difficulty? difficulty,
           Category? category,
+          RepeatType? scheduleType,
+          int? scheduleValue,
+          List<int>? scheduleDays,
           int? finishedCount,
           DateTime? lastFinishedAt,
           DateTime? createdAt}) =>
@@ -782,6 +856,9 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
         description: description ?? this.description,
         difficulty: difficulty ?? this.difficulty,
         category: category ?? this.category,
+        scheduleType: scheduleType ?? this.scheduleType,
+        scheduleValue: scheduleValue ?? this.scheduleValue,
+        scheduleDays: scheduleDays ?? this.scheduleDays,
         finishedCount: finishedCount ?? this.finishedCount,
         lastFinishedAt: lastFinishedAt ?? this.lastFinishedAt,
         createdAt: createdAt ?? this.createdAt,
@@ -793,8 +870,11 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
           ..write('order: $order, ')
           ..write('title: $title, ')
           ..write('description: $description, ')
-          ..write('difficulty: $difficulty, ')
-          ..write('category: $category, ')
+          ..write('difficulty: $difficulty, ')..write(
+          'category: $category, ')..write(
+          'scheduleType: $scheduleType, ')..write(
+          'scheduleValue: $scheduleValue, ')..write(
+          'scheduleDays: $scheduleDays, ')
           ..write('finishedCount: $finishedCount, ')
           ..write('lastFinishedAt: $lastFinishedAt, ')
           ..write('createdAt: $createdAt')
@@ -803,8 +883,19 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
   }
 
   @override
-  int get hashCode => Object.hash(id, order, title, description, difficulty,
-      category, finishedCount, lastFinishedAt, createdAt);
+  int get hashCode => Object.hash(
+      id,
+      order,
+      title,
+      description,
+      difficulty,
+      category,
+      scheduleType,
+      scheduleValue,
+      scheduleDays,
+      finishedCount,
+      lastFinishedAt,
+      createdAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -815,6 +906,9 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
           other.description == this.description &&
           other.difficulty == this.difficulty &&
           other.category == this.category &&
+          other.scheduleType == this.scheduleType &&
+          other.scheduleValue == this.scheduleValue &&
+          other.scheduleDays == this.scheduleDays &&
           other.finishedCount == this.finishedCount &&
           other.lastFinishedAt == this.lastFinishedAt &&
           other.createdAt == this.createdAt);
@@ -827,6 +921,9 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
   final Value<String> description;
   final Value<Difficulty> difficulty;
   final Value<Category> category;
+  final Value<RepeatType> scheduleType;
+  final Value<int> scheduleValue;
+  final Value<List<int>> scheduleDays;
   final Value<int> finishedCount;
   final Value<DateTime> lastFinishedAt;
   final Value<DateTime> createdAt;
@@ -837,6 +934,9 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
     this.description = const Value.absent(),
     this.difficulty = const Value.absent(),
     this.category = const Value.absent(),
+    this.scheduleType = const Value.absent(),
+    this.scheduleValue = const Value.absent(),
+    this.scheduleDays = const Value.absent(),
     this.finishedCount = const Value.absent(),
     this.lastFinishedAt = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -848,6 +948,9 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
     required String description,
     required Difficulty difficulty,
     required Category category,
+    required RepeatType scheduleType,
+    required int scheduleValue,
+    required List<int> scheduleDays,
     required int finishedCount,
     required DateTime lastFinishedAt,
     required DateTime createdAt,
@@ -856,6 +959,9 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
         description = Value(description),
         difficulty = Value(difficulty),
         category = Value(category),
+        scheduleType = Value(scheduleType),
+        scheduleValue = Value(scheduleValue),
+        scheduleDays = Value(scheduleDays),
         finishedCount = Value(finishedCount),
         lastFinishedAt = Value(lastFinishedAt),
         createdAt = Value(createdAt);
@@ -866,6 +972,9 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
     Expression<String>? description,
     Expression<int>? difficulty,
     Expression<int>? category,
+    Expression<int>? scheduleType,
+    Expression<int>? scheduleValue,
+    Expression<String>? scheduleDays,
     Expression<int>? finishedCount,
     Expression<DateTime>? lastFinishedAt,
     Expression<DateTime>? createdAt,
@@ -877,6 +986,9 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
       if (description != null) 'description': description,
       if (difficulty != null) 'difficulty': difficulty,
       if (category != null) 'category': category,
+      if (scheduleType != null) 'schedule_type': scheduleType,
+      if (scheduleValue != null) 'schedule_value': scheduleValue,
+      if (scheduleDays != null) 'schedule_days': scheduleDays,
       if (finishedCount != null) 'finished_count': finishedCount,
       if (lastFinishedAt != null) 'last_finished_at': lastFinishedAt,
       if (createdAt != null) 'created_at': createdAt,
@@ -890,6 +1002,9 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
       Value<String>? description,
       Value<Difficulty>? difficulty,
       Value<Category>? category,
+      Value<RepeatType>? scheduleType,
+      Value<int>? scheduleValue,
+      Value<List<int>>? scheduleDays,
       Value<int>? finishedCount,
       Value<DateTime>? lastFinishedAt,
       Value<DateTime>? createdAt}) {
@@ -900,6 +1015,9 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
       description: description ?? this.description,
       difficulty: difficulty ?? this.difficulty,
       category: category ?? this.category,
+      scheduleType: scheduleType ?? this.scheduleType,
+      scheduleValue: scheduleValue ?? this.scheduleValue,
+      scheduleDays: scheduleDays ?? this.scheduleDays,
       finishedCount: finishedCount ?? this.finishedCount,
       lastFinishedAt: lastFinishedAt ?? this.lastFinishedAt,
       createdAt: createdAt ?? this.createdAt,
@@ -929,6 +1047,17 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
       map['category'] = Variable<int>(
           $TaskTableTable.$convertercategory.toSql(category.value));
     }
+    if (scheduleType.present) {
+      map['schedule_type'] = Variable<int>(
+          $TaskTableTable.$converterscheduleType.toSql(scheduleType.value));
+    }
+    if (scheduleValue.present) {
+      map['schedule_value'] = Variable<int>(scheduleValue.value);
+    }
+    if (scheduleDays.present) {
+      map['schedule_days'] = Variable<String>(
+          $TaskTableTable.$converterscheduleDays.toSql(scheduleDays.value));
+    }
     if (finishedCount.present) {
       map['finished_count'] = Variable<int>(finishedCount.value);
     }
@@ -948,8 +1077,11 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
           ..write('order: $order, ')
           ..write('title: $title, ')
           ..write('description: $description, ')
-          ..write('difficulty: $difficulty, ')
-          ..write('category: $category, ')
+          ..write('difficulty: $difficulty, ')..write(
+          'category: $category, ')..write(
+          'scheduleType: $scheduleType, ')..write(
+          'scheduleValue: $scheduleValue, ')..write(
+          'scheduleDays: $scheduleDays, ')
           ..write('finishedCount: $finishedCount, ')
           ..write('lastFinishedAt: $lastFinishedAt, ')
           ..write('createdAt: $createdAt')
@@ -1730,6 +1862,9 @@ typedef $$TaskTableTableInsertCompanionBuilder = TaskTableCompanion Function({
   required String description,
   required Difficulty difficulty,
   required Category category,
+  required RepeatType scheduleType,
+  required int scheduleValue,
+  required List<int> scheduleDays,
   required int finishedCount,
   required DateTime lastFinishedAt,
   required DateTime createdAt,
@@ -1741,6 +1876,9 @@ typedef $$TaskTableTableUpdateCompanionBuilder = TaskTableCompanion Function({
   Value<String> description,
   Value<Difficulty> difficulty,
   Value<Category> category,
+  Value<RepeatType> scheduleType,
+  Value<int> scheduleValue,
+  Value<List<int>> scheduleDays,
   Value<int> finishedCount,
   Value<DateTime> lastFinishedAt,
   Value<DateTime> createdAt,
@@ -1772,6 +1910,9 @@ class $$TaskTableTableTableManager extends RootTableManager<
             Value<String> description = const Value.absent(),
             Value<Difficulty> difficulty = const Value.absent(),
             Value<Category> category = const Value.absent(),
+            Value<RepeatType> scheduleType = const Value.absent(),
+            Value<int> scheduleValue = const Value.absent(),
+            Value<List<int>> scheduleDays = const Value.absent(),
             Value<int> finishedCount = const Value.absent(),
             Value<DateTime> lastFinishedAt = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
@@ -1783,6 +1924,9 @@ class $$TaskTableTableTableManager extends RootTableManager<
             description: description,
             difficulty: difficulty,
             category: category,
+            scheduleType: scheduleType,
+            scheduleValue: scheduleValue,
+            scheduleDays: scheduleDays,
             finishedCount: finishedCount,
             lastFinishedAt: lastFinishedAt,
             createdAt: createdAt,
@@ -1794,6 +1938,9 @@ class $$TaskTableTableTableManager extends RootTableManager<
             required String description,
             required Difficulty difficulty,
             required Category category,
+            required RepeatType scheduleType,
+            required int scheduleValue,
+            required List<int> scheduleDays,
             required int finishedCount,
             required DateTime lastFinishedAt,
             required DateTime createdAt,
@@ -1805,6 +1952,9 @@ class $$TaskTableTableTableManager extends RootTableManager<
             description: description,
             difficulty: difficulty,
             category: category,
+            scheduleType: scheduleType,
+            scheduleValue: scheduleValue,
+            scheduleDays: scheduleDays,
             finishedCount: finishedCount,
             lastFinishedAt: lastFinishedAt,
             createdAt: createdAt,
@@ -1861,6 +2011,25 @@ class $$TaskTableTableFilterComposer
               column,
               joinBuilders: joinBuilders));
 
+  ColumnWithTypeConverterFilters<RepeatType, RepeatType, int>
+      get scheduleType => $state.composableBuilder(
+          column: $state.table.repeatType,
+          builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
+              column,
+              joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get scheduleValue => $state.composableBuilder(
+      column: $state.table.repeatValue,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnWithTypeConverterFilters<List<int>, List<int>, String>
+      get scheduleDays => $state.composableBuilder(
+          column: $state.table.repeatDays,
+          builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
+              column,
+              joinBuilders: joinBuilders));
+
   ColumnFilters<int> get finishedCount => $state.composableBuilder(
       column: $state.table.finishedCount,
       builder: (column, joinBuilders) =>
@@ -1907,6 +2076,21 @@ class $$TaskTableTableOrderingComposer
 
   ColumnOrderings<int> get category => $state.composableBuilder(
       column: $state.table.category,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get scheduleType => $state.composableBuilder(
+      column: $state.table.repeatType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get scheduleValue => $state.composableBuilder(
+      column: $state.table.repeatValue,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get scheduleDays => $state.composableBuilder(
+      column: $state.table.repeatDays,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
