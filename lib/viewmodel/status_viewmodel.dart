@@ -103,30 +103,23 @@ class StatusViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void insertStatus(StatusModel status) {
+  Future<void> insertStatus(StatusModel status) async {
     database
         .insertStatus(StatusTableCompanion(
       level: Value(status.level),
       exp: Value(status.exp),
-    ))
-        .then((value) {
-      status = status.copyWith(id: value);
-      _status = status;
-      notifyListeners();
-    });
+    ));
     notifyListeners();
   }
 
-  void updateStatus(StatusModel status) {
+  Future<void> updateStatus(StatusModel status) async {
     _status = status;
+    notifyListeners();
     database.updateStatus(status);
-    notifyListeners();
   }
 
-  void removeStatus(StatusModel status) {
-    _status = status;
+  Future<void> removeStatus(StatusModel status) async {
     database.deleteStatus(status);
-    notifyListeners();
   }
 
   double getExpPercent() {

@@ -81,7 +81,7 @@ class AppDatabase extends _$AppDatabase {
         .getSingleOrNull();
   }
 
-  Future<int> insertStatus(StatusTableCompanion status) =>
+  Future<void> insertStatus(StatusTableCompanion status) =>
       into(statusTable).insert(status);
 
   Future<void> updateStatus(StatusModel status) =>
@@ -98,7 +98,7 @@ class AppDatabase extends _$AppDatabase {
         .get();
   }
 
-  Future<int> insertAttribute(AttributeTableCompanion attribute) =>
+  Future<void> insertAttribute(AttributeTableCompanion attribute) =>
       into(attributeTable).insert(attribute);
 
   Future<void> updateAttribute(AttributeModel attribute) =>
