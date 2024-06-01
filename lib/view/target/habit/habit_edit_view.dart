@@ -46,17 +46,24 @@ class _HabitEditViewState extends State<HabitEditView> {
   }
 
   HabitModel _getCurrentHabit() {
-    return HabitModel(
-        id: widget.habit?.id ?? 0,
-        order: widget.habit?.order ?? 0,
-        title: _titleController.text,
-        description: _descriptionController.text,
-        difficulty: _difficultyValue,
-        category: _categoryValue,
-        type: _habitTypeValue,
-        finishedCount: widget.habit?.finishedCount ?? 0,
-        lastFinishedAt: widget.habit?.lastFinishedAt ?? DateTime(0),
-        createdAt: widget.habit?.createdAt ?? DateTime.now());
+    return widget.habit?.copyWith(
+            title: _titleController.text,
+            description: _descriptionController.text,
+            difficulty: _difficultyValue,
+            category: _categoryValue,
+            type: _habitTypeValue) ??
+        HabitModel(
+            id: 0,
+            order: widget.order ?? 0,
+            title: _titleController.text,
+            description: _descriptionController.text,
+            difficulty: _difficultyValue,
+            category: _categoryValue,
+            type: _habitTypeValue,
+            finishedCount: 0,
+            rewardCoefficient: 1.0,
+            lastFinishedAt: DateTime(0),
+            createdAt: DateTime.now());
   }
 
   @override
@@ -92,29 +99,9 @@ class _HabitEditViewState extends State<HabitEditView> {
             onPressed: () {
               if (_globalKey.currentState!.validate()) {
                 if (widget.isAdd) {
-                  widget.viewModel.insertHabit(HabitModel(
-                      id: 0,
-                      order: widget.order!,
-                      title: _titleController.text,
-                      description: _descriptionController.text,
-                      difficulty: _difficultyValue,
-                      category: _categoryValue,
-                      type: _habitTypeValue,
-                      finishedCount: 0,
-                      lastFinishedAt: DateTime(0),
-                      createdAt: DateTime.now()));
+                  widget.viewModel.insertHabit(_getCurrentHabit());
                 } else {
-                  widget.viewModel.updateHabit(HabitModel(
-                      id: widget.habit!.id,
-                      order: widget.habit!.order,
-                      title: _titleController.text,
-                      description: _descriptionController.text,
-                      difficulty: _difficultyValue,
-                      category: _categoryValue,
-                      type: _habitTypeValue,
-                      finishedCount: widget.habit!.finishedCount,
-                      lastFinishedAt: widget.habit!.lastFinishedAt,
-                      createdAt: widget.habit!.createdAt));
+                  widget.viewModel.updateHabit(_getCurrentHabit());
                 }
                 Navigator.of(context).pop();
               }

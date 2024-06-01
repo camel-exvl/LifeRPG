@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
@@ -19,7 +20,7 @@ class TaskEditView extends StatefulWidget {
 
   final TaskViewModel viewModel;
   final bool isAdd;
-  final int? order;
+  final int? order; // only used when adding a new task
   final TaskModel? task;
 
   @override
@@ -62,24 +63,38 @@ class _TaskEditViewState extends State<TaskEditView> {
   }
 
   TaskModel _getCurrentTask() {
-    return TaskModel(
-        id: widget.task?.id ?? 0,
-        order: widget.order ?? 0,
-        title: _titleController.text,
-        description: _descriptionController.text,
-        difficulty: _difficultyValue,
-        category: _categoryValue,
-        repeatType: _repeatTypeValue,
-        repeatValue: _repeatValue,
-        repeatDays: _repeatTypeValue == RepeatType.weekly
-            ? List.from(_repeatDaysOfWeek)
-            : _repeatTypeValue == RepeatType.monthly
-                ? List.from(_repeatDaysOfMonth)
-                : [],
-        deadline: _deadline,
-        finishedCount: widget.task?.finishedCount ?? 0,
-        lastFinishedAt: widget.task?.lastFinishedAt ?? DateTime(0),
-        createdAt: widget.task?.createdAt ?? DateTime.now());
+    return widget.task?.copyWith(
+            title: _titleController.text,
+            description: _descriptionController.text,
+            difficulty: _difficultyValue,
+            category: _categoryValue,
+            repeatType: _repeatTypeValue,
+            repeatValue: _repeatValue,
+            repeatDays: _repeatTypeValue == RepeatType.weekly
+                ? List.from(_repeatDaysOfWeek)
+                : _repeatTypeValue == RepeatType.monthly
+                    ? List.from(_repeatDaysOfMonth)
+                    : [],
+            deadline: Value(_deadline)) ??
+        TaskModel(
+            id: 0,
+            order: widget.order ?? 0,
+            title: _titleController.text,
+            description: _descriptionController.text,
+            difficulty: _difficultyValue,
+            category: _categoryValue,
+            repeatType: _repeatTypeValue,
+            repeatValue: _repeatValue,
+            repeatDays: _repeatTypeValue == RepeatType.weekly
+                ? List.from(_repeatDaysOfWeek)
+                : _repeatTypeValue == RepeatType.monthly
+                    ? List.from(_repeatDaysOfMonth)
+                    : [],
+            deadline: _deadline,
+            finishedCount: 0,
+            rewardCoefficient: 1.0,
+            lastFinishedAt: DateTime(0),
+            createdAt: DateTime.now());
   }
 
   @override
@@ -115,43 +130,9 @@ class _TaskEditViewState extends State<TaskEditView> {
             onPressed: () {
               if (_globalKey.currentState!.validate()) {
                 if (widget.isAdd) {
-                  widget.viewModel.insertTask(TaskModel(
-                      id: 0,
-                      order: widget.order!,
-                      title: _titleController.text,
-                      description: _descriptionController.text,
-                      difficulty: _difficultyValue,
-                      category: _categoryValue,
-                      repeatType: _repeatTypeValue,
-                      repeatValue: _repeatValue,
-                      repeatDays: _repeatTypeValue == RepeatType.weekly
-                          ? _repeatDaysOfWeek
-                          : _repeatTypeValue == RepeatType.monthly
-                              ? _repeatDaysOfMonth
-                              : [],
-                      deadline: _deadline,
-                      finishedCount: 0,
-                      lastFinishedAt: DateTime(0),
-                      createdAt: DateTime.now()));
+                  widget.viewModel.insertTask(_getCurrentTask());
                 } else {
-                  widget.viewModel.updateTask(TaskModel(
-                      id: widget.task!.id,
-                      order: widget.task!.order,
-                      title: _titleController.text,
-                      description: _descriptionController.text,
-                      difficulty: _difficultyValue,
-                      category: _categoryValue,
-                      repeatType: _repeatTypeValue,
-                      repeatValue: _repeatValue,
-                      repeatDays: _repeatTypeValue == RepeatType.weekly
-                          ? _repeatDaysOfWeek
-                          : _repeatTypeValue == RepeatType.monthly
-                              ? _repeatDaysOfMonth
-                              : [],
-                      deadline: _deadline,
-                      finishedCount: widget.task!.finishedCount,
-                      lastFinishedAt: widget.task!.lastFinishedAt,
-                      createdAt: widget.task!.createdAt));
+                  widget.viewModel.updateTask(_getCurrentTask());
                 }
                 Navigator.of(context).pop();
               }
