@@ -5,6 +5,7 @@ import 'package:liferpg/viewmodel/task_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 import '../../../database/database.dart';
+import '../../../model/task_model.dart';
 import 'task_edit_view.dart';
 
 class TaskView extends StatefulWidget {
@@ -51,7 +52,8 @@ class _TaskViewState extends State<TaskView>
                         children: [
                           if (task.description.isNotEmpty)
                             Text(task.description),
-                          if (task.deadline != null)
+                          if (task.deadline != null &&
+                              task.repeatType == RepeatType.none)
                             Text(
                                 "${AppLocalizations.of(context)!.deadline}: ${DateFormat('yyyy-MM-dd HH:mm').format(task.deadline!)}")
                         ],
