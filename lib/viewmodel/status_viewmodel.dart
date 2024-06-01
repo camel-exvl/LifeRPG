@@ -1,4 +1,5 @@
 import 'dart:collection';
+
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -22,6 +23,7 @@ class StatusViewModel extends ChangeNotifier {
   List<AttributeModel> _attributes = [];
 
   StatusModel get status => _status;
+
   UnmodifiableListView<AttributeModel> get attributes =>
       UnmodifiableListView(_attributes);
 
@@ -93,8 +95,7 @@ class StatusViewModel extends ChangeNotifier {
   }
 
   Future<void> insertStatus(StatusModel status) async {
-    database
-        .insertStatus(StatusTableCompanion(
+    database.insertStatus(StatusTableCompanion(
       level: Value(status.level),
       exp: Value(status.exp),
     ));

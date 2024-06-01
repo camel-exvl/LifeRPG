@@ -4,8 +4,6 @@ import 'package:liferpg/theme.dart';
 import 'package:liferpg/view/home_view.dart';
 
 void main() {
-
-
   runApp(const LifeRPG());
 }
 
