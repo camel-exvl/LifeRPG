@@ -2,7 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/model/common_model.dart';
 
-import '../database/database.dart';
+import '../../database/database.dart';
 
 enum HabitType { good, bad }
 
@@ -24,6 +24,8 @@ class HabitTable extends Table {
 
   IntColumn get finishedCount =>
       integer()(); // how many times the habit has been finished
+
+  RealColumn get rewardCoefficient => real().withDefault(const Constant(1.0))();
 
   DateTimeColumn get lastFinishedAt => dateTime()();
 

@@ -4,9 +4,12 @@ import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/database/database.dart';
+import 'package:liferpg/model/reward/reward_response_model.dart';
+import 'package:liferpg/viewmodel/status_viewmodel.dart';
 
 import '../model/common_model.dart';
-import '../model/habit_model.dart';
+import '../model/reward/reward_request_model.dart';
+import '../model/target/habit_model.dart';
 
 class HabitViewModel extends ChangeNotifier {
   static final HabitViewModel instance = HabitViewModel._internal();
@@ -16,12 +19,13 @@ class HabitViewModel extends ChangeNotifier {
   factory HabitViewModel() => instance;
 
   final database = AppDatabase();
+  final statusViewModel = StatusViewModel();
   List<HabitModel> _habits = [];
 
   UnmodifiableListView<HabitModel> get habits => UnmodifiableListView(_habits);
 
   Future<void> initOnFirstRun(BuildContext context) async {
-    var habits = [
+    final habits = [
       // learning
       HabitModel(
         id: 0,
@@ -33,6 +37,7 @@ class HabitViewModel extends ChangeNotifier {
         category: Category.learning,
         type: HabitType.good,
         finishedCount: 0,
+        rewardCoefficient: 1.0,
         lastFinishedAt: DateTime(0),
         createdAt: DateTime.now(),
       ),
@@ -47,6 +52,7 @@ class HabitViewModel extends ChangeNotifier {
         category: Category.art,
         type: HabitType.good,
         finishedCount: 0,
+        rewardCoefficient: 1.0,
         lastFinishedAt: DateTime(0),
         createdAt: DateTime.now(),
       ),
@@ -60,6 +66,7 @@ class HabitViewModel extends ChangeNotifier {
         category: Category.health,
         type: HabitType.bad,
         finishedCount: 0,
+        rewardCoefficient: 1.0,
         lastFinishedAt: DateTime(0),
         createdAt: DateTime.now(),
       ),
@@ -116,5 +123,23 @@ class HabitViewModel extends ChangeNotifier {
     notifyListeners();
 
     database.reorderHabits(_habits, oldIndex, newIndex);
+  }
+
+  Future<RewardResponseModel> finishHabit(HabitModel habit) async {
+    final response = statusViewModel.getReward(RewardRequestModel(
+      difficulty: habit.difficulty,
+      category: habit.category,
+      finishedCount: habit.finishedCount,
+      lastFinishedAt: habit.lastFinishedAt,
+      rewardCoefficient: habit.rewardCoefficient,
+      habitType: habit.type,
+    ));
+    habit = habit.copyWith(
+      finishedCount: habit.finishedCount + 1,
+      rewardCoefficient: response.penaltyCoefficient,
+      lastFinishedAt: DateTime.now(),
+    );
+    updateHabit(habit);
+    return response;
   }
 }

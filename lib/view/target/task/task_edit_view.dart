@@ -1,8 +1,9 @@
+import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
-import 'package:liferpg/model/task_model.dart';
-import 'package:liferpg/view/target/confirm_dialog.dart';
+import 'package:liferpg/model/target/task_model.dart';
+import 'package:liferpg/view/target/dialog/confirm_dialog.dart';
 import 'package:liferpg/view/target/task/task_repeat_edit_view.dart';
 
 import '../../../database/database.dart';
@@ -19,7 +20,7 @@ class TaskEditView extends StatefulWidget {
 
   final TaskViewModel viewModel;
   final bool isAdd;
-  final int? order;
+  final int? order; // only used when adding a new task
   final TaskModel? task;
 
   @override
@@ -62,206 +63,199 @@ class _TaskEditViewState extends State<TaskEditView> {
   }
 
   TaskModel _getCurrentTask() {
-    return TaskModel(
-        id: widget.task?.id ?? 0,
-        order: widget.order ?? 0,
-        title: _titleController.text,
-        description: _descriptionController.text,
-        difficulty: _difficultyValue,
-        category: _categoryValue,
-        repeatType: _repeatTypeValue,
-        repeatValue: _repeatValue,
-        repeatDays: _repeatTypeValue == RepeatType.weekly
-            ? List.from(_repeatDaysOfWeek)
-            : _repeatTypeValue == RepeatType.monthly
-                ? List.from(_repeatDaysOfMonth)
-                : [],
-        deadline: _deadline,
-        finishedCount: widget.task?.finishedCount ?? 0,
-        lastFinishedAt: widget.task?.lastFinishedAt ?? DateTime(0),
-        createdAt: widget.task?.createdAt ?? DateTime.now());
+    return widget.task?.copyWith(
+            title: _titleController.text,
+            description: _descriptionController.text,
+            difficulty: _difficultyValue,
+            category: _categoryValue,
+            repeatType: _repeatTypeValue,
+            repeatValue: _repeatValue,
+            repeatDays: _repeatTypeValue == RepeatType.weekly
+                ? List.from(_repeatDaysOfWeek)
+                : _repeatTypeValue == RepeatType.monthly
+                    ? List.from(_repeatDaysOfMonth)
+                    : [],
+            deadline: Value(_deadline)) ??
+        TaskModel(
+            id: 0,
+            order: widget.order ?? 0,
+            title: _titleController.text,
+            description: _descriptionController.text,
+            difficulty: _difficultyValue,
+            category: _categoryValue,
+            repeatType: _repeatTypeValue,
+            repeatValue: _repeatValue,
+            repeatDays: _repeatTypeValue == RepeatType.weekly
+                ? List.from(_repeatDaysOfWeek)
+                : _repeatTypeValue == RepeatType.monthly
+                    ? List.from(_repeatDaysOfMonth)
+                    : [],
+            deadline: _deadline,
+            finishedCount: 0,
+            rewardCoefficient: 1.0,
+            lastFinishedAt: DateTime(0),
+            createdAt: DateTime.now());
+  }
+
+  Future<bool> _onPopInvoked() async {
+    if (!_initialTask.isEqual(_getCurrentTask())) {
+      final ret = await DiscardChangeDialog().show(context) ?? false;
+      return ret;
+    }
+    return true;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.isAdd
-            ? AppLocalizations.of(context)!.addTask
-            : AppLocalizations.of(context)!.editTask),
-        leading: BackButton(
-          onPressed: () {
-            if (!_initialTask.isEqual(_getCurrentTask())) {
-              DiscardChangeDialog(onDiscard: () {
-                Navigator.of(context).pop();
-              }).show(context);
-            } else {
-              Navigator.of(context).pop();
-            }
-          },
-        ),
-        actions: <Widget>[
-          if (!widget.isAdd)
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (bool didPop) async {
+        if (didPop) {
+          return;
+        }
+        final ret = await _onPopInvoked();
+        if (context.mounted && ret) {
+          Navigator.of(context).pop();
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(widget.isAdd
+              ? AppLocalizations.of(context)!.addTask
+              : AppLocalizations.of(context)!.editTask),
+          actions: <Widget>[
+            if (!widget.isAdd)
+              TextButton(
+                onPressed: () {
+                  DeleteDialog(onDelete: () {
+                    widget.viewModel.removeTask(widget.task!);
+                    Navigator.of(context).pop();
+                  }).show(context);
+                },
+                child: Text(AppLocalizations.of(context)!.delete),
+              ),
             TextButton(
               onPressed: () {
-                DeleteDialog(onDelete: () {
-                  widget.viewModel.removeTask(widget.task!);
-                  Navigator.of(context).pop();
-                }).show(context);
-              },
-              child: Text(AppLocalizations.of(context)!.delete),
-            ),
-          TextButton(
-            onPressed: () {
-              if (_globalKey.currentState!.validate()) {
-                if (widget.isAdd) {
-                  widget.viewModel.insertTask(TaskModel(
-                      id: 0,
-                      order: widget.order!,
-                      title: _titleController.text,
-                      description: _descriptionController.text,
-                      difficulty: _difficultyValue,
-                      category: _categoryValue,
-                      repeatType: _repeatTypeValue,
-                      repeatValue: _repeatValue,
-                      repeatDays: _repeatTypeValue == RepeatType.weekly
-                          ? _repeatDaysOfWeek
-                          : _repeatTypeValue == RepeatType.monthly
-                              ? _repeatDaysOfMonth
-                              : [],
-                      deadline: _deadline,
-                      finishedCount: 0,
-                      lastFinishedAt: DateTime(0),
-                      createdAt: DateTime.now()));
-                } else {
-                  widget.viewModel.updateTask(TaskModel(
-                      id: widget.task!.id,
-                      order: widget.task!.order,
-                      title: _titleController.text,
-                      description: _descriptionController.text,
-                      difficulty: _difficultyValue,
-                      category: _categoryValue,
-                      repeatType: _repeatTypeValue,
-                      repeatValue: _repeatValue,
-                      repeatDays: _repeatTypeValue == RepeatType.weekly
-                          ? _repeatDaysOfWeek
-                          : _repeatTypeValue == RepeatType.monthly
-                              ? _repeatDaysOfMonth
-                              : [],
-                      deadline: _deadline,
-                      finishedCount: widget.task!.finishedCount,
-                      lastFinishedAt: widget.task!.lastFinishedAt,
-                      createdAt: widget.task!.createdAt));
-                }
-                Navigator.of(context).pop();
-              }
-            },
-            child: Text(AppLocalizations.of(context)!.save),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-            child: Form(
-          key: _globalKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              TextFormField(
-                controller: _titleController,
-                decoration: InputDecoration(
-                    labelText: AppLocalizations.of(context)!.title),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return AppLocalizations.of(context)!.titleRequired;
+                if (_globalKey.currentState!.validate()) {
+                  if (widget.isAdd) {
+                    widget.viewModel.insertTask(_getCurrentTask());
+                  } else {
+                    widget.viewModel.updateTask(_getCurrentTask());
                   }
-                  return null;
-                },
-              ),
-              TextFormField(
-                  controller: _descriptionController,
+                  Navigator.of(context).pop();
+                }
+              },
+              child: Text(AppLocalizations.of(context)!.save),
+            ),
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+              child: Form(
+            key: _globalKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TextFormField(
+                  controller: _titleController,
                   decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)!.description),
-                  maxLines: null),
-              DropdownButtonFormField<Category>(
-                decoration: InputDecoration(
-                    labelText: AppLocalizations.of(context)!.category),
-                items: Category.values
-                    .map((category) => DropdownMenuItem(
-                        value: category,
-                        child: Text(category.localizedString(context))))
-                    .toList(),
-                value: _categoryValue,
-                onChanged: (Category? value) {
-                  setState(() {
-                    _categoryValue = value!;
-                  });
-                },
-              ),
-              Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        AppLocalizations.of(context)!.difficulty,
-                      ))),
-              SegmentedButton<Difficulty>(
-                  segments: Difficulty.values
-                      .map((difficulty) => ButtonSegment(
-                          value: difficulty,
-                          label: Text(difficulty.localizedString(context))))
+                      labelText: AppLocalizations.of(context)!.title),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return AppLocalizations.of(context)!.titleRequired;
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                    controller: _descriptionController,
+                    decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.description),
+                    maxLines: null),
+                DropdownButtonFormField<Category>(
+                  decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)!.category),
+                  items: Category.values
+                      .map((category) => DropdownMenuItem(
+                          value: category,
+                          child: Text(category.localizedString(context))))
                       .toList(),
-                  selected: <Difficulty>{_difficultyValue},
-                  onSelectionChanged: (selected) {
+                  value: _categoryValue,
+                  onChanged: (Category? value) {
                     setState(() {
-                      _difficultyValue = selected.first;
+                      _categoryValue = value!;
                     });
                   },
-                  showSelectedIcon: false),
-              Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: ListTile(
-                    title: Text(AppLocalizations.of(context)!.repeat),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(repeatHint(context, _repeatTypeValue, _repeatValue,
-                            _repeatDaysOfWeek, _repeatDaysOfMonth)),
-                        if (_repeatTypeValue == RepeatType.none)
-                          Text((_deadline == null
-                              ? AppLocalizations.of(context)!.noDeadline
-                              : "${AppLocalizations.of(context)!.deadline}: ${DateFormat('yyyy-MM-dd HH:mm').format(_deadline!)}")),
-                      ],
-                    ),
-                    trailing: const Icon(Icons.keyboard_arrow_right),
-                    contentPadding: EdgeInsets.zero,
-                    onTap: () {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(
-                              builder: (context) => TaskRepeatEditView(
-                                    repeatTypeValue: _repeatTypeValue,
-                                    repeatValue: _repeatValue,
-                                    repeatDaysOfWeek: _repeatDaysOfWeek,
-                                    repeatDaysOfMonth: _repeatDaysOfMonth,
-                                    deadline: _deadline,
-                                  )))
-                          .then((value) {
-                        if (value != null) {
-                          setState(() {
-                            _repeatTypeValue = value['repeatTypeValue'];
-                            _repeatValue = value['repeatValue'];
-                            _repeatDaysOfWeek = value['repeatDaysOfWeek'];
-                            _repeatDaysOfMonth = value['repeatDaysOfMonth'];
-                            _deadline = value['deadline'];
-                          });
-                        }
+                ),
+                Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          AppLocalizations.of(context)!.difficulty,
+                        ))),
+                SegmentedButton<Difficulty>(
+                    segments: Difficulty.values
+                        .map((difficulty) => ButtonSegment(
+                            value: difficulty,
+                            label: Text(difficulty.localizedString(context))))
+                        .toList(),
+                    selected: <Difficulty>{_difficultyValue},
+                    onSelectionChanged: (selected) {
+                      setState(() {
+                        _difficultyValue = selected.first;
                       });
                     },
-                  )),
-            ],
-          ),
-        )),
+                    showSelectedIcon: false),
+                Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: ListTile(
+                      title: Text(AppLocalizations.of(context)!.repeat),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(repeatHint(
+                              context,
+                              _repeatTypeValue,
+                              _repeatValue,
+                              _repeatDaysOfWeek,
+                              _repeatDaysOfMonth)),
+                          if (_repeatTypeValue == RepeatType.none)
+                            Text((_deadline == null
+                                ? AppLocalizations.of(context)!.noDeadline
+                                : "${AppLocalizations.of(context)!.deadline}: ${DateFormat('yyyy-MM-dd HH:mm').format(_deadline!)}")),
+                        ],
+                      ),
+                      trailing: const Icon(Icons.keyboard_arrow_right),
+                      contentPadding: EdgeInsets.zero,
+                      onTap: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(
+                                builder: (context) => TaskRepeatEditView(
+                                      repeatTypeValue: _repeatTypeValue,
+                                      repeatValue: _repeatValue,
+                                      repeatDaysOfWeek: _repeatDaysOfWeek,
+                                      repeatDaysOfMonth: _repeatDaysOfMonth,
+                                      deadline: _deadline,
+                                    )))
+                            .then((value) {
+                          if (value != null) {
+                            setState(() {
+                              _repeatTypeValue = value['repeatTypeValue'];
+                              _repeatValue = value['repeatValue'];
+                              _repeatDaysOfWeek = value['repeatDaysOfWeek'];
+                              _repeatDaysOfMonth = value['repeatDaysOfMonth'];
+                              _deadline = value['deadline'];
+                            });
+                          }
+                        });
+                      },
+                    )),
+              ],
+            ),
+          )),
+        ),
       ),
     );
   }

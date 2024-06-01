@@ -4,9 +4,12 @@ import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/database/database.dart';
+import 'package:liferpg/viewmodel/status_viewmodel.dart';
 
 import '../model/common_model.dart';
-import '../model/task_model.dart';
+import '../model/reward/reward_request_model.dart';
+import '../model/reward/reward_response_model.dart';
+import '../model/target/task_model.dart';
 
 class TaskViewModel extends ChangeNotifier {
   static final TaskViewModel instance = TaskViewModel._internal();
@@ -16,12 +19,13 @@ class TaskViewModel extends ChangeNotifier {
   factory TaskViewModel() => instance;
 
   final database = AppDatabase();
+  final statusViewModel = StatusViewModel();
   List<TaskModel> _tasks = [];
 
   UnmodifiableListView<TaskModel> get tasks => UnmodifiableListView(_tasks);
 
   Future<void> initOnFirstRun(BuildContext context) async {
-    var tasks = [
+    final tasks = [
       // health
       TaskModel(
         id: 0,
@@ -36,6 +40,7 @@ class TaskViewModel extends ChangeNotifier {
         repeatDays: [],
         deadline: null,
         finishedCount: 0,
+        rewardCoefficient: 1.0,
         lastFinishedAt: DateTime(0),
         createdAt: DateTime.now(),
       ),
@@ -52,6 +57,7 @@ class TaskViewModel extends ChangeNotifier {
         repeatDays: [0, 6],
         deadline: null,
         finishedCount: 0,
+        rewardCoefficient: 1.0,
         lastFinishedAt: DateTime(0),
         createdAt: DateTime.now(),
       ),
@@ -69,6 +75,7 @@ class TaskViewModel extends ChangeNotifier {
         repeatDays: [],
         deadline: DateTime.now().add(const Duration(days: 7)),
         finishedCount: 0,
+        rewardCoefficient: 1.0,
         lastFinishedAt: DateTime(0),
         createdAt: DateTime.now(),
       ),
@@ -128,5 +135,23 @@ class TaskViewModel extends ChangeNotifier {
     notifyListeners();
 
     database.reorderTasks(_tasks, oldIndex, newIndex);
+  }
+
+  Future<RewardResponseModel> finishTask(TaskModel task) async {
+    final response = statusViewModel.getReward(RewardRequestModel(
+      difficulty: task.difficulty,
+      category: task.category,
+      finishedCount: task.finishedCount,
+      lastFinishedAt: task.lastFinishedAt,
+      rewardCoefficient: task.rewardCoefficient,
+      habitType: null,
+    ));
+    task = task.copyWith(
+      finishedCount: task.finishedCount + 1,
+      rewardCoefficient: response.penaltyCoefficient,
+      lastFinishedAt: DateTime.now(),
+    );
+    updateTask(task);
+    return response;
   }
 }

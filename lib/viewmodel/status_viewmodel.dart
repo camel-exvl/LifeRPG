@@ -1,11 +1,13 @@
 import 'dart:collection';
+
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/database/database.dart';
-import '../model/reward/reward_response_model.dart';
-import '../model/reward/reward_request_model.dart';
+
 import '../model/common_model.dart';
+import '../model/reward/reward_request_model.dart';
+import '../model/reward/reward_response_model.dart';
 
 class StatusViewModel extends ChangeNotifier {
   static final StatusViewModel _instance = StatusViewModel._internal();
@@ -51,7 +53,7 @@ class StatusViewModel extends ChangeNotifier {
         id: 1,
         statusId: _status.id,
         iconPath: "res/icons/attribute_strength.png",
-        name: "Strength",
+        name: "strength",
         level: 1,
         exp: 0,
       ),
@@ -59,7 +61,7 @@ class StatusViewModel extends ChangeNotifier {
         id: 2,
         statusId: _status.id,
         iconPath: "res/icons/attribute_talent.png",
-        name: "Talent",
+        name: "talent",
         level: 1,
         exp: 0,
       ),
@@ -67,7 +69,7 @@ class StatusViewModel extends ChangeNotifier {
         id: 3,
         statusId: _status.id,
         iconPath: "res/icons/attribute_culture.png",
-        name: "Culture",
+        name: "culture",
         level: 1,
         exp: 0,
       ),
@@ -75,7 +77,7 @@ class StatusViewModel extends ChangeNotifier {
         id: 4,
         statusId: _status.id,
         iconPath: "res/icons/attribute_charisma.png",
-        name: "Charisma",
+        name: "charisma",
         level: 1,
         exp: 0,
       ),
@@ -83,15 +85,15 @@ class StatusViewModel extends ChangeNotifier {
         id: 5,
         statusId: _status.id,
         iconPath: "res/icons/attribute_environment.png",
-        name: "Environment",
+        name: "environment",
         level: 1,
         exp: 0,
       ),
       AttributeModel(
         id: 6,
         statusId: _status.id,
-        iconPath: "res/icons/attribute_intellect.png",
-        name: "Intellect",
+        iconPath: "res/icons/attribute_intelligence.png",
+        name: "intelligence",
         level: 1,
         exp: 0,
       ),
@@ -168,18 +170,18 @@ class StatusViewModel extends ChangeNotifier {
 
   String getAttributeName(String key, BuildContext context) {
     switch (key) {
-      case "Strength":
+      case "strength":
         return AppLocalizations.of(context)!.strength;
-      case "Talent":
+      case "talent":
         return AppLocalizations.of(context)!.talent;
-      case "Culture":
+      case "culture":
         return AppLocalizations.of(context)!.culture;
-      case "Charisma":
+      case "charisma":
         return AppLocalizations.of(context)!.charisma;
-      case "Environment":
+      case "environment":
         return AppLocalizations.of(context)!.environment;
-      case "Intellect":
-        return AppLocalizations.of(context)!.intellect;
+      case "intelligence":
+        return AppLocalizations.of(context)!.intelligence;
       default:
         return "Unknown";
     }
@@ -231,47 +233,48 @@ class StatusViewModel extends ChangeNotifier {
             response.expMap[key] = (totalExp * rewardCoefficient / 6).round());
         break;
       case Category.art:
-        response.expMap["Talent"] =
+        response.expMap[Attribute.talent] =
             (totalExp * 0.6 * rewardCoefficient).round();
-        response.expMap["Culture"] =
+        response.expMap[Attribute.culture] =
             (totalExp * 0.2 * rewardCoefficient).round();
-        response.expMap["Charisma"] =
+        response.expMap[Attribute.charisma] =
             (totalExp * 0.2 * rewardCoefficient).round();
         break;
       case Category.career:
-        response.expMap["Intellect"] =
+        response.expMap[Attribute.intelligence] =
             (totalExp * 0.6 * rewardCoefficient).round();
-        response.expMap["Talent"] =
+        response.expMap[Attribute.talent] =
             (totalExp * 0.4 * rewardCoefficient).round();
         break;
       case Category.health:
-        response.expMap["Strength"] =
+        response.expMap[Attribute.strength] =
             (totalExp * 0.6 * rewardCoefficient).round();
-        response.expMap["Charisma"] =
+        response.expMap[Attribute.charisma] =
             (totalExp * 0.4 * rewardCoefficient).round();
         break;
       case Category.fun:
-        response.expMap["Talent"] =
+        response.expMap[Attribute.talent] =
             (totalExp * 0.6 * rewardCoefficient).round();
-        response.expMap["Intellect"] =
+        response.expMap[Attribute.intelligence] =
             (totalExp * 0.4 * rewardCoefficient).round();
         break;
       case Category.learning:
-        response.expMap["Intellect"] =
+        response.expMap[Attribute.intelligence] =
             (totalExp * 0.6 * rewardCoefficient).round();
-        response.expMap["Culture"] =
+        response.expMap[Attribute.culture] =
             (totalExp * 0.4 * rewardCoefficient).round();
         break;
       case Category.social:
-        response.expMap["Environment"] =
+        response.expMap[Attribute.environment] =
             (totalExp * 0.6 * rewardCoefficient).round();
-        response.expMap["Charisma"] =
+        response.expMap[Attribute.charisma] =
             (totalExp * 0.4 * rewardCoefficient).round();
         break;
     }
 
     totalGold = (totalGold * rewardCoefficient).round();
     response.gold = totalGold;
+    response.penaltyCoefficient = rewardCoefficient;
 
     updateAfterReward(response);
     return response;
@@ -296,16 +299,18 @@ class StatusViewModel extends ChangeNotifier {
     for (var entry in response.expMap.entries) {
       if (entry.value != 0) {
         int newAttributeExp = entry.value +
-            _attributes.firstWhere((element) => element.name == entry.key).exp;
+            _attributes
+                .firstWhere((element) => element.name == entry.key.name)
+                .exp;
         int newAttributeLevel = _attributes
-            .firstWhere((element) => element.name == entry.key)
+            .firstWhere((element) => element.name == entry.key.name)
             .level;
         while (newAttributeExp >= getAttributeMaxExp(newAttributeLevel)) {
           newAttributeExp -= getAttributeMaxExp(newAttributeLevel);
           newAttributeLevel++;
         }
         final newAttribute = _attributes
-            .firstWhere((element) => element.name == entry.key)
+            .firstWhere((element) => element.name == entry.key.name)
             .copyWith(
               level: newAttributeLevel,
               exp: newAttributeExp,
