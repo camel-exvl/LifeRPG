@@ -8,4 +8,6 @@ class StatusTable extends Table {
   IntColumn get level => integer()();
 
   IntColumn get exp => integer()();
+
+  IntColumn get gold => integer()();
 }

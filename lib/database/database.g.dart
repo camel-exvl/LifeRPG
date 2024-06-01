@@ -1154,8 +1154,13 @@ class $StatusTableTable extends StatusTable
   late final GeneratedColumn<int> exp = GeneratedColumn<int>(
       'exp', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _goldMeta = const VerificationMeta('gold');
   @override
-  List<GeneratedColumn> get $columns => [id, level, exp];
+  late final GeneratedColumn<int> gold = GeneratedColumn<int>(
+      'gold', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, level, exp, gold];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1181,6 +1186,12 @@ class $StatusTableTable extends StatusTable
     } else if (isInserting) {
       context.missing(_expMeta);
     }
+    if (data.containsKey('gold')) {
+      context.handle(
+          _goldMeta, gold.isAcceptableOrUnknown(data['gold']!, _goldMeta));
+    } else if (isInserting) {
+      context.missing(_goldMeta);
+    }
     return context;
   }
 
@@ -1196,6 +1207,8 @@ class $StatusTableTable extends StatusTable
           .read(DriftSqlType.int, data['${effectivePrefix}level'])!,
       exp: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}exp'])!,
+      gold: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}gold'])!,
     );
   }
 
@@ -1209,13 +1222,19 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
   final int id;
   final int level;
   final int exp;
-  const StatusModel({required this.id, required this.level, required this.exp});
+  final int gold;
+  const StatusModel(
+      {required this.id,
+      required this.level,
+      required this.exp,
+      required this.gold});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['level'] = Variable<int>(level);
     map['exp'] = Variable<int>(exp);
+    map['gold'] = Variable<int>(gold);
     return map;
   }
 
@@ -1224,6 +1243,7 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
       id: Value(id),
       level: Value(level),
       exp: Value(exp),
+      gold: Value(gold),
     );
   }
 
@@ -1234,6 +1254,7 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
       id: serializer.fromJson<int>(json['id']),
       level: serializer.fromJson<int>(json['level']),
       exp: serializer.fromJson<int>(json['exp']),
+      gold: serializer.fromJson<int>(json['gold']),
     );
   }
   @override
@@ -1243,68 +1264,80 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
       'id': serializer.toJson<int>(id),
       'level': serializer.toJson<int>(level),
       'exp': serializer.toJson<int>(exp),
+      'gold': serializer.toJson<int>(gold),
     };
   }
 
-  StatusModel copyWith({int? id, int? level, int? exp}) => StatusModel(
+  StatusModel copyWith({int? id, int? level, int? exp, int? gold}) =>
+      StatusModel(
         id: id ?? this.id,
         level: level ?? this.level,
         exp: exp ?? this.exp,
+        gold: gold ?? this.gold,
       );
   @override
   String toString() {
     return (StringBuffer('StatusModel(')
           ..write('id: $id, ')
           ..write('level: $level, ')
-          ..write('exp: $exp')
+          ..write('exp: $exp, ')
+          ..write('gold: $gold')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, level, exp);
+  int get hashCode => Object.hash(id, level, exp, gold);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is StatusModel &&
           other.id == this.id &&
           other.level == this.level &&
-          other.exp == this.exp);
+          other.exp == this.exp &&
+          other.gold == this.gold);
 }
 
 class StatusTableCompanion extends UpdateCompanion<StatusModel> {
   final Value<int> id;
   final Value<int> level;
   final Value<int> exp;
+  final Value<int> gold;
   const StatusTableCompanion({
     this.id = const Value.absent(),
     this.level = const Value.absent(),
     this.exp = const Value.absent(),
+    this.gold = const Value.absent(),
   });
   StatusTableCompanion.insert({
     this.id = const Value.absent(),
     required int level,
     required int exp,
+    required int gold,
   })  : level = Value(level),
-        exp = Value(exp);
+        exp = Value(exp),
+        gold = Value(gold);
   static Insertable<StatusModel> custom({
     Expression<int>? id,
     Expression<int>? level,
     Expression<int>? exp,
+    Expression<int>? gold,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (level != null) 'level': level,
       if (exp != null) 'exp': exp,
+      if (gold != null) 'gold': gold,
     });
   }
 
   StatusTableCompanion copyWith(
-      {Value<int>? id, Value<int>? level, Value<int>? exp}) {
+      {Value<int>? id, Value<int>? level, Value<int>? exp, Value<int>? gold}) {
     return StatusTableCompanion(
       id: id ?? this.id,
       level: level ?? this.level,
       exp: exp ?? this.exp,
+      gold: gold ?? this.gold,
     );
   }
 
@@ -1320,6 +1353,9 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
     if (exp.present) {
       map['exp'] = Variable<int>(exp.value);
     }
+    if (gold.present) {
+      map['gold'] = Variable<int>(gold.value);
+    }
     return map;
   }
 
@@ -1328,7 +1364,8 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
     return (StringBuffer('StatusTableCompanion(')
           ..write('id: $id, ')
           ..write('level: $level, ')
-          ..write('exp: $exp')
+          ..write('exp: $exp, ')
+          ..write('gold: $gold')
           ..write(')'))
         .toString();
   }
@@ -2170,12 +2207,14 @@ typedef $$StatusTableTableInsertCompanionBuilder = StatusTableCompanion
   Value<int> id,
   required int level,
   required int exp,
+  required int gold,
 });
 typedef $$StatusTableTableUpdateCompanionBuilder = StatusTableCompanion
     Function({
   Value<int> id,
   Value<int> level,
   Value<int> exp,
+  Value<int> gold,
 });
 
 class $$StatusTableTableTableManager extends RootTableManager<
@@ -2201,21 +2240,25 @@ class $$StatusTableTableTableManager extends RootTableManager<
             Value<int> id = const Value.absent(),
             Value<int> level = const Value.absent(),
             Value<int> exp = const Value.absent(),
+            Value<int> gold = const Value.absent(),
           }) =>
               StatusTableCompanion(
             id: id,
             level: level,
             exp: exp,
+            gold: gold,
           ),
           getInsertCompanionBuilder: ({
             Value<int> id = const Value.absent(),
             required int level,
             required int exp,
+            required int gold,
           }) =>
               StatusTableCompanion.insert(
             id: id,
             level: level,
             exp: exp,
+            gold: gold,
           ),
         ));
 }
@@ -2249,6 +2292,11 @@ class $$StatusTableTableFilterComposer
       column: $state.table.exp,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get gold => $state.composableBuilder(
+      column: $state.table.gold,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
 }
 
 class $$StatusTableTableOrderingComposer
@@ -2266,6 +2314,11 @@ class $$StatusTableTableOrderingComposer
 
   ColumnOrderings<int> get exp => $state.composableBuilder(
       column: $state.table.exp,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get gold => $state.composableBuilder(
+      column: $state.table.gold,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
