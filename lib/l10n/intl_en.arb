@@ -68,7 +68,7 @@
   "thursday": "Thursday",
   "friday": "Friday",
   "saturday": "Saturday",
-  "discardChanges": "Discard Changes",
+  "unsavedChanges": "Unsaved Changes",
   "discardChangesMessage": "Are you sure you want to discard changes?",
   "discard": "Discard",
   "deleteMessage": "Are you sure you want to delete?",
