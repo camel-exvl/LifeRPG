@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:liferpg/view/target/confirm_dialog.dart';
 
-import '../database/database.dart';
-import '../model/common_model.dart';
-import '../model/habit_model.dart';
-import '../viewmodel/habit_viewmodel.dart';
+import '../../../database/database.dart';
+import '../../../model/common_model.dart';
+import '../../../model/habit_model.dart';
+import '../../../viewmodel/habit_viewmodel.dart';
 
 class HabitEditView extends StatefulWidget {
   const HabitEditView(
@@ -27,6 +28,8 @@ class _HabitEditViewState extends State<HabitEditView> {
   final _globalKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
+
+  late HabitModel _initialHabit;
   late Difficulty _difficultyValue;
   late Category _categoryValue;
   late HabitType _habitTypeValue;
@@ -39,6 +42,21 @@ class _HabitEditViewState extends State<HabitEditView> {
     _difficultyValue = widget.habit?.difficulty ?? Difficulty.easy;
     _categoryValue = widget.habit?.category ?? Category.general;
     _habitTypeValue = widget.habit?.type ?? HabitType.good;
+    _initialHabit = _getCurrentHabit();
+  }
+
+  HabitModel _getCurrentHabit() {
+    return HabitModel(
+        id: widget.habit?.id ?? 0,
+        order: widget.habit?.order ?? 0,
+        title: _titleController.text,
+        description: _descriptionController.text,
+        difficulty: _difficultyValue,
+        category: _categoryValue,
+        type: _habitTypeValue,
+        finishedCount: widget.habit?.finishedCount ?? 0,
+        lastFinishedAt: widget.habit?.lastFinishedAt ?? DateTime(0),
+        createdAt: widget.habit?.createdAt ?? DateTime.now());
   }
 
   @override
@@ -48,12 +66,25 @@ class _HabitEditViewState extends State<HabitEditView> {
         title: Text(widget.isAdd
             ? AppLocalizations.of(context)!.addHabit
             : AppLocalizations.of(context)!.editHabit),
+        leading: BackButton(
+          onPressed: () {
+            if (!_initialHabit.isEqual(_getCurrentHabit())) {
+              DiscardChangeDialog(onDiscard: () {
+                Navigator.of(context).pop();
+              }).show(context);
+            } else {
+              Navigator.of(context).pop();
+            }
+          },
+        ),
         actions: <Widget>[
           if (!widget.isAdd)
             TextButton(
               onPressed: () {
-                widget.viewModel.removeHabit(widget.habit!);
-                Navigator.of(context).pop();
+                DeleteDialog(onDelete: () {
+                  widget.viewModel.removeHabit(widget.habit!);
+                  Navigator.of(context).pop();
+                }).show(context);
               },
               child: Text(AppLocalizations.of(context)!.delete),
             ),

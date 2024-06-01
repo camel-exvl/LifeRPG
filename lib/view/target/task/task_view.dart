@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
 import 'package:liferpg/viewmodel/task_viewmodel.dart';
 import 'package:provider/provider.dart';
 
-import '../database/database.dart';
+import '../../../database/database.dart';
+import '../../../model/task_model.dart';
 import 'task_edit_view.dart';
 
 class TaskView extends StatefulWidget {
@@ -44,7 +47,17 @@ class _TaskViewState extends State<TaskView>
                     return ListTile(
                       key: ValueKey(task.id),
                       title: Text(task.title),
-                      subtitle: Text(task.description),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (task.description.isNotEmpty)
+                            Text(task.description),
+                          if (task.deadline != null &&
+                              task.repeatType == RepeatType.none)
+                            Text(
+                                "${AppLocalizations.of(context)!.deadline}: ${DateFormat('yyyy-MM-dd HH:mm').format(task.deadline!)}")
+                        ],
+                      ),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => TaskEditView(

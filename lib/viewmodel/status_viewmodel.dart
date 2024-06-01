@@ -1,11 +1,12 @@
+import 'dart:collection';
+import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/database/database.dart';
-import 'package:drift/drift.dart';
-import 'dart:collection';
 
 class StatusViewModel extends ChangeNotifier {
   static StatusViewModel? _instance;
+
   factory StatusViewModel() {
     _instance ??= StatusViewModel._internal();
     return _instance!;
@@ -21,10 +22,10 @@ class StatusViewModel extends ChangeNotifier {
   List<AttributeModel> _attributes = [];
 
   StatusModel get status => _status;
-  UnmodifiableListView<AttributeModel> get attributes => UnmodifiableListView(_attributes);
+  UnmodifiableListView<AttributeModel> get attributes =>
+      UnmodifiableListView(_attributes);
 
   Future<void> loadStatus() async {
-
     // 创建临时变量
     var tempModel = await database.getStatus(1);
 
@@ -48,7 +49,7 @@ class StatusViewModel extends ChangeNotifier {
     _attributes = await database.getAllAttributes(statusId);
 
     // 如果没有属性数据，插入预设数据
-    if(_attributes.isEmpty) {
+    if (_attributes.isEmpty) {
       List<AttributeTableCompanion> defaultAttributes = [
         const AttributeTableCompanion(
           statusId: Value(1),
@@ -89,7 +90,7 @@ class StatusViewModel extends ChangeNotifier {
           statusId: Value(1),
           iconPath: Value("res/icons/attribute_intellect.png"),
           name: Value("Intellect"),
-          level: Value(2),
+          level: Value(1),
           exp: Value(0),
         ),
       ];
@@ -141,7 +142,7 @@ class StatusViewModel extends ChangeNotifier {
   }
 
   String getAttributeName(String key, BuildContext context) {
-    switch(key) {
+    switch (key) {
       case "Strength":
         return AppLocalizations.of(context)!.strength;
       case "Talent":
