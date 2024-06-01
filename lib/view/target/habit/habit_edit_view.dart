@@ -3,7 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/view/target/confirm_dialog.dart';
 
 import '../../../database/database.dart';
-import '../../../model/target/common_model.dart';
+import '../../../model/common_model.dart';
 import '../../../model/target/habit_model.dart';
 import '../../../viewmodel/habit_viewmodel.dart';
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:liferpg/view/target/finish_dialog.dart';
 import 'package:liferpg/viewmodel/habit_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -57,7 +58,12 @@ class _HabitViewState extends State<HabitView>
                         icon: habit.type == HabitType.good
                             ? const Icon(Icons.add)
                             : const Icon(Icons.remove),
-                        onPressed: () {},
+                        onPressed: () async {
+                          final response = await viewModel.finishHabit(habit);
+                          if (context.mounted) {
+                            FinishDialog().show(context, response);
+                          }
+                        },
                       ),
                     );
                   },

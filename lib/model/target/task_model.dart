@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart' hide Category;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:liferpg/model/target/common_model.dart';
+import 'package:liferpg/model/common_model.dart';
 
 import '../../database/database.dart';
 

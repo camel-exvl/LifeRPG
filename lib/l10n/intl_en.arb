@@ -12,7 +12,7 @@
   "attributes": "Attributes",
   "strength": "Strength",
   "talent": "Talent",
-  "intellect": "Intelligence",
+  "intelligence": "Intelligence",
   "environment": "Environment",
   "culture": "Culture",
   "charisma": "Charisma",
@@ -83,5 +83,8 @@
   "defaultTaskJoggingDescription": "Jogging for 30 minutes",
   "defaultTaskReadBookTitle": "Read a book",
   "defaultTaskFinishProjectTitle": "Finish project",
-  "defaultTaskFinishProjectDescription": "Finish project before deadline"
+  "defaultTaskFinishProjectDescription": "Finish project before deadline",
+  "congratulations": "Congratulations!",
+  "youCanDoBetter": "You can do better!",
+  "confirm": "Confirm"
 }

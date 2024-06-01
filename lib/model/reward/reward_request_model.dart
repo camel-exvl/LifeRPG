@@ -1,4 +1,6 @@
-import 'package:liferpg/model/target/common_model.dart';
+import 'package:liferpg/model/common_model.dart';
+
+import '../target/habit_model.dart';
 
 class RewardRequestModel {
   Difficulty difficulty;
@@ -6,6 +8,7 @@ class RewardRequestModel {
   int finishedCount;
   DateTime lastFinishedAt;
   double rewardCoefficient;
+  HabitType? habitType;
 
   RewardRequestModel({
     required this.difficulty,
@@ -13,5 +16,6 @@ class RewardRequestModel {
     required this.finishedCount,
     required this.lastFinishedAt,
     required this.rewardCoefficient,
+    required this.habitType,
   });
 }

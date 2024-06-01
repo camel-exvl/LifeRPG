@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
+import 'package:liferpg/view/target/finish_dialog.dart';
 import 'package:liferpg/viewmodel/task_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -67,7 +68,12 @@ class _TaskViewState extends State<TaskView>
                       },
                       trailing: IconButton(
                         icon: const Icon(Icons.add),
-                        onPressed: () {},
+                        onPressed: () async {
+                          final response = await viewModel.finishTask(task);
+                          if (context.mounted) {
+                            FinishDialog().show(context, response);
+                          }
+                        },
                       ),
                     );
                   },

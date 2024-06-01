@@ -12,7 +12,7 @@
   "attributes": "属性",
   "strength": "力量",
   "talent": "才能",
-  "intellect": "智力",
+  "intelligence": "智力",
   "environment": "环境",
   "culture": "文化",
   "charisma": "魅力",
@@ -83,5 +83,8 @@
   "defaultTaskJoggingDescription": "慢跑 30 分钟",
   "defaultTaskReadBookTitle": "读一本书",
   "defaultTaskFinishProjectTitle": "完成项目",
-  "defaultTaskFinishProjectDescription": "在截止时间之前完成项目"
+  "defaultTaskFinishProjectDescription": "在截止时间之前完成项目",
+  "congratulations": "恭喜!",
+  "youCanDoBetter": "你可以做得更好!",
+  "confirm": "确认"
 }
