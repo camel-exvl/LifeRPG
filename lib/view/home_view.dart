@@ -52,6 +52,7 @@ class _HomeViewState extends State<HomeView> {
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
+
       body: IndexedStack(
         // use IndexedStack can keep the state of the widgets
         index: _selectedIndex,

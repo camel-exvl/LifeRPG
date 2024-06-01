@@ -8,9 +8,7 @@ class $HabitTableTable extends HabitTable
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-
   $HabitTableTable(this.attachedDatabase, [this._alias]);
-
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -74,7 +72,6 @@ class $HabitTableTable extends HabitTable
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
-
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -88,14 +85,11 @@ class $HabitTableTable extends HabitTable
         lastFinishedAt,
         createdAt
       ];
-
   @override
   String get aliasedName => _alias ?? actualTableName;
-
   @override
   String get actualTableName => $name;
   static const String $name = 'habit_table';
-
   @override
   VerificationContext validateIntegrity(Insertable<HabitModel> instance,
       {bool isInserting = false}) {
@@ -154,7 +148,6 @@ class $HabitTableTable extends HabitTable
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
-
   @override
   HabitModel map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -208,7 +201,6 @@ class HabitModel extends DataClass implements Insertable<HabitModel> {
   final int finishedCount;
   final DateTime lastFinishedAt;
   final DateTime createdAt;
-
   const HabitModel(
       {required this.id,
       required this.order,
@@ -220,7 +212,6 @@ class HabitModel extends DataClass implements Insertable<HabitModel> {
       required this.finishedCount,
       required this.lastFinishedAt,
       required this.createdAt});
-
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -279,7 +270,6 @@ class HabitModel extends DataClass implements Insertable<HabitModel> {
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
-
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
@@ -323,7 +313,6 @@ class HabitModel extends DataClass implements Insertable<HabitModel> {
         lastFinishedAt: lastFinishedAt ?? this.lastFinishedAt,
         createdAt: createdAt ?? this.createdAt,
       );
-
   @override
   String toString() {
     return (StringBuffer('HabitModel(')
@@ -344,7 +333,6 @@ class HabitModel extends DataClass implements Insertable<HabitModel> {
   @override
   int get hashCode => Object.hash(id, order, title, description, difficulty,
       category, type, finishedCount, lastFinishedAt, createdAt);
-
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -372,7 +360,6 @@ class HabitTableCompanion extends UpdateCompanion<HabitModel> {
   final Value<int> finishedCount;
   final Value<DateTime> lastFinishedAt;
   final Value<DateTime> createdAt;
-
   const HabitTableCompanion({
     this.id = const Value.absent(),
     this.order = const Value.absent(),
@@ -385,7 +372,6 @@ class HabitTableCompanion extends UpdateCompanion<HabitModel> {
     this.lastFinishedAt = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
-
   HabitTableCompanion.insert({
     this.id = const Value.absent(),
     required int order,
@@ -406,7 +392,6 @@ class HabitTableCompanion extends UpdateCompanion<HabitModel> {
         finishedCount = Value(finishedCount),
         lastFinishedAt = Value(lastFinishedAt),
         createdAt = Value(createdAt);
-
   static Insertable<HabitModel> custom({
     Expression<int>? id,
     Expression<int>? order,
@@ -520,9 +505,7 @@ class $TaskTableTable extends TaskTable
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-
   $TaskTableTable(this.attachedDatabase, [this._alias]);
-
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -606,7 +589,6 @@ class $TaskTableTable extends TaskTable
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
-
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -623,14 +605,11 @@ class $TaskTableTable extends TaskTable
         lastFinishedAt,
         createdAt
       ];
-
   @override
   String get aliasedName => _alias ?? actualTableName;
-
   @override
   String get actualTableName => $name;
   static const String $name = 'task_table';
-
   @override
   VerificationContext validateIntegrity(Insertable<TaskModel> instance,
       {bool isInserting = false}) {
@@ -702,7 +681,6 @@ class $TaskTableTable extends TaskTable
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
-
   @override
   TaskModel map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -769,7 +747,6 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
   final int finishedCount;
   final DateTime lastFinishedAt;
   final DateTime createdAt;
-
   const TaskModel(
       {required this.id,
       required this.order,
@@ -784,7 +761,6 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
       required this.finishedCount,
       required this.lastFinishedAt,
       required this.createdAt});
-
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -860,7 +836,6 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
-
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
@@ -913,7 +888,6 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
         lastFinishedAt: lastFinishedAt ?? this.lastFinishedAt,
         createdAt: createdAt ?? this.createdAt,
       );
-
   @override
   String toString() {
     return (StringBuffer('TaskModel(')
@@ -949,7 +923,6 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
       finishedCount,
       lastFinishedAt,
       createdAt);
-
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -983,7 +956,6 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
   final Value<int> finishedCount;
   final Value<DateTime> lastFinishedAt;
   final Value<DateTime> createdAt;
-
   const TaskTableCompanion({
     this.id = const Value.absent(),
     this.order = const Value.absent(),
@@ -999,7 +971,6 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
     this.lastFinishedAt = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
-
   TaskTableCompanion.insert({
     this.id = const Value.absent(),
     required int order,
@@ -1025,7 +996,6 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
         finishedCount = Value(finishedCount),
         lastFinishedAt = Value(lastFinishedAt),
         createdAt = Value(createdAt);
-
   static Insertable<TaskModel> custom({
     Expression<int>? id,
     Expression<int>? order,
@@ -1164,9 +1134,7 @@ class $StatusTableTable extends StatusTable
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-
   $StatusTableTable(this.attachedDatabase, [this._alias]);
-
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -1186,17 +1154,18 @@ class $StatusTableTable extends StatusTable
   late final GeneratedColumn<int> exp = GeneratedColumn<int>(
       'exp', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-
+  static const VerificationMeta _goldMeta = const VerificationMeta('gold');
   @override
-  List<GeneratedColumn> get $columns => [id, level, exp];
-
+  late final GeneratedColumn<int> gold = GeneratedColumn<int>(
+      'gold', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, level, exp, gold];
   @override
   String get aliasedName => _alias ?? actualTableName;
-
   @override
   String get actualTableName => $name;
   static const String $name = 'status_table';
-
   @override
   VerificationContext validateIntegrity(Insertable<StatusModel> instance,
       {bool isInserting = false}) {
@@ -1217,12 +1186,17 @@ class $StatusTableTable extends StatusTable
     } else if (isInserting) {
       context.missing(_expMeta);
     }
+    if (data.containsKey('gold')) {
+      context.handle(
+          _goldMeta, gold.isAcceptableOrUnknown(data['gold']!, _goldMeta));
+    } else if (isInserting) {
+      context.missing(_goldMeta);
+    }
     return context;
   }
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
-
   @override
   StatusModel map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -1233,6 +1207,8 @@ class $StatusTableTable extends StatusTable
           .read(DriftSqlType.int, data['${effectivePrefix}level'])!,
       exp: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}exp'])!,
+      gold: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}gold'])!,
     );
   }
 
@@ -1246,15 +1222,19 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
   final int id;
   final int level;
   final int exp;
-
-  const StatusModel({required this.id, required this.level, required this.exp});
-
+  final int gold;
+  const StatusModel(
+      {required this.id,
+      required this.level,
+      required this.exp,
+      required this.gold});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['level'] = Variable<int>(level);
     map['exp'] = Variable<int>(exp);
+    map['gold'] = Variable<int>(gold);
     return map;
   }
 
@@ -1263,6 +1243,7 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
       id: Value(id),
       level: Value(level),
       exp: Value(exp),
+      gold: Value(gold),
     );
   }
 
@@ -1273,9 +1254,9 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
       id: serializer.fromJson<int>(json['id']),
       level: serializer.fromJson<int>(json['level']),
       exp: serializer.fromJson<int>(json['exp']),
+      gold: serializer.fromJson<int>(json['gold']),
     );
   }
-
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
@@ -1283,73 +1264,80 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
       'id': serializer.toJson<int>(id),
       'level': serializer.toJson<int>(level),
       'exp': serializer.toJson<int>(exp),
+      'gold': serializer.toJson<int>(gold),
     };
   }
 
-  StatusModel copyWith({int? id, int? level, int? exp}) => StatusModel(
+  StatusModel copyWith({int? id, int? level, int? exp, int? gold}) =>
+      StatusModel(
         id: id ?? this.id,
         level: level ?? this.level,
         exp: exp ?? this.exp,
+        gold: gold ?? this.gold,
       );
-
   @override
   String toString() {
     return (StringBuffer('StatusModel(')
           ..write('id: $id, ')
           ..write('level: $level, ')
-          ..write('exp: $exp')
+          ..write('exp: $exp, ')
+          ..write('gold: $gold')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, level, exp);
-
+  int get hashCode => Object.hash(id, level, exp, gold);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is StatusModel &&
           other.id == this.id &&
           other.level == this.level &&
-          other.exp == this.exp);
+          other.exp == this.exp &&
+          other.gold == this.gold);
 }
 
 class StatusTableCompanion extends UpdateCompanion<StatusModel> {
   final Value<int> id;
   final Value<int> level;
   final Value<int> exp;
-
+  final Value<int> gold;
   const StatusTableCompanion({
     this.id = const Value.absent(),
     this.level = const Value.absent(),
     this.exp = const Value.absent(),
+    this.gold = const Value.absent(),
   });
-
   StatusTableCompanion.insert({
     this.id = const Value.absent(),
     required int level,
     required int exp,
+    required int gold,
   })  : level = Value(level),
-        exp = Value(exp);
-
+        exp = Value(exp),
+        gold = Value(gold);
   static Insertable<StatusModel> custom({
     Expression<int>? id,
     Expression<int>? level,
     Expression<int>? exp,
+    Expression<int>? gold,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (level != null) 'level': level,
       if (exp != null) 'exp': exp,
+      if (gold != null) 'gold': gold,
     });
   }
 
   StatusTableCompanion copyWith(
-      {Value<int>? id, Value<int>? level, Value<int>? exp}) {
+      {Value<int>? id, Value<int>? level, Value<int>? exp, Value<int>? gold}) {
     return StatusTableCompanion(
       id: id ?? this.id,
       level: level ?? this.level,
       exp: exp ?? this.exp,
+      gold: gold ?? this.gold,
     );
   }
 
@@ -1365,6 +1353,9 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
     if (exp.present) {
       map['exp'] = Variable<int>(exp.value);
     }
+    if (gold.present) {
+      map['gold'] = Variable<int>(gold.value);
+    }
     return map;
   }
 
@@ -1373,7 +1364,8 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
     return (StringBuffer('StatusTableCompanion(')
           ..write('id: $id, ')
           ..write('level: $level, ')
-          ..write('exp: $exp')
+          ..write('exp: $exp, ')
+          ..write('gold: $gold')
           ..write(')'))
         .toString();
   }
@@ -1384,9 +1376,7 @@ class $AttributeTableTable extends AttributeTable
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-
   $AttributeTableTable(this.attachedDatabase, [this._alias]);
-
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -1425,18 +1415,14 @@ class $AttributeTableTable extends AttributeTable
       type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'REFERENCES StatusTable(id)');
-
   @override
   List<GeneratedColumn> get $columns =>
       [id, iconPath, name, level, exp, statusId];
-
   @override
   String get aliasedName => _alias ?? actualTableName;
-
   @override
   String get actualTableName => $name;
   static const String $name = 'attribute_table';
-
   @override
   VerificationContext validateIntegrity(Insertable<AttributeModel> instance,
       {bool isInserting = false}) {
@@ -1480,7 +1466,6 @@ class $AttributeTableTable extends AttributeTable
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
-
   @override
   AttributeModel map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -1513,7 +1498,6 @@ class AttributeModel extends DataClass implements Insertable<AttributeModel> {
   final int level;
   final int exp;
   final int statusId;
-
   const AttributeModel(
       {required this.id,
       required this.iconPath,
@@ -1521,7 +1505,6 @@ class AttributeModel extends DataClass implements Insertable<AttributeModel> {
       required this.level,
       required this.exp,
       required this.statusId});
-
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -1557,7 +1540,6 @@ class AttributeModel extends DataClass implements Insertable<AttributeModel> {
       statusId: serializer.fromJson<int>(json['statusId']),
     );
   }
-
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
@@ -1586,7 +1568,6 @@ class AttributeModel extends DataClass implements Insertable<AttributeModel> {
         exp: exp ?? this.exp,
         statusId: statusId ?? this.statusId,
       );
-
   @override
   String toString() {
     return (StringBuffer('AttributeModel(')
@@ -1602,7 +1583,6 @@ class AttributeModel extends DataClass implements Insertable<AttributeModel> {
 
   @override
   int get hashCode => Object.hash(id, iconPath, name, level, exp, statusId);
-
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1622,7 +1602,6 @@ class AttributeTableCompanion extends UpdateCompanion<AttributeModel> {
   final Value<int> level;
   final Value<int> exp;
   final Value<int> statusId;
-
   const AttributeTableCompanion({
     this.id = const Value.absent(),
     this.iconPath = const Value.absent(),
@@ -1631,7 +1610,6 @@ class AttributeTableCompanion extends UpdateCompanion<AttributeModel> {
     this.exp = const Value.absent(),
     this.statusId = const Value.absent(),
   });
-
   AttributeTableCompanion.insert({
     this.id = const Value.absent(),
     required String iconPath,
@@ -1644,7 +1622,6 @@ class AttributeTableCompanion extends UpdateCompanion<AttributeModel> {
         level = Value(level),
         exp = Value(exp),
         statusId = Value(statusId);
-
   static Insertable<AttributeModel> custom({
     Expression<int>? id,
     Expression<String>? iconPath,
@@ -1720,17 +1697,14 @@ class AttributeTableCompanion extends UpdateCompanion<AttributeModel> {
 
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
-
   _$AppDatabaseManager get managers => _$AppDatabaseManager(this);
   late final $HabitTableTable habitTable = $HabitTableTable(this);
   late final $TaskTableTable taskTable = $TaskTableTable(this);
   late final $StatusTableTable statusTable = $StatusTableTable(this);
   late final $AttributeTableTable attributeTable = $AttributeTableTable(this);
-
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
-
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
       [habitTable, taskTable, statusTable, attributeTable];
@@ -1846,7 +1820,6 @@ class $$HabitTableTableProcessedTableManager extends ProcessedTableManager<
 class $$HabitTableTableFilterComposer
     extends FilterComposer<_$AppDatabase, $HabitTableTable> {
   $$HabitTableTableFilterComposer(super.$state);
-
   ColumnFilters<int> get id => $state.composableBuilder(
       column: $state.table.id,
       builder: (column, joinBuilders) =>
@@ -1907,7 +1880,6 @@ class $$HabitTableTableFilterComposer
 class $$HabitTableTableOrderingComposer
     extends OrderingComposer<_$AppDatabase, $HabitTableTable> {
   $$HabitTableTableOrderingComposer(super.$state);
-
   ColumnOrderings<int> get id => $state.composableBuilder(
       column: $state.table.id,
       builder: (column, joinBuilders) =>
@@ -2087,7 +2059,6 @@ class $$TaskTableTableProcessedTableManager extends ProcessedTableManager<
 class $$TaskTableTableFilterComposer
     extends FilterComposer<_$AppDatabase, $TaskTableTable> {
   $$TaskTableTableFilterComposer(super.$state);
-
   ColumnFilters<int> get id => $state.composableBuilder(
       column: $state.table.id,
       builder: (column, joinBuilders) =>
@@ -2165,7 +2136,6 @@ class $$TaskTableTableFilterComposer
 class $$TaskTableTableOrderingComposer
     extends OrderingComposer<_$AppDatabase, $TaskTableTable> {
   $$TaskTableTableOrderingComposer(super.$state);
-
   ColumnOrderings<int> get id => $state.composableBuilder(
       column: $state.table.id,
       builder: (column, joinBuilders) =>
@@ -2237,12 +2207,14 @@ typedef $$StatusTableTableInsertCompanionBuilder = StatusTableCompanion
   Value<int> id,
   required int level,
   required int exp,
+  required int gold,
 });
 typedef $$StatusTableTableUpdateCompanionBuilder = StatusTableCompanion
     Function({
   Value<int> id,
   Value<int> level,
   Value<int> exp,
+  Value<int> gold,
 });
 
 class $$StatusTableTableTableManager extends RootTableManager<
@@ -2268,21 +2240,25 @@ class $$StatusTableTableTableManager extends RootTableManager<
             Value<int> id = const Value.absent(),
             Value<int> level = const Value.absent(),
             Value<int> exp = const Value.absent(),
+            Value<int> gold = const Value.absent(),
           }) =>
               StatusTableCompanion(
             id: id,
             level: level,
             exp: exp,
+            gold: gold,
           ),
           getInsertCompanionBuilder: ({
             Value<int> id = const Value.absent(),
             required int level,
             required int exp,
+            required int gold,
           }) =>
               StatusTableCompanion.insert(
             id: id,
             level: level,
             exp: exp,
+            gold: gold,
           ),
         ));
 }
@@ -2302,7 +2278,6 @@ class $$StatusTableTableProcessedTableManager extends ProcessedTableManager<
 class $$StatusTableTableFilterComposer
     extends FilterComposer<_$AppDatabase, $StatusTableTable> {
   $$StatusTableTableFilterComposer(super.$state);
-
   ColumnFilters<int> get id => $state.composableBuilder(
       column: $state.table.id,
       builder: (column, joinBuilders) =>
@@ -2317,12 +2292,16 @@ class $$StatusTableTableFilterComposer
       column: $state.table.exp,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get gold => $state.composableBuilder(
+      column: $state.table.gold,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
 }
 
 class $$StatusTableTableOrderingComposer
     extends OrderingComposer<_$AppDatabase, $StatusTableTable> {
   $$StatusTableTableOrderingComposer(super.$state);
-
   ColumnOrderings<int> get id => $state.composableBuilder(
       column: $state.table.id,
       builder: (column, joinBuilders) =>
@@ -2335,6 +2314,11 @@ class $$StatusTableTableOrderingComposer
 
   ColumnOrderings<int> get exp => $state.composableBuilder(
       column: $state.table.exp,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get gold => $state.composableBuilder(
+      column: $state.table.gold,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
@@ -2428,7 +2412,6 @@ class $$AttributeTableTableProcessedTableManager extends ProcessedTableManager<
 class $$AttributeTableTableFilterComposer
     extends FilterComposer<_$AppDatabase, $AttributeTableTable> {
   $$AttributeTableTableFilterComposer(super.$state);
-
   ColumnFilters<int> get id => $state.composableBuilder(
       column: $state.table.id,
       builder: (column, joinBuilders) =>
@@ -2463,7 +2446,6 @@ class $$AttributeTableTableFilterComposer
 class $$AttributeTableTableOrderingComposer
     extends OrderingComposer<_$AppDatabase, $AttributeTableTable> {
   $$AttributeTableTableOrderingComposer(super.$state);
-
   ColumnOrderings<int> get id => $state.composableBuilder(
       column: $state.table.id,
       builder: (column, joinBuilders) =>
@@ -2497,18 +2479,13 @@ class $$AttributeTableTableOrderingComposer
 
 class _$AppDatabaseManager {
   final _$AppDatabase _db;
-
   _$AppDatabaseManager(this._db);
-
   $$HabitTableTableTableManager get habitTable =>
       $$HabitTableTableTableManager(_db, _db.habitTable);
-
   $$TaskTableTableTableManager get taskTable =>
       $$TaskTableTableTableManager(_db, _db.taskTable);
-
   $$StatusTableTableTableManager get statusTable =>
       $$StatusTableTableTableManager(_db, _db.statusTable);
-
   $$AttributeTableTableTableManager get attributeTable =>
       $$AttributeTableTableTableManager(_db, _db.attributeTable);
 }

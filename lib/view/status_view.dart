@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import '../viewmodel/status_viewmodel.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/database/database.dart';
 import 'package:provider/provider.dart';
-
-import '../viewmodel/status_viewmodel.dart';
 
 class StatusView extends StatefulWidget {
   const StatusView({super.key});
