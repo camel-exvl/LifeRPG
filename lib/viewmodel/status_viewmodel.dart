@@ -25,81 +25,70 @@ class StatusViewModel extends ChangeNotifier {
   UnmodifiableListView<AttributeModel> get attributes =>
       UnmodifiableListView(_attributes);
 
-  Future<void> loadStatus() async {
-    // 创建临时变量
-    var tempModel = await database.getStatus(1);
+  Future<void> initOnFirstRun() async {
+    await database.insertStatus(StatusTableCompanion(
+      id: Value(statusId),
+      level: const Value(1),
+      exp: const Value(0),
+    ));
 
-    // 检查临时变量是否为空
-    if (tempModel == null) {
-      // 如果 tempModel 为空，向数据库中插入预设数据
-      await database.insertStatus(StatusTableCompanion(
-        id: Value(statusId),
-        level: const Value(1),
-        exp: const Value(0),
-      ));
-      // 再次从数据库获取数据
-      tempModel = await database.getStatus(1);
+    List<AttributeTableCompanion> defaultAttributes = [
+      const AttributeTableCompanion(
+        statusId: Value(1),
+        iconPath: Value("res/icons/attribute_strength.png"),
+        name: Value("Strength"),
+        level: Value(1),
+        exp: Value(0),
+      ),
+      const AttributeTableCompanion(
+        statusId: Value(1),
+        iconPath: Value("res/icons/attribute_talent.png"),
+        name: Value("Talent"),
+        level: Value(1),
+        exp: Value(0),
+      ),
+      const AttributeTableCompanion(
+        statusId: Value(1),
+        iconPath: Value("res/icons/attribute_culture.png"),
+        name: Value("Culture"),
+        level: Value(1),
+        exp: Value(0),
+      ),
+      const AttributeTableCompanion(
+        statusId: Value(1),
+        iconPath: Value("res/icons/attribute_charisma.png"),
+        name: Value("Charisma"),
+        level: Value(1),
+        exp: Value(0),
+      ),
+      const AttributeTableCompanion(
+        statusId: Value(1),
+        iconPath: Value("res/icons/attribute_environment.png"),
+        name: Value("Environment"),
+        level: Value(1),
+        exp: Value(0),
+      ),
+      const AttributeTableCompanion(
+        statusId: Value(1),
+        iconPath: Value("res/icons/attribute_intellect.png"),
+        name: Value("Intellect"),
+        level: Value(1),
+        exp: Value(0),
+      ),
+    ];
+
+    for (var attribute in defaultAttributes) {
+      await database.insertAttribute(attribute);
     }
+  }
 
-    _status = tempModel!;
+  Future<void> loadStatus() async {
+    _status = await database.getStatus(1);
     notifyListeners();
   }
 
   Future<void> loadAttributes() async {
     _attributes = await database.getAllAttributes(statusId);
-
-    // 如果没有属性数据，插入预设数据
-    if (_attributes.isEmpty) {
-      List<AttributeTableCompanion> defaultAttributes = [
-        const AttributeTableCompanion(
-          statusId: Value(1),
-          iconPath: Value("res/icons/attribute_strength.png"),
-          name: Value("Strength"),
-          level: Value(1),
-          exp: Value(0),
-        ),
-        const AttributeTableCompanion(
-          statusId: Value(1),
-          iconPath: Value("res/icons/attribute_talent.png"),
-          name: Value("Talent"),
-          level: Value(1),
-          exp: Value(0),
-        ),
-        const AttributeTableCompanion(
-          statusId: Value(1),
-          iconPath: Value("res/icons/attribute_culture.png"),
-          name: Value("Culture"),
-          level: Value(1),
-          exp: Value(0),
-        ),
-        const AttributeTableCompanion(
-          statusId: Value(1),
-          iconPath: Value("res/icons/attribute_charisma.png"),
-          name: Value("Charisma"),
-          level: Value(1),
-          exp: Value(0),
-        ),
-        const AttributeTableCompanion(
-          statusId: Value(1),
-          iconPath: Value("res/icons/attribute_environment.png"),
-          name: Value("Environment"),
-          level: Value(1),
-          exp: Value(0),
-        ),
-        const AttributeTableCompanion(
-          statusId: Value(1),
-          iconPath: Value("res/icons/attribute_intellect.png"),
-          name: Value("Intellect"),
-          level: Value(1),
-          exp: Value(0),
-        ),
-      ];
-
-      for (var attribute in defaultAttributes) {
-        await database.insertAttribute(attribute);
-      }
-      _attributes = await database.getAllAttributes(statusId);
-    }
     notifyListeners();
   }
 

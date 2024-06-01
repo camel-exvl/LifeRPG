@@ -76,9 +76,9 @@ class AppDatabase extends _$AppDatabase {
   }
 
   // Status
-  Future<StatusModel?> getStatus(int statusId) async {
+  Future<StatusModel> getStatus(int statusId) async {
     return (select(statusTable)..where((t) => t.id.equals(statusId)))
-        .getSingleOrNull();
+        .getSingle();
   }
 
   Future<void> insertStatus(StatusTableCompanion status) =>
