@@ -12,11 +12,14 @@ class StatusViewModel extends ChangeNotifier {
 
   StatusViewModel._internal();
 
-  final int statusId = 1;
   final int lifeLevelMaxExp = 500;
   final int attributeMaxExp = 100;
   final database = AppDatabase();
-  late StatusModel _status;
+  StatusModel _status = const StatusModel(
+    id: 1,
+    level: 1,
+    exp: 0,
+  );
   List<AttributeModel> _attributes = [];
 
   StatusModel get status => _status;
@@ -25,67 +28,62 @@ class StatusViewModel extends ChangeNotifier {
       UnmodifiableListView(_attributes);
 
   Future<void> initOnFirstRun() async {
-    _status = StatusModel(
-      id: statusId,
-      level: 1,
-      exp: 0,
-    );
-    notifyListeners();
+    await insertStatus(_status);
 
-    await database.insertStatus(StatusTableCompanion(
-      id: Value(statusId),
-      level: const Value(1),
-      exp: const Value(0),
-    ));
-
-
-    List<AttributeTableCompanion> defaultAttributes = [
-      const AttributeTableCompanion(
-        statusId: Value(1),
-        iconPath: Value("res/icons/attribute_strength.png"),
-        name: Value("Strength"),
-        level: Value(1),
-        exp: Value(0),
+    _attributes = [
+      AttributeModel(
+        id: 1,
+        statusId: _status.id,
+        iconPath: "res/icons/attribute_strength.png",
+        name: "Strength",
+        level: 1,
+        exp: 0,
       ),
-      const AttributeTableCompanion(
-        statusId: Value(1),
-        iconPath: Value("res/icons/attribute_talent.png"),
-        name: Value("Talent"),
-        level: Value(1),
-        exp: Value(0),
+      AttributeModel(
+        id: 2,
+        statusId: _status.id,
+        iconPath: "res/icons/attribute_talent.png",
+        name: "Talent",
+        level: 1,
+        exp: 0,
       ),
-      const AttributeTableCompanion(
-        statusId: Value(1),
-        iconPath: Value("res/icons/attribute_culture.png"),
-        name: Value("Culture"),
-        level: Value(1),
-        exp: Value(0),
+      AttributeModel(
+        id: 3,
+        statusId: _status.id,
+        iconPath: "res/icons/attribute_culture.png",
+        name: "Culture",
+        level: 1,
+        exp: 0,
       ),
-      const AttributeTableCompanion(
-        statusId: Value(1),
-        iconPath: Value("res/icons/attribute_charisma.png"),
-        name: Value("Charisma"),
-        level: Value(1),
-        exp: Value(0),
+      AttributeModel(
+        id: 4,
+        statusId: _status.id,
+        iconPath: "res/icons/attribute_charisma.png",
+        name: "Charisma",
+        level: 1,
+        exp: 0,
       ),
-      const AttributeTableCompanion(
-        statusId: Value(1),
-        iconPath: Value("res/icons/attribute_environment.png"),
-        name: Value("Environment"),
-        level: Value(1),
-        exp: Value(0),
+      AttributeModel(
+        id: 5,
+        statusId: _status.id,
+        iconPath: "res/icons/attribute_environment.png",
+        name: "Environment",
+        level: 1,
+        exp: 0,
       ),
-      const AttributeTableCompanion(
-        statusId: Value(1),
-        iconPath: Value("res/icons/attribute_intellect.png"),
-        name: Value("Intellect"),
-        level: Value(1),
-        exp: Value(0),
+      AttributeModel(
+        id: 6,
+        statusId: _status.id,
+        iconPath: "res/icons/attribute_intellect.png",
+        name: "Intellect",
+        level: 1,
+        exp: 0,
       ),
     ];
+    notifyListeners();
 
-    for (var attribute in defaultAttributes) {
-      await database.insertAttribute(attribute);
+    for (var attribute in _attributes) {
+      await insertAttribute(attribute);
     }
   }
 
@@ -95,7 +93,7 @@ class StatusViewModel extends ChangeNotifier {
   }
 
   Future<void> loadAttributes() async {
-    _attributes = await database.getAllAttributes(statusId);
+    _attributes = await database.getAllAttributes(_status.id);
     notifyListeners();
   }
 
@@ -104,7 +102,6 @@ class StatusViewModel extends ChangeNotifier {
       level: Value(status.level),
       exp: Value(status.exp),
     ));
-    notifyListeners();
   }
 
   Future<void> updateStatus(StatusModel status) async {
@@ -115,6 +112,29 @@ class StatusViewModel extends ChangeNotifier {
 
   Future<void> removeStatus(StatusModel status) async {
     database.deleteStatus(status);
+  }
+
+  Future<void> insertAttribute(AttributeModel attribute) async {
+    database.insertAttribute(AttributeTableCompanion(
+      statusId: Value(attribute.statusId),
+      iconPath: Value(attribute.iconPath),
+      name: Value(attribute.name),
+      level: Value(attribute.level),
+      exp: Value(attribute.exp),
+    ));
+  }
+
+  Future<void> updateAttribute(AttributeModel attribute) async {
+    _attributes[_attributes
+        .indexWhere((element) => element.id == attribute.id)] = attribute;
+    notifyListeners();
+    database.updateAttribute(attribute);
+  }
+
+  Future<void> removeAttribute(AttributeModel attribute) async {
+    _attributes.remove(attribute);
+    notifyListeners();
+    database.deleteAttribute(attribute);
   }
 
   double getExpPercent() {

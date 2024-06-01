@@ -36,9 +36,9 @@ class _HomeViewState extends State<HomeView> {
       final habitViewModel = HabitViewModel();
       final taskViewModel = TaskViewModel();
 
-      await statusViewModel.initOnFirstRun();
       if (context.mounted) await habitViewModel.initOnFirstRun(context);
       if (context.mounted) await taskViewModel.initOnFirstRun(context);
+      await statusViewModel.initOnFirstRun();
     }
   }
 

@@ -66,7 +66,7 @@ class HabitViewModel extends ChangeNotifier {
     ];
 
     for (var habit in habits) {
-      insertHabit(habit);
+      await insertHabit(habit);
     }
   }
 

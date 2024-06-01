@@ -75,7 +75,7 @@ class TaskViewModel extends ChangeNotifier {
     ];
 
     for (var task in tasks) {
-      insertTask(task);
+      await insertTask(task);
     }
   }
 
