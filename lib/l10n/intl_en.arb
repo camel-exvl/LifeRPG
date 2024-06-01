@@ -71,5 +71,7 @@
   "discardChanges": "Discard Changes",
   "discardChangesMessage": "Are you sure you want to discard changes?",
   "discard": "Discard",
-  "deleteMessage": "Are you sure you want to delete?"
+  "deleteMessage": "Are you sure you want to delete?",
+  "deadline": "Deadline",
+  "noDeadline": "No Deadline"
 }

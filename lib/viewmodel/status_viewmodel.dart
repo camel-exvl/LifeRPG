@@ -7,6 +7,7 @@ import 'package:liferpg/database/database.dart';
 
 class StatusViewModel extends ChangeNotifier {
   static StatusViewModel? _instance;
+
   factory StatusViewModel() {
     _instance ??= StatusViewModel._internal();
     return _instance!;
@@ -22,10 +23,11 @@ class StatusViewModel extends ChangeNotifier {
   List<AttributeModel> _attributes = [];
 
   StatusModel get status => _status;
-  UnmodifiableListView<AttributeModel> get attributes => UnmodifiableListView(_attributes);
+
+  UnmodifiableListView<AttributeModel> get attributes =>
+      UnmodifiableListView(_attributes);
 
   Future<void> loadStatus() async {
-
     // 创建临时变量
     var tempModel = await database.getStatus(1);
 
@@ -49,7 +51,7 @@ class StatusViewModel extends ChangeNotifier {
     _attributes = await database.getAllAttributes(statusId);
 
     // 如果没有属性数据，插入预设数据
-    if(_attributes.isEmpty) {
+    if (_attributes.isEmpty) {
       List<AttributeTableCompanion> defaultAttributes = [
         const AttributeTableCompanion(
           statusId: Value(1),
@@ -142,7 +144,7 @@ class StatusViewModel extends ChangeNotifier {
   }
 
   String getAttributeName(String key, BuildContext context) {
-    switch(key) {
+    switch (key) {
       case "Strength":
         return AppLocalizations.of(context)!.strength;
       case "Talent":

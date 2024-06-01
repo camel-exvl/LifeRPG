@@ -8,7 +8,9 @@ class $HabitTableTable extends HabitTable
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
+
   $HabitTableTable(this.attachedDatabase, [this._alias]);
+
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -72,6 +74,7 @@ class $HabitTableTable extends HabitTable
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
+
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -85,11 +88,14 @@ class $HabitTableTable extends HabitTable
         lastFinishedAt,
         createdAt
       ];
+
   @override
   String get aliasedName => _alias ?? actualTableName;
+
   @override
   String get actualTableName => $name;
   static const String $name = 'habit_table';
+
   @override
   VerificationContext validateIntegrity(Insertable<HabitModel> instance,
       {bool isInserting = false}) {
@@ -148,6 +154,7 @@ class $HabitTableTable extends HabitTable
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
+
   @override
   HabitModel map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -201,6 +208,7 @@ class HabitModel extends DataClass implements Insertable<HabitModel> {
   final int finishedCount;
   final DateTime lastFinishedAt;
   final DateTime createdAt;
+
   const HabitModel(
       {required this.id,
       required this.order,
@@ -212,6 +220,7 @@ class HabitModel extends DataClass implements Insertable<HabitModel> {
       required this.finishedCount,
       required this.lastFinishedAt,
       required this.createdAt});
+
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -270,6 +279,7 @@ class HabitModel extends DataClass implements Insertable<HabitModel> {
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
+
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
@@ -313,6 +323,7 @@ class HabitModel extends DataClass implements Insertable<HabitModel> {
         lastFinishedAt: lastFinishedAt ?? this.lastFinishedAt,
         createdAt: createdAt ?? this.createdAt,
       );
+
   @override
   String toString() {
     return (StringBuffer('HabitModel(')
@@ -333,6 +344,7 @@ class HabitModel extends DataClass implements Insertable<HabitModel> {
   @override
   int get hashCode => Object.hash(id, order, title, description, difficulty,
       category, type, finishedCount, lastFinishedAt, createdAt);
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -360,6 +372,7 @@ class HabitTableCompanion extends UpdateCompanion<HabitModel> {
   final Value<int> finishedCount;
   final Value<DateTime> lastFinishedAt;
   final Value<DateTime> createdAt;
+
   const HabitTableCompanion({
     this.id = const Value.absent(),
     this.order = const Value.absent(),
@@ -372,6 +385,7 @@ class HabitTableCompanion extends UpdateCompanion<HabitModel> {
     this.lastFinishedAt = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
+
   HabitTableCompanion.insert({
     this.id = const Value.absent(),
     required int order,
@@ -392,6 +406,7 @@ class HabitTableCompanion extends UpdateCompanion<HabitModel> {
         finishedCount = Value(finishedCount),
         lastFinishedAt = Value(lastFinishedAt),
         createdAt = Value(createdAt);
+
   static Insertable<HabitModel> custom({
     Expression<int>? id,
     Expression<int>? order,
@@ -505,7 +520,9 @@ class $TaskTableTable extends TaskTable
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
+
   $TaskTableTable(this.attachedDatabase, [this._alias]);
+
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -545,26 +562,32 @@ class $TaskTableTable extends TaskTable
       GeneratedColumn<int>('category', aliasedName, false,
               type: DriftSqlType.int, requiredDuringInsert: true)
           .withConverter<Category>($TaskTableTable.$convertercategory);
-  static const VerificationMeta _scheduleTypeMeta =
-      const VerificationMeta('scheduleType');
+  static const VerificationMeta _repeatTypeMeta =
+      const VerificationMeta('repeatType');
   @override
   late final GeneratedColumnWithTypeConverter<RepeatType, int> repeatType =
-      GeneratedColumn<int>('schedule_type', aliasedName, false,
+      GeneratedColumn<int>('repeat_type', aliasedName, false,
               type: DriftSqlType.int, requiredDuringInsert: true)
-          .withConverter<RepeatType>($TaskTableTable.$converterscheduleType);
-  static const VerificationMeta _scheduleValueMeta =
-      const VerificationMeta('scheduleValue');
+          .withConverter<RepeatType>($TaskTableTable.$converterrepeatType);
+  static const VerificationMeta _repeatValueMeta =
+      const VerificationMeta('repeatValue');
   @override
   late final GeneratedColumn<int> repeatValue = GeneratedColumn<int>(
-      'schedule_value', aliasedName, false,
+      'repeat_value', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _scheduleDaysMeta =
-      const VerificationMeta('scheduleDays');
+  static const VerificationMeta _repeatDaysMeta =
+      const VerificationMeta('repeatDays');
   @override
   late final GeneratedColumnWithTypeConverter<List<int>, String> repeatDays =
-      GeneratedColumn<String>('schedule_days', aliasedName, false,
+      GeneratedColumn<String>('repeat_days', aliasedName, false,
               type: DriftSqlType.string, requiredDuringInsert: true)
-          .withConverter<List<int>>($TaskTableTable.$converterscheduleDays);
+          .withConverter<List<int>>($TaskTableTable.$converterrepeatDays);
+  static const VerificationMeta _deadlineMeta =
+      const VerificationMeta('deadline');
+  @override
+  late final GeneratedColumn<DateTime> deadline = GeneratedColumn<DateTime>(
+      'deadline', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
   static const VerificationMeta _finishedCountMeta =
       const VerificationMeta('finishedCount');
   @override
@@ -583,6 +606,7 @@ class $TaskTableTable extends TaskTable
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
+
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -594,15 +618,19 @@ class $TaskTableTable extends TaskTable
         repeatType,
         repeatValue,
         repeatDays,
+        deadline,
         finishedCount,
         lastFinishedAt,
         createdAt
       ];
+
   @override
   String get aliasedName => _alias ?? actualTableName;
+
   @override
   String get actualTableName => $name;
   static const String $name = 'task_table';
+
   @override
   VerificationContext validateIntegrity(Insertable<TaskModel> instance,
       {bool isInserting = false}) {
@@ -633,16 +661,20 @@ class $TaskTableTable extends TaskTable
     }
     context.handle(_difficultyMeta, const VerificationResult.success());
     context.handle(_categoryMeta, const VerificationResult.success());
-    context.handle(_scheduleTypeMeta, const VerificationResult.success());
-    if (data.containsKey('schedule_value')) {
+    context.handle(_repeatTypeMeta, const VerificationResult.success());
+    if (data.containsKey('repeat_value')) {
       context.handle(
-          _scheduleValueMeta,
+          _repeatValueMeta,
           repeatValue.isAcceptableOrUnknown(
-              data['schedule_value']!, _scheduleValueMeta));
+              data['repeat_value']!, _repeatValueMeta));
     } else if (isInserting) {
-      context.missing(_scheduleValueMeta);
+      context.missing(_repeatValueMeta);
     }
-    context.handle(_scheduleDaysMeta, const VerificationResult.success());
+    context.handle(_repeatDaysMeta, const VerificationResult.success());
+    if (data.containsKey('deadline')) {
+      context.handle(_deadlineMeta,
+          deadline.isAcceptableOrUnknown(data['deadline']!, _deadlineMeta));
+    }
     if (data.containsKey('finished_count')) {
       context.handle(
           _finishedCountMeta,
@@ -670,6 +702,7 @@ class $TaskTableTable extends TaskTable
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
+
   @override
   TaskModel map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -688,14 +721,16 @@ class $TaskTableTable extends TaskTable
       category: $TaskTableTable.$convertercategory.fromSql(attachedDatabase
           .typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}category'])!),
-      scheduleType: $TaskTableTable.$converterscheduleType.fromSql(
-          attachedDatabase.typeMapping.read(
-              DriftSqlType.int, data['${effectivePrefix}schedule_type'])!),
-      scheduleValue: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}schedule_value'])!,
-      scheduleDays: $TaskTableTable.$converterscheduleDays.fromSql(
-          attachedDatabase.typeMapping.read(
-              DriftSqlType.string, data['${effectivePrefix}schedule_days'])!),
+      repeatType: $TaskTableTable.$converterrepeatType.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}repeat_type'])!),
+      repeatValue: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}repeat_value'])!,
+      repeatDays: $TaskTableTable.$converterrepeatDays.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}repeat_days'])!),
+      deadline: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}deadline']),
       finishedCount: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}finished_count'])!,
       lastFinishedAt: attachedDatabase.typeMapping.read(
@@ -714,9 +749,9 @@ class $TaskTableTable extends TaskTable
       const EnumIndexConverter<Difficulty>(Difficulty.values);
   static JsonTypeConverter2<Category, int, int> $convertercategory =
       const EnumIndexConverter<Category>(Category.values);
-  static JsonTypeConverter2<RepeatType, int, int> $converterscheduleType =
+  static JsonTypeConverter2<RepeatType, int, int> $converterrepeatType =
       const EnumIndexConverter<RepeatType>(RepeatType.values);
-  static TypeConverter<List<int>, String> $converterscheduleDays =
+  static TypeConverter<List<int>, String> $converterrepeatDays =
       repeatDaysConverter;
 }
 
@@ -727,12 +762,14 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
   final String description;
   final Difficulty difficulty;
   final Category category;
-  final RepeatType scheduleType;
-  final int scheduleValue;
-  final List<int> scheduleDays;
+  final RepeatType repeatType;
+  final int repeatValue;
+  final List<int> repeatDays;
+  final DateTime? deadline;
   final int finishedCount;
   final DateTime lastFinishedAt;
   final DateTime createdAt;
+
   const TaskModel(
       {required this.id,
       required this.order,
@@ -740,12 +777,14 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
       required this.description,
       required this.difficulty,
       required this.category,
-      required this.scheduleType,
-      required this.scheduleValue,
-      required this.scheduleDays,
+      required this.repeatType,
+      required this.repeatValue,
+      required this.repeatDays,
+      this.deadline,
       required this.finishedCount,
       required this.lastFinishedAt,
       required this.createdAt});
+
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -762,13 +801,16 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
           Variable<int>($TaskTableTable.$convertercategory.toSql(category));
     }
     {
-      map['schedule_type'] = Variable<int>(
-          $TaskTableTable.$converterscheduleType.toSql(scheduleType));
+      map['repeat_type'] =
+          Variable<int>($TaskTableTable.$converterrepeatType.toSql(repeatType));
     }
-    map['schedule_value'] = Variable<int>(scheduleValue);
+    map['repeat_value'] = Variable<int>(repeatValue);
     {
-      map['schedule_days'] = Variable<String>(
-          $TaskTableTable.$converterscheduleDays.toSql(scheduleDays));
+      map['repeat_days'] = Variable<String>(
+          $TaskTableTable.$converterrepeatDays.toSql(repeatDays));
+    }
+    if (!nullToAbsent || deadline != null) {
+      map['deadline'] = Variable<DateTime>(deadline);
     }
     map['finished_count'] = Variable<int>(finishedCount);
     map['last_finished_at'] = Variable<DateTime>(lastFinishedAt);
@@ -784,9 +826,12 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
       description: Value(description),
       difficulty: Value(difficulty),
       category: Value(category),
-      scheduleType: Value(scheduleType),
-      scheduleValue: Value(scheduleValue),
-      scheduleDays: Value(scheduleDays),
+      repeatType: Value(repeatType),
+      repeatValue: Value(repeatValue),
+      repeatDays: Value(repeatDays),
+      deadline: deadline == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deadline),
       finishedCount: Value(finishedCount),
       lastFinishedAt: Value(lastFinishedAt),
       createdAt: Value(createdAt),
@@ -805,15 +850,17 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
           .fromJson(serializer.fromJson<int>(json['difficulty'])),
       category: $TaskTableTable.$convertercategory
           .fromJson(serializer.fromJson<int>(json['category'])),
-      scheduleType: $TaskTableTable.$converterscheduleType
-          .fromJson(serializer.fromJson<int>(json['scheduleType'])),
-      scheduleValue: serializer.fromJson<int>(json['scheduleValue']),
-      scheduleDays: serializer.fromJson<List<int>>(json['scheduleDays']),
+      repeatType: $TaskTableTable.$converterrepeatType
+          .fromJson(serializer.fromJson<int>(json['repeatType'])),
+      repeatValue: serializer.fromJson<int>(json['repeatValue']),
+      repeatDays: serializer.fromJson<List<int>>(json['repeatDays']),
+      deadline: serializer.fromJson<DateTime?>(json['deadline']),
       finishedCount: serializer.fromJson<int>(json['finishedCount']),
       lastFinishedAt: serializer.fromJson<DateTime>(json['lastFinishedAt']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
+
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
@@ -826,10 +873,11 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
           .toJson<int>($TaskTableTable.$converterdifficulty.toJson(difficulty)),
       'category': serializer
           .toJson<int>($TaskTableTable.$convertercategory.toJson(category)),
-      'scheduleType': serializer.toJson<int>(
-          $TaskTableTable.$converterscheduleType.toJson(scheduleType)),
-      'scheduleValue': serializer.toJson<int>(scheduleValue),
-      'scheduleDays': serializer.toJson<List<int>>(scheduleDays),
+      'repeatType': serializer
+          .toJson<int>($TaskTableTable.$converterrepeatType.toJson(repeatType)),
+      'repeatValue': serializer.toJson<int>(repeatValue),
+      'repeatDays': serializer.toJson<List<int>>(repeatDays),
+      'deadline': serializer.toJson<DateTime?>(deadline),
       'finishedCount': serializer.toJson<int>(finishedCount),
       'lastFinishedAt': serializer.toJson<DateTime>(lastFinishedAt),
       'createdAt': serializer.toJson<DateTime>(createdAt),
@@ -843,9 +891,10 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
           String? description,
           Difficulty? difficulty,
           Category? category,
-          RepeatType? scheduleType,
-          int? scheduleValue,
-          List<int>? scheduleDays,
+          RepeatType? repeatType,
+          int? repeatValue,
+          List<int>? repeatDays,
+          Value<DateTime?> deadline = const Value.absent(),
           int? finishedCount,
           DateTime? lastFinishedAt,
           DateTime? createdAt}) =>
@@ -856,25 +905,26 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
         description: description ?? this.description,
         difficulty: difficulty ?? this.difficulty,
         category: category ?? this.category,
-        scheduleType: scheduleType ?? this.scheduleType,
-        scheduleValue: scheduleValue ?? this.scheduleValue,
-        scheduleDays: scheduleDays ?? this.scheduleDays,
+        repeatType: repeatType ?? this.repeatType,
+        repeatValue: repeatValue ?? this.repeatValue,
+        repeatDays: repeatDays ?? this.repeatDays,
+        deadline: deadline.present ? deadline.value : this.deadline,
         finishedCount: finishedCount ?? this.finishedCount,
         lastFinishedAt: lastFinishedAt ?? this.lastFinishedAt,
         createdAt: createdAt ?? this.createdAt,
       );
+
   @override
   String toString() {
     return (StringBuffer('TaskModel(')
           ..write('id: $id, ')
           ..write('order: $order, ')
           ..write('title: $title, ')
-          ..write('description: $description, ')
-          ..write('difficulty: $difficulty, ')..write(
-          'category: $category, ')..write(
-          'scheduleType: $scheduleType, ')..write(
-          'scheduleValue: $scheduleValue, ')..write(
-          'scheduleDays: $scheduleDays, ')
+          ..write('description: $description, ')..write(
+          'difficulty: $difficulty, ')..write('category: $category, ')..write(
+          'repeatType: $repeatType, ')..write(
+          'repeatValue: $repeatValue, ')..write(
+          'repeatDays: $repeatDays, ')..write('deadline: $deadline, ')
           ..write('finishedCount: $finishedCount, ')
           ..write('lastFinishedAt: $lastFinishedAt, ')
           ..write('createdAt: $createdAt')
@@ -890,12 +940,14 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
       description,
       difficulty,
       category,
-      scheduleType,
-      scheduleValue,
-      scheduleDays,
+      repeatType,
+      repeatValue,
+      repeatDays,
+      deadline,
       finishedCount,
       lastFinishedAt,
       createdAt);
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -906,9 +958,10 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
           other.description == this.description &&
           other.difficulty == this.difficulty &&
           other.category == this.category &&
-          other.scheduleType == this.scheduleType &&
-          other.scheduleValue == this.scheduleValue &&
-          other.scheduleDays == this.scheduleDays &&
+          other.repeatType == this.repeatType &&
+          other.repeatValue == this.repeatValue &&
+          other.repeatDays == this.repeatDays &&
+          other.deadline == this.deadline &&
           other.finishedCount == this.finishedCount &&
           other.lastFinishedAt == this.lastFinishedAt &&
           other.createdAt == this.createdAt);
@@ -921,12 +974,14 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
   final Value<String> description;
   final Value<Difficulty> difficulty;
   final Value<Category> category;
-  final Value<RepeatType> scheduleType;
-  final Value<int> scheduleValue;
-  final Value<List<int>> scheduleDays;
+  final Value<RepeatType> repeatType;
+  final Value<int> repeatValue;
+  final Value<List<int>> repeatDays;
+  final Value<DateTime?> deadline;
   final Value<int> finishedCount;
   final Value<DateTime> lastFinishedAt;
   final Value<DateTime> createdAt;
+
   const TaskTableCompanion({
     this.id = const Value.absent(),
     this.order = const Value.absent(),
@@ -934,13 +989,15 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
     this.description = const Value.absent(),
     this.difficulty = const Value.absent(),
     this.category = const Value.absent(),
-    this.scheduleType = const Value.absent(),
-    this.scheduleValue = const Value.absent(),
-    this.scheduleDays = const Value.absent(),
+    this.repeatType = const Value.absent(),
+    this.repeatValue = const Value.absent(),
+    this.repeatDays = const Value.absent(),
+    this.deadline = const Value.absent(),
     this.finishedCount = const Value.absent(),
     this.lastFinishedAt = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
+
   TaskTableCompanion.insert({
     this.id = const Value.absent(),
     required int order,
@@ -948,9 +1005,10 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
     required String description,
     required Difficulty difficulty,
     required Category category,
-    required RepeatType scheduleType,
-    required int scheduleValue,
-    required List<int> scheduleDays,
+    required RepeatType repeatType,
+    required int repeatValue,
+    required List<int> repeatDays,
+    this.deadline = const Value.absent(),
     required int finishedCount,
     required DateTime lastFinishedAt,
     required DateTime createdAt,
@@ -959,12 +1017,13 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
         description = Value(description),
         difficulty = Value(difficulty),
         category = Value(category),
-        scheduleType = Value(scheduleType),
-        scheduleValue = Value(scheduleValue),
-        scheduleDays = Value(scheduleDays),
+        repeatType = Value(repeatType),
+        repeatValue = Value(repeatValue),
+        repeatDays = Value(repeatDays),
         finishedCount = Value(finishedCount),
         lastFinishedAt = Value(lastFinishedAt),
         createdAt = Value(createdAt);
+
   static Insertable<TaskModel> custom({
     Expression<int>? id,
     Expression<int>? order,
@@ -972,9 +1031,10 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
     Expression<String>? description,
     Expression<int>? difficulty,
     Expression<int>? category,
-    Expression<int>? scheduleType,
-    Expression<int>? scheduleValue,
-    Expression<String>? scheduleDays,
+    Expression<int>? repeatType,
+    Expression<int>? repeatValue,
+    Expression<String>? repeatDays,
+    Expression<DateTime>? deadline,
     Expression<int>? finishedCount,
     Expression<DateTime>? lastFinishedAt,
     Expression<DateTime>? createdAt,
@@ -986,9 +1046,10 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
       if (description != null) 'description': description,
       if (difficulty != null) 'difficulty': difficulty,
       if (category != null) 'category': category,
-      if (scheduleType != null) 'schedule_type': scheduleType,
-      if (scheduleValue != null) 'schedule_value': scheduleValue,
-      if (scheduleDays != null) 'schedule_days': scheduleDays,
+      if (repeatType != null) 'repeat_type': repeatType,
+      if (repeatValue != null) 'repeat_value': repeatValue,
+      if (repeatDays != null) 'repeat_days': repeatDays,
+      if (deadline != null) 'deadline': deadline,
       if (finishedCount != null) 'finished_count': finishedCount,
       if (lastFinishedAt != null) 'last_finished_at': lastFinishedAt,
       if (createdAt != null) 'created_at': createdAt,
@@ -1002,9 +1063,10 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
       Value<String>? description,
       Value<Difficulty>? difficulty,
       Value<Category>? category,
-      Value<RepeatType>? scheduleType,
-      Value<int>? scheduleValue,
-      Value<List<int>>? scheduleDays,
+      Value<RepeatType>? repeatType,
+      Value<int>? repeatValue,
+      Value<List<int>>? repeatDays,
+      Value<DateTime?>? deadline,
       Value<int>? finishedCount,
       Value<DateTime>? lastFinishedAt,
       Value<DateTime>? createdAt}) {
@@ -1015,9 +1077,10 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
       description: description ?? this.description,
       difficulty: difficulty ?? this.difficulty,
       category: category ?? this.category,
-      scheduleType: scheduleType ?? this.scheduleType,
-      scheduleValue: scheduleValue ?? this.scheduleValue,
-      scheduleDays: scheduleDays ?? this.scheduleDays,
+      repeatType: repeatType ?? this.repeatType,
+      repeatValue: repeatValue ?? this.repeatValue,
+      repeatDays: repeatDays ?? this.repeatDays,
+      deadline: deadline ?? this.deadline,
       finishedCount: finishedCount ?? this.finishedCount,
       lastFinishedAt: lastFinishedAt ?? this.lastFinishedAt,
       createdAt: createdAt ?? this.createdAt,
@@ -1047,16 +1110,19 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
       map['category'] = Variable<int>(
           $TaskTableTable.$convertercategory.toSql(category.value));
     }
-    if (scheduleType.present) {
-      map['schedule_type'] = Variable<int>(
-          $TaskTableTable.$converterscheduleType.toSql(scheduleType.value));
+    if (repeatType.present) {
+      map['repeat_type'] = Variable<int>(
+          $TaskTableTable.$converterrepeatType.toSql(repeatType.value));
     }
-    if (scheduleValue.present) {
-      map['schedule_value'] = Variable<int>(scheduleValue.value);
+    if (repeatValue.present) {
+      map['repeat_value'] = Variable<int>(repeatValue.value);
     }
-    if (scheduleDays.present) {
-      map['schedule_days'] = Variable<String>(
-          $TaskTableTable.$converterscheduleDays.toSql(scheduleDays.value));
+    if (repeatDays.present) {
+      map['repeat_days'] = Variable<String>(
+          $TaskTableTable.$converterrepeatDays.toSql(repeatDays.value));
+    }
+    if (deadline.present) {
+      map['deadline'] = Variable<DateTime>(deadline.value);
     }
     if (finishedCount.present) {
       map['finished_count'] = Variable<int>(finishedCount.value);
@@ -1076,12 +1142,11 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
           ..write('id: $id, ')
           ..write('order: $order, ')
           ..write('title: $title, ')
-          ..write('description: $description, ')
-          ..write('difficulty: $difficulty, ')..write(
-          'category: $category, ')..write(
-          'scheduleType: $scheduleType, ')..write(
-          'scheduleValue: $scheduleValue, ')..write(
-          'scheduleDays: $scheduleDays, ')
+          ..write('description: $description, ')..write(
+          'difficulty: $difficulty, ')..write('category: $category, ')..write(
+          'repeatType: $repeatType, ')..write(
+          'repeatValue: $repeatValue, ')..write(
+          'repeatDays: $repeatDays, ')..write('deadline: $deadline, ')
           ..write('finishedCount: $finishedCount, ')
           ..write('lastFinishedAt: $lastFinishedAt, ')
           ..write('createdAt: $createdAt')
@@ -1095,7 +1160,9 @@ class $StatusTableTable extends StatusTable
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
+
   $StatusTableTable(this.attachedDatabase, [this._alias]);
+
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -1115,13 +1182,17 @@ class $StatusTableTable extends StatusTable
   late final GeneratedColumn<int> exp = GeneratedColumn<int>(
       'exp', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
+
   @override
   List<GeneratedColumn> get $columns => [id, level, exp];
+
   @override
   String get aliasedName => _alias ?? actualTableName;
+
   @override
   String get actualTableName => $name;
   static const String $name = 'status_table';
+
   @override
   VerificationContext validateIntegrity(Insertable<StatusModel> instance,
       {bool isInserting = false}) {
@@ -1147,6 +1218,7 @@ class $StatusTableTable extends StatusTable
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
+
   @override
   StatusModel map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -1170,7 +1242,9 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
   final int id;
   final int level;
   final int exp;
+
   const StatusModel({required this.id, required this.level, required this.exp});
+
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -1197,6 +1271,7 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
       exp: serializer.fromJson<int>(json['exp']),
     );
   }
+
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
@@ -1212,6 +1287,7 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
         level: level ?? this.level,
         exp: exp ?? this.exp,
       );
+
   @override
   String toString() {
     return (StringBuffer('StatusModel(')
@@ -1224,6 +1300,7 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
 
   @override
   int get hashCode => Object.hash(id, level, exp);
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1237,17 +1314,20 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
   final Value<int> id;
   final Value<int> level;
   final Value<int> exp;
+
   const StatusTableCompanion({
     this.id = const Value.absent(),
     this.level = const Value.absent(),
     this.exp = const Value.absent(),
   });
+
   StatusTableCompanion.insert({
     this.id = const Value.absent(),
     required int level,
     required int exp,
   })  : level = Value(level),
         exp = Value(exp);
+
   static Insertable<StatusModel> custom({
     Expression<int>? id,
     Expression<int>? level,
@@ -1300,7 +1380,9 @@ class $AttributeTableTable extends AttributeTable
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
+
   $AttributeTableTable(this.attachedDatabase, [this._alias]);
+
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -1339,14 +1421,18 @@ class $AttributeTableTable extends AttributeTable
       type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'REFERENCES StatusTable(id)');
+
   @override
   List<GeneratedColumn> get $columns =>
       [id, iconPath, name, level, exp, statusId];
+
   @override
   String get aliasedName => _alias ?? actualTableName;
+
   @override
   String get actualTableName => $name;
   static const String $name = 'attribute_table';
+
   @override
   VerificationContext validateIntegrity(Insertable<AttributeModel> instance,
       {bool isInserting = false}) {
@@ -1390,6 +1476,7 @@ class $AttributeTableTable extends AttributeTable
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
+
   @override
   AttributeModel map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -1422,6 +1509,7 @@ class AttributeModel extends DataClass implements Insertable<AttributeModel> {
   final int level;
   final int exp;
   final int statusId;
+
   const AttributeModel(
       {required this.id,
       required this.iconPath,
@@ -1429,6 +1517,7 @@ class AttributeModel extends DataClass implements Insertable<AttributeModel> {
       required this.level,
       required this.exp,
       required this.statusId});
+
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -1464,6 +1553,7 @@ class AttributeModel extends DataClass implements Insertable<AttributeModel> {
       statusId: serializer.fromJson<int>(json['statusId']),
     );
   }
+
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
@@ -1492,6 +1582,7 @@ class AttributeModel extends DataClass implements Insertable<AttributeModel> {
         exp: exp ?? this.exp,
         statusId: statusId ?? this.statusId,
       );
+
   @override
   String toString() {
     return (StringBuffer('AttributeModel(')
@@ -1507,6 +1598,7 @@ class AttributeModel extends DataClass implements Insertable<AttributeModel> {
 
   @override
   int get hashCode => Object.hash(id, iconPath, name, level, exp, statusId);
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1526,6 +1618,7 @@ class AttributeTableCompanion extends UpdateCompanion<AttributeModel> {
   final Value<int> level;
   final Value<int> exp;
   final Value<int> statusId;
+
   const AttributeTableCompanion({
     this.id = const Value.absent(),
     this.iconPath = const Value.absent(),
@@ -1534,6 +1627,7 @@ class AttributeTableCompanion extends UpdateCompanion<AttributeModel> {
     this.exp = const Value.absent(),
     this.statusId = const Value.absent(),
   });
+
   AttributeTableCompanion.insert({
     this.id = const Value.absent(),
     required String iconPath,
@@ -1546,6 +1640,7 @@ class AttributeTableCompanion extends UpdateCompanion<AttributeModel> {
         level = Value(level),
         exp = Value(exp),
         statusId = Value(statusId);
+
   static Insertable<AttributeModel> custom({
     Expression<int>? id,
     Expression<String>? iconPath,
@@ -1621,14 +1716,17 @@ class AttributeTableCompanion extends UpdateCompanion<AttributeModel> {
 
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
+
   _$AppDatabaseManager get managers => _$AppDatabaseManager(this);
   late final $HabitTableTable habitTable = $HabitTableTable(this);
   late final $TaskTableTable taskTable = $TaskTableTable(this);
   late final $StatusTableTable statusTable = $StatusTableTable(this);
   late final $AttributeTableTable attributeTable = $AttributeTableTable(this);
+
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
+
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
       [habitTable, taskTable, statusTable, attributeTable];
@@ -1744,6 +1842,7 @@ class $$HabitTableTableProcessedTableManager extends ProcessedTableManager<
 class $$HabitTableTableFilterComposer
     extends FilterComposer<_$AppDatabase, $HabitTableTable> {
   $$HabitTableTableFilterComposer(super.$state);
+
   ColumnFilters<int> get id => $state.composableBuilder(
       column: $state.table.id,
       builder: (column, joinBuilders) =>
@@ -1804,6 +1903,7 @@ class $$HabitTableTableFilterComposer
 class $$HabitTableTableOrderingComposer
     extends OrderingComposer<_$AppDatabase, $HabitTableTable> {
   $$HabitTableTableOrderingComposer(super.$state);
+
   ColumnOrderings<int> get id => $state.composableBuilder(
       column: $state.table.id,
       builder: (column, joinBuilders) =>
@@ -1862,9 +1962,10 @@ typedef $$TaskTableTableInsertCompanionBuilder = TaskTableCompanion Function({
   required String description,
   required Difficulty difficulty,
   required Category category,
-  required RepeatType scheduleType,
-  required int scheduleValue,
-  required List<int> scheduleDays,
+  required RepeatType repeatType,
+  required int repeatValue,
+  required List<int> repeatDays,
+  Value<DateTime?> deadline,
   required int finishedCount,
   required DateTime lastFinishedAt,
   required DateTime createdAt,
@@ -1876,9 +1977,10 @@ typedef $$TaskTableTableUpdateCompanionBuilder = TaskTableCompanion Function({
   Value<String> description,
   Value<Difficulty> difficulty,
   Value<Category> category,
-  Value<RepeatType> scheduleType,
-  Value<int> scheduleValue,
-  Value<List<int>> scheduleDays,
+  Value<RepeatType> repeatType,
+  Value<int> repeatValue,
+  Value<List<int>> repeatDays,
+  Value<DateTime?> deadline,
   Value<int> finishedCount,
   Value<DateTime> lastFinishedAt,
   Value<DateTime> createdAt,
@@ -1910,9 +2012,10 @@ class $$TaskTableTableTableManager extends RootTableManager<
             Value<String> description = const Value.absent(),
             Value<Difficulty> difficulty = const Value.absent(),
             Value<Category> category = const Value.absent(),
-            Value<RepeatType> scheduleType = const Value.absent(),
-            Value<int> scheduleValue = const Value.absent(),
-            Value<List<int>> scheduleDays = const Value.absent(),
+            Value<RepeatType> repeatType = const Value.absent(),
+            Value<int> repeatValue = const Value.absent(),
+            Value<List<int>> repeatDays = const Value.absent(),
+            Value<DateTime?> deadline = const Value.absent(),
             Value<int> finishedCount = const Value.absent(),
             Value<DateTime> lastFinishedAt = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
@@ -1924,9 +2027,10 @@ class $$TaskTableTableTableManager extends RootTableManager<
             description: description,
             difficulty: difficulty,
             category: category,
-            scheduleType: scheduleType,
-            scheduleValue: scheduleValue,
-            scheduleDays: scheduleDays,
+            repeatType: repeatType,
+            repeatValue: repeatValue,
+            repeatDays: repeatDays,
+            deadline: deadline,
             finishedCount: finishedCount,
             lastFinishedAt: lastFinishedAt,
             createdAt: createdAt,
@@ -1938,9 +2042,10 @@ class $$TaskTableTableTableManager extends RootTableManager<
             required String description,
             required Difficulty difficulty,
             required Category category,
-            required RepeatType scheduleType,
-            required int scheduleValue,
-            required List<int> scheduleDays,
+            required RepeatType repeatType,
+            required int repeatValue,
+            required List<int> repeatDays,
+            Value<DateTime?> deadline = const Value.absent(),
             required int finishedCount,
             required DateTime lastFinishedAt,
             required DateTime createdAt,
@@ -1952,9 +2057,10 @@ class $$TaskTableTableTableManager extends RootTableManager<
             description: description,
             difficulty: difficulty,
             category: category,
-            scheduleType: scheduleType,
-            scheduleValue: scheduleValue,
-            scheduleDays: scheduleDays,
+            repeatType: repeatType,
+            repeatValue: repeatValue,
+            repeatDays: repeatDays,
+            deadline: deadline,
             finishedCount: finishedCount,
             lastFinishedAt: lastFinishedAt,
             createdAt: createdAt,
@@ -1977,6 +2083,7 @@ class $$TaskTableTableProcessedTableManager extends ProcessedTableManager<
 class $$TaskTableTableFilterComposer
     extends FilterComposer<_$AppDatabase, $TaskTableTable> {
   $$TaskTableTableFilterComposer(super.$state);
+
   ColumnFilters<int> get id => $state.composableBuilder(
       column: $state.table.id,
       builder: (column, joinBuilders) =>
@@ -2011,24 +2118,29 @@ class $$TaskTableTableFilterComposer
               column,
               joinBuilders: joinBuilders));
 
-  ColumnWithTypeConverterFilters<RepeatType, RepeatType, int>
-      get scheduleType => $state.composableBuilder(
+  ColumnWithTypeConverterFilters<RepeatType, RepeatType, int> get repeatType =>
+      $state.composableBuilder(
           column: $state.table.repeatType,
           builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
               column,
               joinBuilders: joinBuilders));
 
-  ColumnFilters<int> get scheduleValue => $state.composableBuilder(
+  ColumnFilters<int> get repeatValue => $state.composableBuilder(
       column: $state.table.repeatValue,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnWithTypeConverterFilters<List<int>, List<int>, String>
-      get scheduleDays => $state.composableBuilder(
+  ColumnWithTypeConverterFilters<List<int>, List<int>, String> get repeatDays =>
+      $state.composableBuilder(
           column: $state.table.repeatDays,
           builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
               column,
               joinBuilders: joinBuilders));
+
+  ColumnFilters<DateTime> get deadline => $state.composableBuilder(
+      column: $state.table.deadline,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
 
   ColumnFilters<int> get finishedCount => $state.composableBuilder(
       column: $state.table.finishedCount,
@@ -2049,6 +2161,7 @@ class $$TaskTableTableFilterComposer
 class $$TaskTableTableOrderingComposer
     extends OrderingComposer<_$AppDatabase, $TaskTableTable> {
   $$TaskTableTableOrderingComposer(super.$state);
+
   ColumnOrderings<int> get id => $state.composableBuilder(
       column: $state.table.id,
       builder: (column, joinBuilders) =>
@@ -2079,18 +2192,23 @@ class $$TaskTableTableOrderingComposer
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<int> get scheduleType => $state.composableBuilder(
+  ColumnOrderings<int> get repeatType => $state.composableBuilder(
       column: $state.table.repeatType,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<int> get scheduleValue => $state.composableBuilder(
+  ColumnOrderings<int> get repeatValue => $state.composableBuilder(
       column: $state.table.repeatValue,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<String> get scheduleDays => $state.composableBuilder(
+  ColumnOrderings<String> get repeatDays => $state.composableBuilder(
       column: $state.table.repeatDays,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<DateTime> get deadline => $state.composableBuilder(
+      column: $state.table.deadline,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
@@ -2180,6 +2298,7 @@ class $$StatusTableTableProcessedTableManager extends ProcessedTableManager<
 class $$StatusTableTableFilterComposer
     extends FilterComposer<_$AppDatabase, $StatusTableTable> {
   $$StatusTableTableFilterComposer(super.$state);
+
   ColumnFilters<int> get id => $state.composableBuilder(
       column: $state.table.id,
       builder: (column, joinBuilders) =>
@@ -2199,6 +2318,7 @@ class $$StatusTableTableFilterComposer
 class $$StatusTableTableOrderingComposer
     extends OrderingComposer<_$AppDatabase, $StatusTableTable> {
   $$StatusTableTableOrderingComposer(super.$state);
+
   ColumnOrderings<int> get id => $state.composableBuilder(
       column: $state.table.id,
       builder: (column, joinBuilders) =>
@@ -2304,6 +2424,7 @@ class $$AttributeTableTableProcessedTableManager extends ProcessedTableManager<
 class $$AttributeTableTableFilterComposer
     extends FilterComposer<_$AppDatabase, $AttributeTableTable> {
   $$AttributeTableTableFilterComposer(super.$state);
+
   ColumnFilters<int> get id => $state.composableBuilder(
       column: $state.table.id,
       builder: (column, joinBuilders) =>
@@ -2338,6 +2459,7 @@ class $$AttributeTableTableFilterComposer
 class $$AttributeTableTableOrderingComposer
     extends OrderingComposer<_$AppDatabase, $AttributeTableTable> {
   $$AttributeTableTableOrderingComposer(super.$state);
+
   ColumnOrderings<int> get id => $state.composableBuilder(
       column: $state.table.id,
       builder: (column, joinBuilders) =>
@@ -2371,13 +2493,18 @@ class $$AttributeTableTableOrderingComposer
 
 class _$AppDatabaseManager {
   final _$AppDatabase _db;
+
   _$AppDatabaseManager(this._db);
+
   $$HabitTableTableTableManager get habitTable =>
       $$HabitTableTableTableManager(_db, _db.habitTable);
+
   $$TaskTableTableTableManager get taskTable =>
       $$TaskTableTableTableManager(_db, _db.taskTable);
+
   $$StatusTableTableTableManager get statusTable =>
       $$StatusTableTableTableManager(_db, _db.statusTable);
+
   $$AttributeTableTableTableManager get attributeTable =>
       $$AttributeTableTableTableManager(_db, _db.attributeTable);
 }
