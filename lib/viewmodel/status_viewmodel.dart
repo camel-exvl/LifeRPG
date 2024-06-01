@@ -5,12 +5,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/database/database.dart';
 
 class StatusViewModel extends ChangeNotifier {
-  static StatusViewModel? _instance;
+  static final StatusViewModel _instance = StatusViewModel._internal();
 
-  factory StatusViewModel() {
-    _instance ??= StatusViewModel._internal();
-    return _instance!;
-  }
+  factory StatusViewModel() => _instance;
 
   StatusViewModel._internal();
 
@@ -26,11 +23,19 @@ class StatusViewModel extends ChangeNotifier {
       UnmodifiableListView(_attributes);
 
   Future<void> initOnFirstRun() async {
+    _status = StatusModel(
+      id: statusId,
+      level: 1,
+      exp: 0,
+    );
+    notifyListeners();
+
     await database.insertStatus(StatusTableCompanion(
       id: Value(statusId),
       level: const Value(1),
       exp: const Value(0),
     ));
+
 
     List<AttributeTableCompanion> defaultAttributes = [
       const AttributeTableCompanion(
