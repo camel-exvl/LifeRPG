@@ -21,7 +21,8 @@ class FinishDialog {
                 children: [
                   // TODO: Replace Icon with Image.asset
                   const Icon(Icons.star, color: Colors.yellow),
-                  Text("+${rewardResponse.gold.toString()}"),
+                  Text(
+                      "${AppLocalizations.of(context)!.gold} + ${rewardResponse.gold.toString()}"),
                 ],
               ),
               for (var exp in rewardResponse.expMap.entries)
@@ -30,7 +31,8 @@ class FinishDialog {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       exp.key.icon(context),
-                      Text("+${exp.value}"),
+                      Text(
+                          "${exp.key.localizedString(context)} + ${exp.value}"),
                     ],
                   ),
             ],

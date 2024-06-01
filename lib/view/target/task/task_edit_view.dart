@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:liferpg/model/target/task_model.dart';
-import 'package:liferpg/view/target/confirm_dialog.dart';
+import 'package:liferpg/view/target/dialog/confirm_dialog.dart';
 import 'package:liferpg/view/target/task/task_repeat_edit_view.dart';
 
 import '../../../database/database.dart';

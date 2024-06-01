@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
-import 'package:liferpg/view/target/finish_dialog.dart';
+import 'package:liferpg/view/target/dialog/finish_dialog.dart';
 import 'package:liferpg/viewmodel/task_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 import '../../../database/database.dart';
 import '../../../model/target/task_model.dart';
+import '../dialog/frequent_finish_warning_dialog.dart';
 import 'task_edit_view.dart';
 
 class TaskView extends StatefulWidget {
@@ -71,7 +72,11 @@ class _TaskViewState extends State<TaskView>
                         onPressed: () async {
                           final response = await viewModel.finishTask(task);
                           if (context.mounted) {
-                            FinishDialog().show(context, response);
+                            await FinishDialog().show(context, response);
+                          }
+                          if (context.mounted &&
+                              response.penaltyCoefficient < 0.8) {
+                            FrequentFinishWarningDialog().show(context);
                           }
                         },
                       ),

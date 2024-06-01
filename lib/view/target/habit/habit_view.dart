@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:liferpg/view/target/finish_dialog.dart';
+import 'package:liferpg/view/target/dialog/finish_dialog.dart';
+import 'package:liferpg/view/target/dialog/frequent_finish_warning_dialog.dart';
 import 'package:liferpg/viewmodel/habit_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -61,7 +62,11 @@ class _HabitViewState extends State<HabitView>
                         onPressed: () async {
                           final response = await viewModel.finishHabit(habit);
                           if (context.mounted) {
-                            FinishDialog().show(context, response);
+                            await FinishDialog().show(context, response);
+                          }
+                          if (context.mounted &&
+                              response.penaltyCoefficient < 0.8) {
+                            FrequentFinishWarningDialog().show(context);
                           }
                         },
                       ),

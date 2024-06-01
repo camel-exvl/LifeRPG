@@ -86,5 +86,8 @@
   "defaultTaskFinishProjectDescription": "在截止时间之前完成项目",
   "congratulations": "恭喜!",
   "youCanDoBetter": "你可以做得更好!",
-  "confirm": "确认"
+  "confirm": "确认",
+  "frequentFinishWarningTitle": "您完成得太频繁了",
+  "frequentFinishWarningMessage": "此应用程序旨在帮助您养成良好的习惯并实现长期目标。如果您完成得太频繁，可能对您没有帮助。",
+  "gold": "金币"
 }
