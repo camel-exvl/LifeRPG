@@ -73,5 +73,15 @@
   "discard": "Discard",
   "deleteMessage": "Are you sure you want to delete?",
   "deadline": "Deadline",
-  "noDeadline": "No Deadline"
+  "noDeadline": "No Deadline",
+  "defaultHabitReadingTitle": "Reading",
+  "defaultHabitReadingDescription": "Read a book for 30 minutes",
+  "defaultHabitPlayGuitarTitle": "Play guitar",
+  "defaultHabitPlayGuitarDescription": "Play a song on guitar",
+  "defaultHabitSmokeCigaretteTitle": "Smoke a cigarette",
+  "defaultTaskJoggingTitle": "Jogging",
+  "defaultTaskJoggingDescription": "Jogging for 30 minutes",
+  "defaultTaskReadBookTitle": "Read a book",
+  "defaultTaskFinishProjectTitle": "Finish project",
+  "defaultTaskFinishProjectDescription": "Finish project before deadline"
 }

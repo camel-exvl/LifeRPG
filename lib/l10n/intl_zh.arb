@@ -73,5 +73,15 @@
   "discard": "放弃",
   "deleteMessage": "您确定要删除吗？",
   "deadline": "截止时间",
-  "noDeadline": "无截止时间"
+  "noDeadline": "无截止时间",
+  "defaultHabitReadingTitle": "阅读",
+  "defaultHabitReadingDescription": "阅读 30 分钟",
+  "defaultHabitPlayGuitarTitle": "弹吉他",
+  "defaultHabitPlayGuitarDescription": "弹奏一首歌曲",
+  "defaultHabitSmokeCigaretteTitle": "抽烟",
+  "defaultTaskJoggingTitle": "慢跑",
+  "defaultTaskJoggingDescription": "慢跑 30 分钟",
+  "defaultTaskReadBookTitle": "读一本书",
+  "defaultTaskFinishProjectTitle": "完成项目",
+  "defaultTaskFinishProjectDescription": "在截止时间之前完成项目"
 }
