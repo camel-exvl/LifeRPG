@@ -920,11 +920,13 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
           ..write('id: $id, ')
           ..write('order: $order, ')
           ..write('title: $title, ')
-          ..write('description: $description, ')..write(
-          'difficulty: $difficulty, ')..write('category: $category, ')..write(
-          'repeatType: $repeatType, ')..write(
-          'repeatValue: $repeatValue, ')..write(
-          'repeatDays: $repeatDays, ')..write('deadline: $deadline, ')
+          ..write('description: $description, ')
+          ..write('difficulty: $difficulty, ')
+          ..write('category: $category, ')
+          ..write('repeatType: $repeatType, ')
+          ..write('repeatValue: $repeatValue, ')
+          ..write('repeatDays: $repeatDays, ')
+          ..write('deadline: $deadline, ')
           ..write('finishedCount: $finishedCount, ')
           ..write('lastFinishedAt: $lastFinishedAt, ')
           ..write('createdAt: $createdAt')
@@ -1142,11 +1144,13 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
           ..write('id: $id, ')
           ..write('order: $order, ')
           ..write('title: $title, ')
-          ..write('description: $description, ')..write(
-          'difficulty: $difficulty, ')..write('category: $category, ')..write(
-          'repeatType: $repeatType, ')..write(
-          'repeatValue: $repeatValue, ')..write(
-          'repeatDays: $repeatDays, ')..write('deadline: $deadline, ')
+          ..write('description: $description, ')
+          ..write('difficulty: $difficulty, ')
+          ..write('category: $category, ')
+          ..write('repeatType: $repeatType, ')
+          ..write('repeatValue: $repeatValue, ')
+          ..write('repeatDays: $repeatDays, ')
+          ..write('deadline: $deadline, ')
           ..write('finishedCount: $finishedCount, ')
           ..write('lastFinishedAt: $lastFinishedAt, ')
           ..write('createdAt: $createdAt')

@@ -76,12 +76,12 @@ class AppDatabase extends _$AppDatabase {
   }
 
   // Status
-  Future<StatusModel?> getStatus(int statusId) async {
+  Future<StatusModel> getStatus(int statusId) async {
     return (select(statusTable)..where((t) => t.id.equals(statusId)))
-        .getSingleOrNull();
+        .getSingle();
   }
 
-  Future<int> insertStatus(StatusTableCompanion status) =>
+  Future<void> insertStatus(StatusTableCompanion status) =>
       into(statusTable).insert(status);
 
   Future<void> updateStatus(StatusModel status) =>
@@ -98,7 +98,7 @@ class AppDatabase extends _$AppDatabase {
         .get();
   }
 
-  Future<int> insertAttribute(AttributeTableCompanion attribute) =>
+  Future<void> insertAttribute(AttributeTableCompanion attribute) =>
       into(attributeTable).insert(attribute);
 
   Future<void> updateAttribute(AttributeModel attribute) =>
