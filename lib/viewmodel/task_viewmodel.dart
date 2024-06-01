@@ -23,57 +23,59 @@ class TaskViewModel extends ChangeNotifier {
   Future<void> initOnFirstRun(BuildContext context) async {
     var tasks = [
       // health
-      TaskTableCompanion(
-        order: const Value(0),
-        title: Value(AppLocalizations.of(context)!.defaultTaskJoggingTitle),
+      TaskModel(
+        id: 0,
+        order: 0,
+        title: AppLocalizations.of(context)!.defaultTaskJoggingTitle,
         description:
-            Value(AppLocalizations.of(context)!.defaultTaskJoggingDescription),
-        difficulty: const Value(Difficulty.easy),
-        category: const Value(Category.health),
-        repeatType: const Value(RepeatType.daily),
-        repeatValue: const Value(1),
-        repeatDays: const Value([]),
-        deadline: const Value(null),
-        finishedCount: const Value(0),
-        lastFinishedAt: Value(DateTime(0)),
-        createdAt: Value(DateTime.now()),
+            AppLocalizations.of(context)!.defaultTaskJoggingDescription,
+        difficulty: Difficulty.easy,
+        category: Category.health,
+        repeatType: RepeatType.daily,
+        repeatValue: 1,
+        repeatDays: [],
+        deadline: null,
+        finishedCount: 0,
+        lastFinishedAt: DateTime(0),
+        createdAt: DateTime.now(),
       ),
       // learning
-      TaskTableCompanion(
-        order: const Value(1),
-        title: Value(AppLocalizations.of(context)!.defaultTaskReadBookTitle),
-        description: const Value(""),
-        difficulty: const Value(Difficulty.medium),
-        category: const Value(Category.learning),
-        repeatType: const Value(RepeatType.weekly),
-        repeatValue: const Value(1),
-        repeatDays: const Value([0, 6]),
-        deadline: const Value(null),
-        finishedCount: const Value(0),
-        lastFinishedAt: Value(DateTime(0)),
-        createdAt: Value(DateTime.now()),
+      TaskModel(
+        id: 0,
+        order: 1,
+        title: AppLocalizations.of(context)!.defaultTaskReadBookTitle,
+        description: "",
+        difficulty: Difficulty.medium,
+        category: Category.learning,
+        repeatType: RepeatType.weekly,
+        repeatValue: 1,
+        repeatDays: [0, 6],
+        deadline: null,
+        finishedCount: 0,
+        lastFinishedAt: DateTime(0),
+        createdAt: DateTime.now(),
       ),
       // career
-      TaskTableCompanion(
-        order: const Value(2),
-        title:
-            Value(AppLocalizations.of(context)!.defaultTaskFinishProjectTitle),
-        description: Value(
-            AppLocalizations.of(context)!.defaultTaskFinishProjectDescription),
-        difficulty: const Value(Difficulty.hard),
-        category: const Value(Category.career),
-        repeatType: const Value(RepeatType.none),
-        repeatValue: const Value(0),
-        repeatDays: const Value([]),
-        deadline: Value(DateTime.now().add(const Duration(days: 7))),
-        finishedCount: const Value(0),
-        lastFinishedAt: Value(DateTime(0)),
-        createdAt: Value(DateTime.now()),
+      TaskModel(
+        id: 0,
+        order: 2,
+        title: AppLocalizations.of(context)!.defaultTaskFinishProjectTitle,
+        description:
+            AppLocalizations.of(context)!.defaultTaskFinishProjectDescription,
+        difficulty: Difficulty.hard,
+        category: Category.career,
+        repeatType: RepeatType.none,
+        repeatValue: 0,
+        repeatDays: [],
+        deadline: DateTime.now().add(const Duration(days: 7)),
+        finishedCount: 0,
+        lastFinishedAt: DateTime(0),
+        createdAt: DateTime.now(),
       ),
     ];
 
     for (var task in tasks) {
-      await database.insertTask(task);
+      await insertTask(task);
     }
   }
 

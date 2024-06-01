@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../viewmodel/status_viewmodel.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/database/database.dart';
+import 'package:provider/provider.dart';
 
 class StatusView extends StatefulWidget {
   const StatusView({super.key});
@@ -14,41 +15,37 @@ class StatusView extends StatefulWidget {
 class _StatusViewState extends State<StatusView>
     with AutomaticKeepAliveClientMixin {
   final viewModel = StatusViewModel();
-  Future<bool>? loadResult; // 声明 future 变量
+  final _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
     super.initState();
-    loadResult = loadData(); // 在initState函数中加载数据
+    Future.delayed(Duration.zero).then((_) {
+      // wait for the widget to be built
+      _refreshIndicatorKey.currentState?.show();
+    });
   }
 
-  Future<bool> loadData() async {
+  Future<void> loadData() async {
     await viewModel.loadStatus();
     await viewModel.loadAttributes();
-    return true;
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return FutureBuilder<bool>(
-      future: loadResult,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
-          return const CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        } else {
+    return ChangeNotifierProvider(
+        create: (context) => viewModel,
+        child: Consumer<StatusViewModel>(builder: (context, viewModel, child) {
           return RefreshIndicator(
+              key: _refreshIndicatorKey,
               onRefresh: loadData,
               child: ListView(// 使用 ListView 来替换 Column
                   children: [
                 StatusCard(viewModel: viewModel),
                 AttributesCard(viewModel: viewModel),
               ]));
-        }
-      },
-    );
+        }));
   }
 
   @override

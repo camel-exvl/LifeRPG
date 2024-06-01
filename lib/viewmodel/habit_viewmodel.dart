@@ -23,48 +23,50 @@ class HabitViewModel extends ChangeNotifier {
   Future<void> initOnFirstRun(BuildContext context) async {
     var habits = [
       // learning
-      HabitTableCompanion(
-        order: const Value(0),
-        title: Value(AppLocalizations.of(context)!.defaultHabitReadingTitle),
+      HabitModel(
+        id: 0,
+        order: 0,
+        title: AppLocalizations.of(context)!.defaultHabitReadingTitle,
         description:
-            Value(AppLocalizations.of(context)!.defaultHabitReadingDescription),
-        difficulty: const Value(Difficulty.easy),
-        category: const Value(Category.learning),
-        type: const Value(HabitType.good),
-        finishedCount: const Value(0),
-        lastFinishedAt: Value(DateTime(0)),
-        createdAt: Value(DateTime.now()),
+            AppLocalizations.of(context)!.defaultHabitReadingDescription,
+        difficulty: Difficulty.easy,
+        category: Category.learning,
+        type: HabitType.good,
+        finishedCount: 0,
+        lastFinishedAt: DateTime(0),
+        createdAt: DateTime.now(),
       ),
       // art
-      HabitTableCompanion(
-        order: const Value(1),
-        title: Value(AppLocalizations.of(context)!.defaultHabitPlayGuitarTitle),
-        description: Value(
-            AppLocalizations.of(context)!.defaultHabitPlayGuitarDescription),
-        difficulty: const Value(Difficulty.medium),
-        category: const Value(Category.art),
-        type: const Value(HabitType.good),
-        finishedCount: const Value(0),
-        lastFinishedAt: Value(DateTime(0)),
-        createdAt: Value(DateTime.now()),
+      HabitModel(
+        id: 0,
+        order: 1,
+        title: AppLocalizations.of(context)!.defaultHabitPlayGuitarTitle,
+        description:
+            AppLocalizations.of(context)!.defaultHabitPlayGuitarDescription,
+        difficulty: Difficulty.medium,
+        category: Category.art,
+        type: HabitType.good,
+        finishedCount: 0,
+        lastFinishedAt: DateTime(0),
+        createdAt: DateTime.now(),
       ),
       // health
-      HabitTableCompanion(
-        order: const Value(2),
-        title: Value(
-            AppLocalizations.of(context)!.defaultHabitSmokeCigaretteTitle),
-        description: const Value(""),
-        difficulty: const Value(Difficulty.hard),
-        category: const Value(Category.health),
-        type: const Value(HabitType.bad),
-        finishedCount: const Value(0),
-        lastFinishedAt: Value(DateTime(0)),
-        createdAt: Value(DateTime.now()),
+      HabitModel(
+        id: 0,
+        order: 2,
+        title: AppLocalizations.of(context)!.defaultHabitSmokeCigaretteTitle,
+        description: "",
+        difficulty: Difficulty.hard,
+        category: Category.health,
+        type: HabitType.bad,
+        finishedCount: 0,
+        lastFinishedAt: DateTime(0),
+        createdAt: DateTime.now(),
       ),
     ];
 
     for (var habit in habits) {
-      await database.insertHabit(habit);
+      await insertHabit(habit);
     }
   }
 

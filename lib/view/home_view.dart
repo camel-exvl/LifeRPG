@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/view/status_view.dart';
 import 'package:liferpg/view/target/target_view.dart';
+import 'package:liferpg/viewmodel/habit_viewmodel.dart';
+import 'package:liferpg/viewmodel/status_viewmodel.dart';
+import 'package:liferpg/viewmodel/task_viewmodel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -20,8 +24,28 @@ class _HomeViewState extends State<HomeView> {
     StatusView()
   ];
 
+  Future<void> initOnFirstRun(BuildContext context) async {
+    WidgetsFlutterBinding.ensureInitialized(); // 确保初始化
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? isFirstRun = prefs.getBool('is_first_run');
+
+    if (isFirstRun == null || isFirstRun == true) {
+      prefs.setBool('is_first_run', false);
+
+      final statusViewModel = StatusViewModel();
+      final habitViewModel = HabitViewModel();
+      final taskViewModel = TaskViewModel();
+
+      if (context.mounted) await habitViewModel.initOnFirstRun(context);
+      if (context.mounted) await taskViewModel.initOnFirstRun(context);
+      await statusViewModel.initOnFirstRun();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    initOnFirstRun(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.appName),

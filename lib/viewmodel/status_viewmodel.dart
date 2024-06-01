@@ -5,128 +5,134 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/database/database.dart';
 
 class StatusViewModel extends ChangeNotifier {
-  static StatusViewModel? _instance;
+  static final StatusViewModel _instance = StatusViewModel._internal();
 
-  factory StatusViewModel() {
-    _instance ??= StatusViewModel._internal();
-    return _instance!;
-  }
+  factory StatusViewModel() => _instance;
 
   StatusViewModel._internal();
 
-  final int statusId = 1;
   final int lifeLevelMaxExp = 500;
   final int attributeMaxExp = 100;
   final database = AppDatabase();
-  late StatusModel _status;
+  StatusModel _status = const StatusModel(
+    id: 1,
+    level: 1,
+    exp: 0,
+  );
   List<AttributeModel> _attributes = [];
 
   StatusModel get status => _status;
   UnmodifiableListView<AttributeModel> get attributes =>
       UnmodifiableListView(_attributes);
 
-  Future<void> loadStatus() async {
-    // 创建临时变量
-    var tempModel = await database.getStatus(1);
+  Future<void> initOnFirstRun() async {
+    await insertStatus(_status);
 
-    // 检查临时变量是否为空
-    if (tempModel == null) {
-      // 如果 tempModel 为空，向数据库中插入预设数据
-      await database.insertStatus(StatusTableCompanion(
-        id: Value(statusId),
-        level: const Value(1),
-        exp: const Value(0),
-      ));
-      // 再次从数据库获取数据
-      tempModel = await database.getStatus(1);
+    _attributes = [
+      AttributeModel(
+        id: 1,
+        statusId: _status.id,
+        iconPath: "res/icons/attribute_strength.png",
+        name: "Strength",
+        level: 1,
+        exp: 0,
+      ),
+      AttributeModel(
+        id: 2,
+        statusId: _status.id,
+        iconPath: "res/icons/attribute_talent.png",
+        name: "Talent",
+        level: 1,
+        exp: 0,
+      ),
+      AttributeModel(
+        id: 3,
+        statusId: _status.id,
+        iconPath: "res/icons/attribute_culture.png",
+        name: "Culture",
+        level: 1,
+        exp: 0,
+      ),
+      AttributeModel(
+        id: 4,
+        statusId: _status.id,
+        iconPath: "res/icons/attribute_charisma.png",
+        name: "Charisma",
+        level: 1,
+        exp: 0,
+      ),
+      AttributeModel(
+        id: 5,
+        statusId: _status.id,
+        iconPath: "res/icons/attribute_environment.png",
+        name: "Environment",
+        level: 1,
+        exp: 0,
+      ),
+      AttributeModel(
+        id: 6,
+        statusId: _status.id,
+        iconPath: "res/icons/attribute_intellect.png",
+        name: "Intellect",
+        level: 1,
+        exp: 0,
+      ),
+    ];
+    notifyListeners();
+
+    for (var attribute in _attributes) {
+      await insertAttribute(attribute);
     }
+  }
 
-    _status = tempModel!;
+  Future<void> loadStatus() async {
+    _status = await database.getStatus(1);
     notifyListeners();
   }
 
   Future<void> loadAttributes() async {
-    _attributes = await database.getAllAttributes(statusId);
-
-    // 如果没有属性数据，插入预设数据
-    if (_attributes.isEmpty) {
-      List<AttributeTableCompanion> defaultAttributes = [
-        const AttributeTableCompanion(
-          statusId: Value(1),
-          iconPath: Value("res/icons/attribute_strength.png"),
-          name: Value("Strength"),
-          level: Value(1),
-          exp: Value(0),
-        ),
-        const AttributeTableCompanion(
-          statusId: Value(1),
-          iconPath: Value("res/icons/attribute_talent.png"),
-          name: Value("Talent"),
-          level: Value(1),
-          exp: Value(0),
-        ),
-        const AttributeTableCompanion(
-          statusId: Value(1),
-          iconPath: Value("res/icons/attribute_culture.png"),
-          name: Value("Culture"),
-          level: Value(1),
-          exp: Value(0),
-        ),
-        const AttributeTableCompanion(
-          statusId: Value(1),
-          iconPath: Value("res/icons/attribute_charisma.png"),
-          name: Value("Charisma"),
-          level: Value(1),
-          exp: Value(0),
-        ),
-        const AttributeTableCompanion(
-          statusId: Value(1),
-          iconPath: Value("res/icons/attribute_environment.png"),
-          name: Value("Environment"),
-          level: Value(1),
-          exp: Value(0),
-        ),
-        const AttributeTableCompanion(
-          statusId: Value(1),
-          iconPath: Value("res/icons/attribute_intellect.png"),
-          name: Value("Intellect"),
-          level: Value(1),
-          exp: Value(0),
-        ),
-      ];
-
-      for (var attribute in defaultAttributes) {
-        await database.insertAttribute(attribute);
-      }
-      _attributes = await database.getAllAttributes(statusId);
-    }
+    _attributes = await database.getAllAttributes(_status.id);
     notifyListeners();
   }
 
-  void insertStatus(StatusModel status) {
-    database
-        .insertStatus(StatusTableCompanion(
+  Future<void> insertStatus(StatusModel status) async {
+    database.insertStatus(StatusTableCompanion(
       level: Value(status.level),
       exp: Value(status.exp),
-    ))
-        .then((value) {
-      status = status.copyWith(id: value);
-      _status = status;
-      notifyListeners();
-    });
-    notifyListeners();
+    ));
   }
 
-  void updateStatus(StatusModel status) {
+  Future<void> updateStatus(StatusModel status) async {
     _status = status;
+    notifyListeners();
     database.updateStatus(status);
-    notifyListeners();
   }
 
-  void removeStatus(StatusModel status) {
-    _status = status;
+  Future<void> removeStatus(StatusModel status) async {
     database.deleteStatus(status);
+  }
+
+  Future<void> insertAttribute(AttributeModel attribute) async {
+    database.insertAttribute(AttributeTableCompanion(
+      statusId: Value(attribute.statusId),
+      iconPath: Value(attribute.iconPath),
+      name: Value(attribute.name),
+      level: Value(attribute.level),
+      exp: Value(attribute.exp),
+    ));
+  }
+
+  Future<void> updateAttribute(AttributeModel attribute) async {
+    _attributes[_attributes
+        .indexWhere((element) => element.id == attribute.id)] = attribute;
     notifyListeners();
+    database.updateAttribute(attribute);
+  }
+
+  Future<void> removeAttribute(AttributeModel attribute) async {
+    _attributes.remove(attribute);
+    notifyListeners();
+    database.deleteAttribute(attribute);
   }
 
   double getExpPercent() {
