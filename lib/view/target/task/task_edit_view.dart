@@ -2,12 +2,12 @@ import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
-import 'package:liferpg/model/task_model.dart';
+import 'package:liferpg/model/target/task_model.dart';
 import 'package:liferpg/view/target/confirm_dialog.dart';
 import 'package:liferpg/view/target/task/task_repeat_edit_view.dart';
 
 import '../../../database/database.dart';
-import '../../../model/common_model.dart';
+import '../../../model/target/common_model.dart';
 import '../../../viewmodel/task_viewmodel.dart';
 
 class TaskEditView extends StatefulWidget {

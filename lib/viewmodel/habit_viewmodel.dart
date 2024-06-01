@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/database/database.dart';
 
-import '../model/common_model.dart';
-import '../model/habit_model.dart';
+import '../model/target/common_model.dart';
+import '../model/target/habit_model.dart';
 
 class HabitViewModel extends ChangeNotifier {
   static final HabitViewModel instance = HabitViewModel._internal();

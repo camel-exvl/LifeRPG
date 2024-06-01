@@ -5,7 +5,7 @@ import 'package:liferpg/viewmodel/task_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 import '../../../database/database.dart';
-import '../../../model/task_model.dart';
+import '../../../model/target/task_model.dart';
 import 'task_edit_view.dart';
 
 class TaskView extends StatefulWidget {

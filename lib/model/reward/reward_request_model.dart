@@ -1,4 +1,4 @@
-import 'package:liferpg/model/common_model.dart';
+import 'package:liferpg/model/target/common_model.dart';
 
 class RewardRequestModel {
   Difficulty difficulty;

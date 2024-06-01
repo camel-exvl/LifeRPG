@@ -1,11 +1,13 @@
 import 'dart:collection';
+
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/database/database.dart';
-import '../model/reward/reward_response_model.dart';
+
 import '../model/reward/reward_request_model.dart';
-import '../model/common_model.dart';
+import '../model/reward/reward_response_model.dart';
+import '../model/target/common_model.dart';
 
 class StatusViewModel extends ChangeNotifier {
   static final StatusViewModel _instance = StatusViewModel._internal();

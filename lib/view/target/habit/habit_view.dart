@@ -3,7 +3,7 @@ import 'package:liferpg/viewmodel/habit_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 import '../../../database/database.dart';
-import '../../../model/habit_model.dart';
+import '../../../model/target/habit_model.dart';
 import 'habit_edit_view.dart';
 
 class HabitView extends StatefulWidget {

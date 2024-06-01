@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/database/database.dart';
 
-import '../model/common_model.dart';
-import '../model/task_model.dart';
+import '../model/target/common_model.dart';
+import '../model/target/task_model.dart';
 
 class TaskViewModel extends ChangeNotifier {
   static final TaskViewModel instance = TaskViewModel._internal();
