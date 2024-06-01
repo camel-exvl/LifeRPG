@@ -13,5 +13,6 @@ class AttributeTable extends Table {
 
   IntColumn get exp => integer()();
 
-  IntColumn get statusId => integer().customConstraint('REFERENCES StatusTable(id)')();
+  IntColumn get statusId =>
+      integer().customConstraint('REFERENCES StatusTable(id)')();
 }

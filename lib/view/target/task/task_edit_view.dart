@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
 import 'package:liferpg/model/task_model.dart';
 import 'package:liferpg/view/target/confirm_dialog.dart';
 import 'package:liferpg/view/target/task/task_repeat_edit_view.dart';
@@ -37,6 +38,7 @@ class _TaskEditViewState extends State<TaskEditView> {
   late int _repeatValue;
   late List<int> _repeatDaysOfWeek; // sunday..saturday
   late List<int> _repeatDaysOfMonth;
+  late DateTime? _deadline;
 
   @override
   void initState() {
@@ -46,15 +48,16 @@ class _TaskEditViewState extends State<TaskEditView> {
     _descriptionController.text = widget.task?.description ?? '';
     _difficultyValue = widget.task?.difficulty ?? Difficulty.easy;
     _categoryValue = widget.task?.category ?? Category.general;
-    _repeatTypeValue = widget.task?.scheduleType ?? RepeatType.none;
-    _repeatValue = widget.task?.scheduleValue ?? 1;
+    _repeatTypeValue = widget.task?.repeatType ?? RepeatType.none;
+    _repeatValue = widget.task?.repeatValue ?? 1;
     _repeatDaysOfWeek = _repeatTypeValue == RepeatType.weekly
         ? List.from(
-            widget.task?.scheduleDays ?? [date.weekday == 7 ? 0 : date.weekday])
+            widget.task?.repeatDays ?? [date.weekday == 7 ? 0 : date.weekday])
         : [date.weekday == 7 ? 0 : date.weekday];
     _repeatDaysOfMonth = _repeatTypeValue == RepeatType.monthly
-        ? List.from(widget.task?.scheduleDays ?? [date.day])
+        ? List.from(widget.task?.repeatDays ?? [date.day])
         : [date.day];
+    _deadline = widget.task?.deadline;
     _initialTask = _getCurrentTask();
   }
 
@@ -66,13 +69,14 @@ class _TaskEditViewState extends State<TaskEditView> {
         description: _descriptionController.text,
         difficulty: _difficultyValue,
         category: _categoryValue,
-        scheduleType: _repeatTypeValue,
-        scheduleValue: _repeatValue,
-        scheduleDays: _repeatTypeValue == RepeatType.weekly
+        repeatType: _repeatTypeValue,
+        repeatValue: _repeatValue,
+        repeatDays: _repeatTypeValue == RepeatType.weekly
             ? List.from(_repeatDaysOfWeek)
             : _repeatTypeValue == RepeatType.monthly
                 ? List.from(_repeatDaysOfMonth)
                 : [],
+        deadline: _deadline,
         finishedCount: widget.task?.finishedCount ?? 0,
         lastFinishedAt: widget.task?.lastFinishedAt ?? DateTime(0),
         createdAt: widget.task?.createdAt ?? DateTime.now());
@@ -118,13 +122,14 @@ class _TaskEditViewState extends State<TaskEditView> {
                       description: _descriptionController.text,
                       difficulty: _difficultyValue,
                       category: _categoryValue,
-                      scheduleType: _repeatTypeValue,
-                      scheduleValue: _repeatValue,
-                      scheduleDays: _repeatTypeValue == RepeatType.weekly
+                      repeatType: _repeatTypeValue,
+                      repeatValue: _repeatValue,
+                      repeatDays: _repeatTypeValue == RepeatType.weekly
                           ? _repeatDaysOfWeek
                           : _repeatTypeValue == RepeatType.monthly
                               ? _repeatDaysOfMonth
                               : [],
+                      deadline: _deadline,
                       finishedCount: 0,
                       lastFinishedAt: DateTime(0),
                       createdAt: DateTime.now()));
@@ -136,13 +141,14 @@ class _TaskEditViewState extends State<TaskEditView> {
                       description: _descriptionController.text,
                       difficulty: _difficultyValue,
                       category: _categoryValue,
-                      scheduleType: _repeatTypeValue,
-                      scheduleValue: _repeatValue,
-                      scheduleDays: _repeatTypeValue == RepeatType.weekly
+                      repeatType: _repeatTypeValue,
+                      repeatValue: _repeatValue,
+                      repeatDays: _repeatTypeValue == RepeatType.weekly
                           ? _repeatDaysOfWeek
                           : _repeatTypeValue == RepeatType.monthly
                               ? _repeatDaysOfMonth
                               : [],
+                      deadline: _deadline,
                       finishedCount: widget.task!.finishedCount,
                       lastFinishedAt: widget.task!.lastFinishedAt,
                       createdAt: widget.task!.createdAt));
@@ -217,8 +223,17 @@ class _TaskEditViewState extends State<TaskEditView> {
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: ListTile(
                     title: Text(AppLocalizations.of(context)!.repeat),
-                    subtitle: Text(repeatHint(context, _repeatTypeValue,
-                        _repeatValue, _repeatDaysOfWeek, _repeatDaysOfMonth)),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(repeatHint(context, _repeatTypeValue, _repeatValue,
+                            _repeatDaysOfWeek, _repeatDaysOfMonth)),
+                        if (_repeatTypeValue == RepeatType.none)
+                          Text((_deadline == null
+                              ? AppLocalizations.of(context)!.noDeadline
+                              : "${AppLocalizations.of(context)!.deadline}: ${DateFormat('yyyy-MM-dd HH:mm').format(_deadline!)}")),
+                      ],
+                    ),
                     trailing: const Icon(Icons.keyboard_arrow_right),
                     contentPadding: EdgeInsets.zero,
                     onTap: () {
@@ -229,6 +244,7 @@ class _TaskEditViewState extends State<TaskEditView> {
                                     repeatValue: _repeatValue,
                                     repeatDaysOfWeek: _repeatDaysOfWeek,
                                     repeatDaysOfMonth: _repeatDaysOfMonth,
+                                    deadline: _deadline,
                                   )))
                           .then((value) {
                         if (value != null) {
@@ -237,6 +253,7 @@ class _TaskEditViewState extends State<TaskEditView> {
                             _repeatValue = value['repeatValue'];
                             _repeatDaysOfWeek = value['repeatDaysOfWeek'];
                             _repeatDaysOfMonth = value['repeatDaysOfMonth'];
+                            _deadline = value['deadline'];
                           });
                         }
                       });

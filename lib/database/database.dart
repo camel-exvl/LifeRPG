@@ -17,7 +17,6 @@ import '../model/task_model.dart';
 part 'database.g.dart';
 
 @DriftDatabase(tables: [HabitTable, TaskTable, StatusTable, AttributeTable])
-
 class AppDatabase extends _$AppDatabase {
   static final AppDatabase instance = AppDatabase._internal();
 
@@ -78,7 +77,8 @@ class AppDatabase extends _$AppDatabase {
 
   // Status
   Future<StatusModel?> getStatus(int statusId) async {
-    return (select(statusTable)..where((t) => t.id.equals(statusId))).getSingleOrNull();
+    return (select(statusTable)..where((t) => t.id.equals(statusId)))
+        .getSingleOrNull();
   }
 
   Future<int> insertStatus(StatusTableCompanion status) =>

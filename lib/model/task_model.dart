@@ -43,6 +43,8 @@ class TaskTable extends Table {
 
   TextColumn get repeatDays => text().map(repeatDaysConverter)();
 
+  DateTimeColumn get deadline => dateTime().nullable()();
+
   IntColumn get finishedCount =>
       integer()(); // how many times the task has been finished
 
@@ -57,9 +59,10 @@ extension TaskModelExtension on TaskModel {
         description == other.description &&
         difficulty == other.difficulty &&
         category == other.category &&
-        scheduleType == other.scheduleType &&
-        scheduleValue == other.scheduleValue &&
-        listEquals(scheduleDays, other.scheduleDays);
+        repeatType == other.repeatType &&
+        repeatValue == other.repeatValue &&
+        listEquals(repeatDays, other.repeatDays) &&
+        deadline == other.deadline;
   }
 }
 

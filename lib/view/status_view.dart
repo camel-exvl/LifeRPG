@@ -1,9 +1,8 @@
-
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../viewmodel/status_viewmodel.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/database/database.dart';
+
+import '../viewmodel/status_viewmodel.dart';
 
 class StatusView extends StatefulWidget {
   const StatusView({super.key});
@@ -12,9 +11,10 @@ class StatusView extends StatefulWidget {
   State<StatusView> createState() => _StatusViewState();
 }
 
-class _StatusViewState extends State<StatusView> with AutomaticKeepAliveClientMixin {
+class _StatusViewState extends State<StatusView>
+    with AutomaticKeepAliveClientMixin {
   final viewModel = StatusViewModel();
-  Future<bool>? loadResult;  // 声明 future 变量
+  Future<bool>? loadResult; // 声明 future 变量
 
   @override
   void initState() {
@@ -41,13 +41,11 @@ class _StatusViewState extends State<StatusView> with AutomaticKeepAliveClientMi
         } else {
           return RefreshIndicator(
               onRefresh: loadData,
-              child: ListView(  // 使用 ListView 来替换 Column
+              child: ListView(// 使用 ListView 来替换 Column
                   children: [
-                    StatusCard(viewModel: viewModel),
-                    AttributesCard(viewModel: viewModel),
-                  ]
-              )
-          );
+                StatusCard(viewModel: viewModel),
+                AttributesCard(viewModel: viewModel),
+              ]));
         }
       },
     );
@@ -65,7 +63,8 @@ class StatusCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: ClipRRect( // 为 Column 的子项包裹一个 ClipRRect
+      child: ClipRRect(
+        // 为 Column 的子项包裹一个 ClipRRect
         borderRadius: BorderRadius.circular(10.0), // 圆角半径和卡片相同
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -76,7 +75,8 @@ class StatusCard extends StatelessWidget {
                 title: Text(
                   '${AppLocalizations.of(context)!.lifeLevel}  ${AppLocalizations.of(context)!.lv}${viewModel.status.level}',
                   style: TextStyle(
-                    fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
+                    fontSize:
+                        Theme.of(context).textTheme.headlineSmall?.fontSize,
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),
@@ -85,40 +85,43 @@ class StatusCard extends StatelessWidget {
             ),
             Container(
               color: Theme.of(context).colorScheme.secondaryContainer,
-              child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(15.0, 10.0, 50.0, 0.0),
-                      child: Column(
-                        children: [
-                          LinearProgressIndicator(
-                            value: viewModel.getExpPercent(),
-                            semanticsLabel: AppLocalizations.of(context)!.lifeLevelExperienceBar,
-                            color: Theme.of(context).colorScheme.onSecondaryContainer,
-                            backgroundColor: Theme.of(context).colorScheme.outlineVariant,
-                          ),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: Text(
-                                '${viewModel.status.exp}/${viewModel.getLifeLevelMaxExp(viewModel.status.level)}',
-                                style: TextStyle(
-                                  fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize,
-                                )
-                            ),
-                          ),
-                        ],
+              child: Column(children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(15.0, 10.0, 50.0, 0.0),
+                  child: Column(
+                    children: [
+                      LinearProgressIndicator(
+                        value: viewModel.getExpPercent(),
+                        semanticsLabel: AppLocalizations.of(context)!
+                            .lifeLevelExperienceBar,
+                        color:
+                            Theme.of(context).colorScheme.onSecondaryContainer,
+                        backgroundColor:
+                            Theme.of(context).colorScheme.outlineVariant,
                       ),
-                    ),
-                    ListTile(
-                      title: Text(
-                        '${AppLocalizations.of(context)!.lifeChickenSoup}\n${AppLocalizations.of(context)!.workHard}',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSecondaryContainer,
-                        ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                            '${viewModel.status.exp}/${viewModel.getLifeLevelMaxExp(viewModel.status.level)}',
+                            style: TextStyle(
+                              fontSize: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.fontSize,
+                            )),
                       ),
+                    ],
+                  ),
+                ),
+                ListTile(
+                  title: Text(
+                    '${AppLocalizations.of(context)!.lifeChickenSoup}\n${AppLocalizations.of(context)!.workHard}',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSecondaryContainer,
                     ),
-                  ]
-              ),
+                  ),
+                ),
+              ]),
             ),
           ],
         ),
@@ -140,26 +143,23 @@ class AttributesCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.0),
         child: Container(
           color: Theme.of(context).colorScheme.tertiaryContainer,
-          child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ListTile(
-                  title: Text(
-                    AppLocalizations.of(context)!.attributes,
-                    style: TextStyle(
-                      fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onTertiaryContainer,
-                    ),
-                  ),
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            ListTile(
+              title: Text(
+                AppLocalizations.of(context)!.attributes,
+                style: TextStyle(
+                  fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onTertiaryContainer,
                 ),
-                Column(
-                  children: viewModel.attributes.map((attribute) {
-                    return AttributeRow(viewModel: viewModel, attribute: attribute);
-                  }).toList(),
-                )
-              ]
-          ),
+              ),
+            ),
+            Column(
+              children: viewModel.attributes.map((attribute) {
+                return AttributeRow(viewModel: viewModel, attribute: attribute);
+              }).toList(),
+            )
+          ]),
         ),
       ),
     );
@@ -170,7 +170,8 @@ class AttributeRow extends StatelessWidget {
   final StatusViewModel viewModel;
   final AttributeModel attribute;
 
-  const AttributeRow({super.key, required this.viewModel, required this.attribute});
+  const AttributeRow(
+      {super.key, required this.viewModel, required this.attribute});
 
   @override
   Widget build(BuildContext context) {
@@ -184,8 +185,12 @@ class AttributeRow extends StatelessWidget {
               alignment: Alignment.center,
               child: Image.asset(
                 attribute.iconPath,
-                width: (Theme.of(context).textTheme.headlineSmall?.fontSize ?? 15) * 1.2,
-                height: (Theme.of(context).textTheme.headlineSmall?.fontSize ?? 15) * 1.2,
+                width: (Theme.of(context).textTheme.headlineSmall?.fontSize ??
+                        15) *
+                    1.2,
+                height: (Theme.of(context).textTheme.headlineSmall?.fontSize ??
+                        15) *
+                    1.2,
               ),
             ),
           ),
@@ -195,9 +200,7 @@ class AttributeRow extends StatelessWidget {
                   '${viewModel.getAttributeName(attribute.name, context)} ${AppLocalizations.of(context)!.lv}${attribute.level}',
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onTertiaryContainer,
-                  )
-              )
-          ),
+                  ))),
           Expanded(
               flex: 15,
               child: Padding(
@@ -205,24 +208,27 @@ class AttributeRow extends StatelessWidget {
                 child: Column(
                   children: [
                     LinearProgressIndicator(
-                      value: attribute.exp / (viewModel.getAttributeMaxExp(attribute.level)),
-                      semanticsLabel: AppLocalizations.of(context)!.attributeLevelExperienceBar,
+                      value: attribute.exp /
+                          (viewModel.getAttributeMaxExp(attribute.level)),
+                      semanticsLabel: AppLocalizations.of(context)!
+                          .attributeLevelExperienceBar,
                       color: Theme.of(context).colorScheme.onTertiaryContainer,
-                      backgroundColor: Theme.of(context).colorScheme.outlineVariant,
+                      backgroundColor:
+                          Theme.of(context).colorScheme.outlineVariant,
                     ),
                     Align(
                       alignment: Alignment.centerRight,
                       child: Text(
                           '${attribute.exp}/${viewModel.getAttributeMaxExp(attribute.level)}',
                           style: TextStyle(
-                            color: Theme.of(context).colorScheme.onTertiaryContainer,
-                          )
-                      ),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onTertiaryContainer,
+                          )),
                     ),
                   ],
                 ),
-              )
-          ),
+              )),
         ],
       ),
     );

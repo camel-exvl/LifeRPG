@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
 import 'package:liferpg/view/target/task/task_edit_view.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -11,12 +12,14 @@ class TaskRepeatEditView extends StatefulWidget {
       required this.repeatTypeValue,
       required this.repeatValue,
       required this.repeatDaysOfWeek,
-      required this.repeatDaysOfMonth});
+      required this.repeatDaysOfMonth,
+      required this.deadline});
 
   final RepeatType repeatTypeValue;
   final int repeatValue;
   final List<int> repeatDaysOfWeek;
   final List<int> repeatDaysOfMonth;
+  final DateTime? deadline;
 
   @override
   State<TaskRepeatEditView> createState() => _TaskRepeatEditViewState();
@@ -29,6 +32,7 @@ class _TaskRepeatEditViewState extends State<TaskRepeatEditView> {
   late int _repeatValue;
   late List<int> _repeatDaysOfWeek;
   late List<int> _repeatDaysOfMonth;
+  late DateTime? _deadline;
 
   late FixedExtentScrollController _repeatValueController;
   late FixedExtentScrollController _repeatTypeController;
@@ -40,6 +44,7 @@ class _TaskRepeatEditViewState extends State<TaskRepeatEditView> {
     _repeatValue = widget.repeatValue;
     _repeatDaysOfWeek = widget.repeatDaysOfWeek;
     _repeatDaysOfMonth = widget.repeatDaysOfMonth;
+    _deadline = widget.deadline;
 
     _repeatValueController =
         FixedExtentScrollController(initialItem: _repeatValue - 1);
@@ -59,7 +64,8 @@ class _TaskRepeatEditViewState extends State<TaskRepeatEditView> {
                   'repeatTypeValue': _repeatTypeValue,
                   'repeatValue': _repeatValue,
                   'repeatDaysOfWeek': _repeatDaysOfWeek,
-                  'repeatDaysOfMonth': _repeatDaysOfMonth
+                  'repeatDaysOfMonth': _repeatDaysOfMonth,
+                  'deadline': _deadline
                 });
               },
               child: Text(AppLocalizations.of(context)!.save),
@@ -113,7 +119,45 @@ class _TaskRepeatEditViewState extends State<TaskRepeatEditView> {
                 )
               ]),
             ),
-            if (_repeatTypeValue != RepeatType.none)
+            if (_repeatTypeValue == RepeatType.none)
+              ListTile(
+                  title: Text(AppLocalizations.of(context)!.deadline),
+                  subtitle: Text(_deadline == null
+                      ? AppLocalizations.of(context)!.noDeadline
+                      : DateFormat('yyyy-MM-dd HH:mm').format(_deadline!)),
+                  onTap: () {
+                    showDatePicker(
+                      context: context,
+                      initialDate: _deadline ?? DateTime.now(),
+                      firstDate: DateTime.now(),
+                      lastDate:
+                          DateTime.now().add(const Duration(days: 365 * 99)),
+                    ).then((date) {
+                      if (date != null) {
+                        showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.fromDateTime(
+                              _deadline ?? DateTime.now()),
+                        ).then((time) {
+                          if (time != null) {
+                            setState(() {
+                              _deadline = DateTime(date.year, date.month,
+                                  date.day, time.hour, time.minute);
+                            });
+                          }
+                        });
+                      }
+                    });
+                  },
+                  trailing: IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      setState(() {
+                        _deadline = null;
+                      });
+                    },
+                  ))
+            else
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Card(
