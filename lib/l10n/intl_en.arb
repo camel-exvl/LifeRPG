@@ -89,5 +89,6 @@
   "confirm": "Confirm",
   "frequentFinishWarningTitle": "You are finishing too frequent",
   "frequentFinishWarningMessage": "This app aims to help you build good habits and achieve long-term goals. If you finish too frequent, it may not be helpful for you. ",
-  "gold": "Gold"
+  "gold": "Gold",
+  "nextScheduledAt": "Next Scheduled At"
 }

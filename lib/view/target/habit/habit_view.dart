@@ -56,15 +56,20 @@ class _HabitViewState extends State<HabitView>
                                 habit: habit)));
                       },
                       trailing: IconButton(
-                        icon: habit.type == HabitType.good
-                            ? const Icon(Icons.add)
-                            : const Icon(Icons.remove),
+                        icon: Image(
+                          image: habit.type == HabitType.good
+                              ? const AssetImage('res/icons/finish.png')
+                              : const AssetImage('res/icons/finish_bad.png'),
+                          width: Theme.of(context).iconTheme.size,
+                          height: Theme.of(context).iconTheme.size,
+                        ),
                         onPressed: () async {
                           final response = await viewModel.finishHabit(habit);
                           if (context.mounted) {
                             await FinishDialog().show(context, response);
                           }
                           if (context.mounted &&
+                              habit.type == HabitType.good &&
                               response.penaltyCoefficient < 0.8) {
                             FrequentFinishWarningDialog().show(context);
                           }
@@ -85,7 +90,11 @@ class _HabitViewState extends State<HabitView>
                         isAdd: true,
                         order: viewModel.habits.length)));
               },
-              child: const Icon(Icons.add),
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              elevation: 0,
+              child: const Image(
+                image: AssetImage('res/icons/add.png'),
+              ),
             ),
           );
         }));

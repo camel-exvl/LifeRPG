@@ -25,7 +25,7 @@ class HabitTable extends Table {
   IntColumn get finishedCount =>
       integer()(); // how many times the habit has been finished
 
-  RealColumn get rewardCoefficient => real().withDefault(const Constant(1.0))();
+  RealColumn get rewardCoefficient => real()();
 
   DateTimeColumn get lastFinishedAt => dateTime()();
 
