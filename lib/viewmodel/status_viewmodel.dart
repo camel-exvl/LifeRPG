@@ -293,21 +293,6 @@ class StatusViewModel extends ChangeNotifier {
     int newLifeLevel = _status.level;
     int newLifeExp =
         _status.exp + response.expMap.values.reduce((a, b) => a + b);
-    if(newLifeExp < 0) {
-      newLifeExp = 0;
-    }
-    else {
-      while (newLifeExp >= getLifeLevelMaxExp(newLifeLevel)) {
-        newLifeExp -= getLifeLevelMaxExp(newLifeLevel);
-        newLifeLevel++;
-      }
-    }
-    final newStatus = _status.copyWith(
-      level: newLifeLevel,
-      exp: newLifeExp,
-      gold: newGold,
-    );
-    updateStatus(newStatus);
 
     for (var entry in response.expMap.entries) {
       if (entry.value != 0) {
@@ -319,6 +304,7 @@ class StatusViewModel extends ChangeNotifier {
             .firstWhere((element) => element.name == entry.key.name)
             .level;
         if(newAttributeExp < 0) {
+          newLifeExp -= newAttributeExp;
           newAttributeExp = 0;
         } else {
           while (newAttributeExp >= getAttributeMaxExp(newAttributeLevel)) {
@@ -329,11 +315,26 @@ class StatusViewModel extends ChangeNotifier {
         final newAttribute = _attributes
             .firstWhere((element) => element.name == entry.key.name)
             .copyWith(
-              level: newAttributeLevel,
-              exp: newAttributeExp,
-            );
+          level: newAttributeLevel,
+          exp: newAttributeExp,
+        );
         updateAttribute(newAttribute);
       }
     }
+
+    while(newLifeExp < 0) {
+      newLifeLevel--;
+      newLifeExp += getLifeLevelMaxExp(newLifeLevel);
+    }
+    while (newLifeExp >= getLifeLevelMaxExp(newLifeLevel)) {
+      newLifeExp -= getLifeLevelMaxExp(newLifeLevel);
+      newLifeLevel++;
+    }
+    final newStatus = _status.copyWith(
+      level: newLifeLevel,
+      exp: newLifeExp,
+      gold: newGold,
+    );
+    updateStatus(newStatus);
   }
 }
