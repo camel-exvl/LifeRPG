@@ -33,7 +33,7 @@ class FinishDialog {
                   const Spacer(),
                   Text(rewardResponse.gold > 0
                       ? "+ ${rewardResponse.gold.toString()}"
-                      : "- ${rewardResponse.gold.toString()}"),
+                      : "- ${(-rewardResponse.gold).toString()}"),
                 ],
               ),
               for (var exp in rewardResponse.expMap.entries)
@@ -50,7 +50,7 @@ class FinishDialog {
                       const Spacer(),
                       Text(exp.value > 0
                           ? "+ ${exp.value.toString()}"
-                          : "- ${exp.value.toString()}"),
+                          : "- ${(-exp.value).toString()}"),
                     ],
                   ),
             ],

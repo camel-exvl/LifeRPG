@@ -1,5 +1,4 @@
 import 'package:drift/drift.dart';
-import 'package:liferpg/model/status/status_model.dart';
 
 /// 代表一个属性状态信息
 @DataClassName("AttributeModel")
