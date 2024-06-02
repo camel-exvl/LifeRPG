@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:liferpg/view/target/dialog/finish_dialog.dart';
+import 'package:liferpg/view/target/dialog/frequent_finish_warning_dialog.dart';
 import 'package:liferpg/viewmodel/habit_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 import '../../../database/database.dart';
-import '../../../model/habit_model.dart';
+import '../../../model/target/habit_model.dart';
 import 'habit_edit_view.dart';
 
 class HabitView extends StatefulWidget {
@@ -57,7 +59,16 @@ class _HabitViewState extends State<HabitView>
                         icon: habit.type == HabitType.good
                             ? const Icon(Icons.add)
                             : const Icon(Icons.remove),
-                        onPressed: () {},
+                        onPressed: () async {
+                          final response = await viewModel.finishHabit(habit);
+                          if (context.mounted) {
+                            await FinishDialog().show(context, response);
+                          }
+                          if (context.mounted &&
+                              response.penaltyCoefficient < 0.8) {
+                            FrequentFinishWarningDialog().show(context);
+                          }
+                        },
                       ),
                     );
                   },

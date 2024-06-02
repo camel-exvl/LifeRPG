@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart' hide Category;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/model/common_model.dart';
 
-import '../database/database.dart';
+import '../../database/database.dart';
 
 enum RepeatType { none, daily, weekly, monthly, yearly }
 
@@ -47,6 +47,8 @@ class TaskTable extends Table {
 
   IntColumn get finishedCount =>
       integer()(); // how many times the task has been finished
+
+  RealColumn get rewardCoefficient => real().withDefault(const Constant(1.0))();
 
   DateTimeColumn get lastFinishedAt => dateTime()();
 

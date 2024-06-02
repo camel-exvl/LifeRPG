@@ -12,7 +12,7 @@
   "attributes": "属性",
   "strength": "力量",
   "talent": "才能",
-  "intellect": "智力",
+  "intelligence": "智力",
   "environment": "环境",
   "culture": "文化",
   "charisma": "魅力",
@@ -68,7 +68,7 @@
   "thursday": "周四",
   "friday": "周五",
   "saturday": "周六",
-  "discardChanges": "放弃更改",
+  "unsavedChanges": "未保存的更改",
   "discardChangesMessage": "您确定要放弃更改吗？",
   "discard": "放弃",
   "deleteMessage": "您确定要删除吗？",
@@ -83,5 +83,11 @@
   "defaultTaskJoggingDescription": "慢跑 30 分钟",
   "defaultTaskReadBookTitle": "读一本书",
   "defaultTaskFinishProjectTitle": "完成项目",
-  "defaultTaskFinishProjectDescription": "在截止时间之前完成项目"
+  "defaultTaskFinishProjectDescription": "在截止时间之前完成项目",
+  "congratulations": "恭喜!",
+  "youCanDoBetter": "你可以做得更好!",
+  "confirm": "确认",
+  "frequentFinishWarningTitle": "您完成得太频繁了",
+  "frequentFinishWarningMessage": "此应用程序旨在帮助您养成良好的习惯并实现长期目标。如果您完成得太频繁，可能对您没有帮助。",
+  "gold": "金币"
 }

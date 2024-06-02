@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:liferpg/view/target/task/task_edit_view.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../../../model/task_model.dart';
+import '../../../model/target/task_model.dart';
 
 class TaskRepeatEditView extends StatefulWidget {
   const TaskRepeatEditView(

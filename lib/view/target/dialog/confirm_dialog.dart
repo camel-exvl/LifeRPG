@@ -2,28 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DiscardChangeDialog {
-  final VoidCallback onDiscard;
-
-  const DiscardChangeDialog({required this.onDiscard});
-
-  Future<void> show(BuildContext context) async {
-    return showDialog<void>(
+  Future<bool?> show(BuildContext context) async {
+    return showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)!.discardChanges),
+          title: Row(children: [
+            Text(AppLocalizations.of(context)!.unsavedChanges),
+            Image(
+              image: const AssetImage('res/icons/warning.png'),
+              width: Theme.of(context).iconTheme.size,
+              height: Theme.of(context).iconTheme.size,
+            )
+          ]),
           content: Text(AppLocalizations.of(context)!.discardChangesMessage),
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(false);
               },
               child: Text(AppLocalizations.of(context)!.cancel),
             ),
             TextButton(
               onPressed: () {
-                onDiscard();
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(true);
               },
               child: Text(AppLocalizations.of(context)!.discard),
             ),
