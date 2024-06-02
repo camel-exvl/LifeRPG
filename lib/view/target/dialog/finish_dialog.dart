@@ -16,28 +16,29 @@ class FinishDialog {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
-                children: [
-                  // TODO: Replace Icon with Image.asset
-                  Icon(
-                    Icons.star,
-                    size: Theme.of(context).iconTheme.size,
-                  ),
-                  // Image(
-                  //   image: const AssetImage('res/icons/gold.png'),
-                  //   width: Theme.of(context).iconTheme.size,
-                  //   height: Theme.of(context).iconTheme.size,
-                  // ),
-                  const Spacer(),
-                  Text(AppLocalizations.of(context)!.gold),
-                  const Spacer(),
-                  Text(rewardResponse.gold > 0
-                      ? "+ ${rewardResponse.gold.toString()}"
-                      : "- ${rewardResponse.gold.toString()}"),
-                ],
-              ),
+              if (rewardResponse.gold != 0)
+                Row(
+                  children: [
+                    // TODO: Replace Icon with Image.asset
+                    Icon(
+                      Icons.star,
+                      size: Theme.of(context).iconTheme.size,
+                    ),
+                    // Image(
+                    //   image: const AssetImage('res/icons/gold.png'),
+                    //   width: Theme.of(context).iconTheme.size,
+                    //   height: Theme.of(context).iconTheme.size,
+                    // ),
+                    const Spacer(),
+                    Text(AppLocalizations.of(context)!.gold),
+                    const Spacer(),
+                    Text(rewardResponse.gold > 0
+                        ? "+ ${rewardResponse.gold.toString()}"
+                        : "- ${(-rewardResponse.gold).toString()}"),
+                  ],
+                ),
               for (var exp in rewardResponse.expMap.entries)
-                if (exp.value > 0)
+                if (exp.value != 0)
                   Row(
                     children: [
                       Image(
@@ -50,7 +51,7 @@ class FinishDialog {
                       const Spacer(),
                       Text(exp.value > 0
                           ? "+ ${exp.value.toString()}"
-                          : "- ${exp.value.toString()}"),
+                          : "- ${(-exp.value).toString()}"),
                     ],
                   ),
             ],
