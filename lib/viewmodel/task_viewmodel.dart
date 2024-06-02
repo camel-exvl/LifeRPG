@@ -42,6 +42,7 @@ class TaskViewModel extends ChangeNotifier {
         finishedCount: 0,
         rewardCoefficient: 1.0,
         lastFinishedAt: DateTime(0),
+        nextScheduledAt: DateTime.now(),
         createdAt: DateTime.now(),
       ),
       // learning
@@ -59,6 +60,7 @@ class TaskViewModel extends ChangeNotifier {
         finishedCount: 0,
         rewardCoefficient: 1.0,
         lastFinishedAt: DateTime(0),
+        nextScheduledAt: DateTime.now(),
         createdAt: DateTime.now(),
       ),
       // career
@@ -77,6 +79,7 @@ class TaskViewModel extends ChangeNotifier {
         finishedCount: 0,
         rewardCoefficient: 1.0,
         lastFinishedAt: DateTime(0),
+        nextScheduledAt: DateTime.now(),
         createdAt: DateTime.now(),
       ),
     ];
@@ -104,6 +107,8 @@ class TaskViewModel extends ChangeNotifier {
       repeatDays: Value(task.repeatDays),
       deadline: Value(task.deadline),
       finishedCount: Value(task.finishedCount),
+      rewardCoefficient: Value(task.rewardCoefficient),
+      nextScheduledAt: Value(task.nextScheduledAt),
       lastFinishedAt: Value(task.lastFinishedAt),
       createdAt: Value(task.createdAt),
     ))
@@ -146,12 +151,56 @@ class TaskViewModel extends ChangeNotifier {
       rewardCoefficient: task.rewardCoefficient,
       habitType: null,
     ));
-    task = task.copyWith(
-      finishedCount: task.finishedCount + 1,
-      rewardCoefficient: response.penaltyCoefficient,
-      lastFinishedAt: DateTime.now(),
-    );
-    updateTask(task);
+    if (task.repeatType == RepeatType.none) {
+      // delete the task if it's not repeatable
+      removeTask(task);
+    } else {
+      // update the task if it's repeatable
+      final dateTime = DateTime.now();
+      DateTime nextScheduledAt;
+      switch (task.repeatType) {
+        case RepeatType.daily:
+          nextScheduledAt = DateTime(
+              dateTime.year, dateTime.month, dateTime.day + task.repeatValue);
+          break;
+        case RepeatType.weekly:
+          final currentDay = dateTime.weekday == 7 ? 0 : dateTime.weekday;
+          final nextDay = task.repeatDays
+              .firstWhere((element) => element > currentDay, orElse: () => -1);
+          if (nextDay == -1) {
+            nextScheduledAt = DateTime(dateTime.year, dateTime.month,
+                task.repeatDays.first + 7 * task.repeatValue);
+          } else {
+            nextScheduledAt = DateTime(dateTime.year, dateTime.month,
+                dateTime.day + nextDay - currentDay);
+          }
+          break;
+        case RepeatType.monthly:
+          final currentDay = dateTime.day;
+          final nextDay = task.repeatDays
+              .firstWhere((element) => element > currentDay, orElse: () => -1);
+          if (nextDay == -1) {
+            nextScheduledAt = DateTime(dateTime.year,
+                dateTime.month + task.repeatValue, task.repeatDays.first);
+          } else {
+            nextScheduledAt = DateTime(dateTime.year, dateTime.month, nextDay);
+          }
+          break;
+        case RepeatType.yearly:
+          nextScheduledAt = DateTime(
+              dateTime.year + task.repeatValue, dateTime.month, dateTime.day);
+          break;
+        default:
+          throw Exception("Unknown repeat type");
+      }
+      task = task.copyWith(
+        finishedCount: task.finishedCount + 1,
+        nextScheduledAt: nextScheduledAt,
+        rewardCoefficient: response.penaltyCoefficient,
+        lastFinishedAt: DateTime.now(),
+      );
+      updateTask(task);
+    }
     return response;
   }
 }

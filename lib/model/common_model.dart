@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 enum Difficulty { easy, medium, hard }
@@ -66,38 +65,20 @@ extension AttributeExtension on Attribute {
     }
   }
 
-  Image icon(context) {
+  String iconPath() {
     switch (this) {
       case Attribute.strength:
-        return Image(
-            image: const AssetImage('res/icons/attribute_strength.png'),
-            width: Theme.of(context).iconTheme.size,
-            height: Theme.of(context).iconTheme.size);
+        return 'res/icons/attribute_strength.png';
       case Attribute.talent:
-        return Image(
-            image: const AssetImage('res/icons/attribute_talent.png'),
-            width: Theme.of(context).iconTheme.size,
-            height: Theme.of(context).iconTheme.size);
+        return 'res/icons/attribute_talent.png';
       case Attribute.culture:
-        return Image(
-            image: const AssetImage('res/icons/attribute_culture.png'),
-            width: Theme.of(context).iconTheme.size,
-            height: Theme.of(context).iconTheme.size);
+        return 'res/icons/attribute_culture.png';
       case Attribute.charisma:
-        return Image(
-            image: const AssetImage('res/icons/attribute_charisma.png'),
-            width: Theme.of(context).iconTheme.size,
-            height: Theme.of(context).iconTheme.size);
+        return 'res/icons/attribute_charisma.png';
       case Attribute.environment:
-        return Image(
-            image: const AssetImage('res/icons/attribute_environment.png'),
-            width: Theme.of(context).iconTheme.size,
-            height: Theme.of(context).iconTheme.size);
+        return 'res/icons/attribute_environment.png';
       case Attribute.intelligence:
-        return Image(
-            image: const AssetImage('res/icons/attribute_intelligence.png'),
-            width: Theme.of(context).iconTheme.size,
-            height: Theme.of(context).iconTheme.size);
+        return 'res/icons/attribute_intelligence.png';
     }
   }
 }

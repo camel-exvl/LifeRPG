@@ -17,22 +17,40 @@ class FinishDialog {
             mainAxisSize: MainAxisSize.min,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   // TODO: Replace Icon with Image.asset
-                  const Icon(Icons.star, color: Colors.yellow),
-                  Text(
-                      "${AppLocalizations.of(context)!.gold} + ${rewardResponse.gold.toString()}"),
+                  Icon(
+                    Icons.star,
+                    size: Theme.of(context).iconTheme.size,
+                  ),
+                  // Image(
+                  //   image: const AssetImage('res/icons/gold.png'),
+                  //   width: Theme.of(context).iconTheme.size,
+                  //   height: Theme.of(context).iconTheme.size,
+                  // ),
+                  const Spacer(),
+                  Text(AppLocalizations.of(context)!.gold),
+                  const Spacer(),
+                  Text(rewardResponse.gold > 0
+                      ? "+ ${rewardResponse.gold.toString()}"
+                      : "- ${rewardResponse.gold.toString()}"),
                 ],
               ),
               for (var exp in rewardResponse.expMap.entries)
                 if (exp.value > 0)
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      exp.key.icon(context),
-                      Text(
-                          "${exp.key.localizedString(context)} + ${exp.value}"),
+                      Image(
+                        image: AssetImage(exp.key.iconPath()),
+                        width: Theme.of(context).iconTheme.size,
+                        height: Theme.of(context).iconTheme.size,
+                      ),
+                      const Spacer(),
+                      Text(exp.key.localizedString(context)),
+                      const Spacer(),
+                      Text(exp.value > 0
+                          ? "+ ${exp.value.toString()}"
+                          : "- ${exp.value.toString()}"),
                     ],
                   ),
             ],

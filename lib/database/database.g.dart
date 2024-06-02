@@ -387,9 +387,7 @@ class $HabitTableTable extends HabitTable
   @override
   late final GeneratedColumn<double> rewardCoefficient =
       GeneratedColumn<double>('reward_coefficient', aliasedName, false,
-          type: DriftSqlType.double,
-          requiredDuringInsert: false,
-          defaultValue: const Constant(1.0));
+          type: DriftSqlType.double, requiredDuringInsert: true);
   static const VerificationMeta _lastFinishedAtMeta =
       const VerificationMeta('lastFinishedAt');
   @override
@@ -465,6 +463,8 @@ class $HabitTableTable extends HabitTable
           _rewardCoefficientMeta,
           rewardCoefficient.isAcceptableOrUnknown(
               data['reward_coefficient']!, _rewardCoefficientMeta));
+    } else if (isInserting) {
+      context.missing(_rewardCoefficientMeta);
     }
     if (data.containsKey('last_finished_at')) {
       context.handle(
@@ -742,7 +742,7 @@ class HabitTableCompanion extends UpdateCompanion<HabitModel> {
     required Category category,
     required HabitType type,
     required int finishedCount,
-    this.rewardCoefficient = const Value.absent(),
+    required double rewardCoefficient,
     required DateTime lastFinishedAt,
     required DateTime createdAt,
   })  : order = Value(order),
@@ -752,6 +752,7 @@ class HabitTableCompanion extends UpdateCompanion<HabitModel> {
         category = Value(category),
         type = Value(type),
         finishedCount = Value(finishedCount),
+        rewardCoefficient = Value(rewardCoefficient),
         lastFinishedAt = Value(lastFinishedAt),
         createdAt = Value(createdAt);
   static Insertable<HabitModel> custom({
@@ -952,9 +953,13 @@ class $TaskTableTable extends TaskTable
   @override
   late final GeneratedColumn<double> rewardCoefficient =
       GeneratedColumn<double>('reward_coefficient', aliasedName, false,
-          type: DriftSqlType.double,
-          requiredDuringInsert: false,
-          defaultValue: const Constant(1.0));
+          type: DriftSqlType.double, requiredDuringInsert: true);
+  static const VerificationMeta _nextScheduledAtMeta =
+      const VerificationMeta('nextScheduledAt');
+  @override
+  late final GeneratedColumn<DateTime> nextScheduledAt =
+      GeneratedColumn<DateTime>('next_scheduled_at', aliasedName, false,
+          type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _lastFinishedAtMeta =
       const VerificationMeta('lastFinishedAt');
   @override
@@ -981,6 +986,7 @@ class $TaskTableTable extends TaskTable
         deadline,
         finishedCount,
         rewardCoefficient,
+        nextScheduledAt,
         lastFinishedAt,
         createdAt
       ];
@@ -1046,6 +1052,16 @@ class $TaskTableTable extends TaskTable
           _rewardCoefficientMeta,
           rewardCoefficient.isAcceptableOrUnknown(
               data['reward_coefficient']!, _rewardCoefficientMeta));
+    } else if (isInserting) {
+      context.missing(_rewardCoefficientMeta);
+    }
+    if (data.containsKey('next_scheduled_at')) {
+      context.handle(
+          _nextScheduledAtMeta,
+          nextScheduledAt.isAcceptableOrUnknown(
+              data['next_scheduled_at']!, _nextScheduledAtMeta));
+    } else if (isInserting) {
+      context.missing(_nextScheduledAtMeta);
     }
     if (data.containsKey('last_finished_at')) {
       context.handle(
@@ -1098,6 +1114,8 @@ class $TaskTableTable extends TaskTable
           .read(DriftSqlType.int, data['${effectivePrefix}finished_count'])!,
       rewardCoefficient: attachedDatabase.typeMapping.read(
           DriftSqlType.double, data['${effectivePrefix}reward_coefficient'])!,
+      nextScheduledAt: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime, data['${effectivePrefix}next_scheduled_at'])!,
       lastFinishedAt: attachedDatabase.typeMapping.read(
           DriftSqlType.dateTime, data['${effectivePrefix}last_finished_at'])!,
       createdAt: attachedDatabase.typeMapping
@@ -1133,6 +1151,7 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
   final DateTime? deadline;
   final int finishedCount;
   final double rewardCoefficient;
+  final DateTime nextScheduledAt;
   final DateTime lastFinishedAt;
   final DateTime createdAt;
   const TaskModel(
@@ -1148,6 +1167,7 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
       this.deadline,
       required this.finishedCount,
       required this.rewardCoefficient,
+      required this.nextScheduledAt,
       required this.lastFinishedAt,
       required this.createdAt});
   @override
@@ -1179,6 +1199,7 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
     }
     map['finished_count'] = Variable<int>(finishedCount);
     map['reward_coefficient'] = Variable<double>(rewardCoefficient);
+    map['next_scheduled_at'] = Variable<DateTime>(nextScheduledAt);
     map['last_finished_at'] = Variable<DateTime>(lastFinishedAt);
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
@@ -1200,6 +1221,7 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
           : Value(deadline),
       finishedCount: Value(finishedCount),
       rewardCoefficient: Value(rewardCoefficient),
+      nextScheduledAt: Value(nextScheduledAt),
       lastFinishedAt: Value(lastFinishedAt),
       createdAt: Value(createdAt),
     );
@@ -1224,6 +1246,7 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
       deadline: serializer.fromJson<DateTime?>(json['deadline']),
       finishedCount: serializer.fromJson<int>(json['finishedCount']),
       rewardCoefficient: serializer.fromJson<double>(json['rewardCoefficient']),
+      nextScheduledAt: serializer.fromJson<DateTime>(json['nextScheduledAt']),
       lastFinishedAt: serializer.fromJson<DateTime>(json['lastFinishedAt']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
@@ -1247,6 +1270,7 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
       'deadline': serializer.toJson<DateTime?>(deadline),
       'finishedCount': serializer.toJson<int>(finishedCount),
       'rewardCoefficient': serializer.toJson<double>(rewardCoefficient),
+      'nextScheduledAt': serializer.toJson<DateTime>(nextScheduledAt),
       'lastFinishedAt': serializer.toJson<DateTime>(lastFinishedAt),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
@@ -1265,6 +1289,7 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
           Value<DateTime?> deadline = const Value.absent(),
           int? finishedCount,
           double? rewardCoefficient,
+          DateTime? nextScheduledAt,
           DateTime? lastFinishedAt,
           DateTime? createdAt}) =>
       TaskModel(
@@ -1280,6 +1305,7 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
         deadline: deadline.present ? deadline.value : this.deadline,
         finishedCount: finishedCount ?? this.finishedCount,
         rewardCoefficient: rewardCoefficient ?? this.rewardCoefficient,
+        nextScheduledAt: nextScheduledAt ?? this.nextScheduledAt,
         lastFinishedAt: lastFinishedAt ?? this.lastFinishedAt,
         createdAt: createdAt ?? this.createdAt,
       );
@@ -1298,6 +1324,7 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
           ..write('deadline: $deadline, ')
           ..write('finishedCount: $finishedCount, ')
           ..write('rewardCoefficient: $rewardCoefficient, ')
+          ..write('nextScheduledAt: $nextScheduledAt, ')
           ..write('lastFinishedAt: $lastFinishedAt, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
@@ -1318,6 +1345,7 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
       deadline,
       finishedCount,
       rewardCoefficient,
+      nextScheduledAt,
       lastFinishedAt,
       createdAt);
   @override
@@ -1336,6 +1364,7 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
           other.deadline == this.deadline &&
           other.finishedCount == this.finishedCount &&
           other.rewardCoefficient == this.rewardCoefficient &&
+          other.nextScheduledAt == this.nextScheduledAt &&
           other.lastFinishedAt == this.lastFinishedAt &&
           other.createdAt == this.createdAt);
 }
@@ -1353,6 +1382,7 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
   final Value<DateTime?> deadline;
   final Value<int> finishedCount;
   final Value<double> rewardCoefficient;
+  final Value<DateTime> nextScheduledAt;
   final Value<DateTime> lastFinishedAt;
   final Value<DateTime> createdAt;
   const TaskTableCompanion({
@@ -1368,6 +1398,7 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
     this.deadline = const Value.absent(),
     this.finishedCount = const Value.absent(),
     this.rewardCoefficient = const Value.absent(),
+    this.nextScheduledAt = const Value.absent(),
     this.lastFinishedAt = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
@@ -1383,7 +1414,8 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
     required List<int> repeatDays,
     this.deadline = const Value.absent(),
     required int finishedCount,
-    this.rewardCoefficient = const Value.absent(),
+    required double rewardCoefficient,
+    required DateTime nextScheduledAt,
     required DateTime lastFinishedAt,
     required DateTime createdAt,
   })  : order = Value(order),
@@ -1395,6 +1427,8 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
         repeatValue = Value(repeatValue),
         repeatDays = Value(repeatDays),
         finishedCount = Value(finishedCount),
+        rewardCoefficient = Value(rewardCoefficient),
+        nextScheduledAt = Value(nextScheduledAt),
         lastFinishedAt = Value(lastFinishedAt),
         createdAt = Value(createdAt);
   static Insertable<TaskModel> custom({
@@ -1410,6 +1444,7 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
     Expression<DateTime>? deadline,
     Expression<int>? finishedCount,
     Expression<double>? rewardCoefficient,
+    Expression<DateTime>? nextScheduledAt,
     Expression<DateTime>? lastFinishedAt,
     Expression<DateTime>? createdAt,
   }) {
@@ -1426,6 +1461,7 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
       if (deadline != null) 'deadline': deadline,
       if (finishedCount != null) 'finished_count': finishedCount,
       if (rewardCoefficient != null) 'reward_coefficient': rewardCoefficient,
+      if (nextScheduledAt != null) 'next_scheduled_at': nextScheduledAt,
       if (lastFinishedAt != null) 'last_finished_at': lastFinishedAt,
       if (createdAt != null) 'created_at': createdAt,
     });
@@ -1444,6 +1480,7 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
       Value<DateTime?>? deadline,
       Value<int>? finishedCount,
       Value<double>? rewardCoefficient,
+      Value<DateTime>? nextScheduledAt,
       Value<DateTime>? lastFinishedAt,
       Value<DateTime>? createdAt}) {
     return TaskTableCompanion(
@@ -1459,6 +1496,7 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
       deadline: deadline ?? this.deadline,
       finishedCount: finishedCount ?? this.finishedCount,
       rewardCoefficient: rewardCoefficient ?? this.rewardCoefficient,
+      nextScheduledAt: nextScheduledAt ?? this.nextScheduledAt,
       lastFinishedAt: lastFinishedAt ?? this.lastFinishedAt,
       createdAt: createdAt ?? this.createdAt,
     );
@@ -1507,6 +1545,9 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
     if (rewardCoefficient.present) {
       map['reward_coefficient'] = Variable<double>(rewardCoefficient.value);
     }
+    if (nextScheduledAt.present) {
+      map['next_scheduled_at'] = Variable<DateTime>(nextScheduledAt.value);
+    }
     if (lastFinishedAt.present) {
       map['last_finished_at'] = Variable<DateTime>(lastFinishedAt.value);
     }
@@ -1531,6 +1572,7 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
           ..write('deadline: $deadline, ')
           ..write('finishedCount: $finishedCount, ')
           ..write('rewardCoefficient: $rewardCoefficient, ')
+          ..write('nextScheduledAt: $nextScheduledAt, ')
           ..write('lastFinishedAt: $lastFinishedAt, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
@@ -1958,7 +2000,7 @@ typedef $$HabitTableTableInsertCompanionBuilder = HabitTableCompanion Function({
   required Category category,
   required HabitType type,
   required int finishedCount,
-  Value<double> rewardCoefficient,
+  required double rewardCoefficient,
   required DateTime lastFinishedAt,
   required DateTime createdAt,
 });
@@ -2030,7 +2072,7 @@ class $$HabitTableTableTableManager extends RootTableManager<
             required Category category,
             required HabitType type,
             required int finishedCount,
-            Value<double> rewardCoefficient = const Value.absent(),
+            required double rewardCoefficient,
             required DateTime lastFinishedAt,
             required DateTime createdAt,
           }) =>
@@ -2198,7 +2240,8 @@ typedef $$TaskTableTableInsertCompanionBuilder = TaskTableCompanion Function({
   required List<int> repeatDays,
   Value<DateTime?> deadline,
   required int finishedCount,
-  Value<double> rewardCoefficient,
+  required double rewardCoefficient,
+  required DateTime nextScheduledAt,
   required DateTime lastFinishedAt,
   required DateTime createdAt,
 });
@@ -2215,6 +2258,7 @@ typedef $$TaskTableTableUpdateCompanionBuilder = TaskTableCompanion Function({
   Value<DateTime?> deadline,
   Value<int> finishedCount,
   Value<double> rewardCoefficient,
+  Value<DateTime> nextScheduledAt,
   Value<DateTime> lastFinishedAt,
   Value<DateTime> createdAt,
 });
@@ -2251,6 +2295,7 @@ class $$TaskTableTableTableManager extends RootTableManager<
             Value<DateTime?> deadline = const Value.absent(),
             Value<int> finishedCount = const Value.absent(),
             Value<double> rewardCoefficient = const Value.absent(),
+            Value<DateTime> nextScheduledAt = const Value.absent(),
             Value<DateTime> lastFinishedAt = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
           }) =>
@@ -2267,6 +2312,7 @@ class $$TaskTableTableTableManager extends RootTableManager<
             deadline: deadline,
             finishedCount: finishedCount,
             rewardCoefficient: rewardCoefficient,
+            nextScheduledAt: nextScheduledAt,
             lastFinishedAt: lastFinishedAt,
             createdAt: createdAt,
           ),
@@ -2282,7 +2328,8 @@ class $$TaskTableTableTableManager extends RootTableManager<
             required List<int> repeatDays,
             Value<DateTime?> deadline = const Value.absent(),
             required int finishedCount,
-            Value<double> rewardCoefficient = const Value.absent(),
+            required double rewardCoefficient,
+            required DateTime nextScheduledAt,
             required DateTime lastFinishedAt,
             required DateTime createdAt,
           }) =>
@@ -2299,6 +2346,7 @@ class $$TaskTableTableTableManager extends RootTableManager<
             deadline: deadline,
             finishedCount: finishedCount,
             rewardCoefficient: rewardCoefficient,
+            nextScheduledAt: nextScheduledAt,
             lastFinishedAt: lastFinishedAt,
             createdAt: createdAt,
           ),
@@ -2388,6 +2436,11 @@ class $$TaskTableTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
+  ColumnFilters<DateTime> get nextScheduledAt => $state.composableBuilder(
+      column: $state.table.nextScheduledAt,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
   ColumnFilters<DateTime> get lastFinishedAt => $state.composableBuilder(
       column: $state.table.lastFinishedAt,
       builder: (column, joinBuilders) =>
@@ -2459,6 +2512,11 @@ class $$TaskTableTableOrderingComposer
 
   ColumnOrderings<double> get rewardCoefficient => $state.composableBuilder(
       column: $state.table.rewardCoefficient,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<DateTime> get nextScheduledAt => $state.composableBuilder(
+      column: $state.table.nextScheduledAt,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
