@@ -16,7 +16,7 @@ import '../model/target/task_model.dart';
 
 part 'database.g.dart';
 
-@DriftDatabase(tables: [HabitTable, TaskTable, StatusTable, AttributeTable])
+@DriftDatabase(tables: [AttributeTable, HabitTable, TaskTable, StatusTable])
 class AppDatabase extends _$AppDatabase {
   static final AppDatabase instance = AppDatabase._internal();
 
