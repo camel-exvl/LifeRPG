@@ -92,6 +92,7 @@ class HabitViewModel extends ChangeNotifier {
       category: Value(habit.category),
       type: Value(habit.type),
       finishedCount: Value(habit.finishedCount),
+      rewardCoefficient: Value(habit.rewardCoefficient),
       lastFinishedAt: Value(habit.lastFinishedAt),
       createdAt: Value(habit.createdAt),
     ))

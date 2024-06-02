@@ -28,7 +28,7 @@ class TaskEditView extends StatefulWidget {
 }
 
 class _TaskEditViewState extends State<TaskEditView> {
-  final _globalKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
 
@@ -94,6 +94,7 @@ class _TaskEditViewState extends State<TaskEditView> {
             finishedCount: 0,
             rewardCoefficient: 1.0,
             lastFinishedAt: DateTime(0),
+            nextScheduledAt: DateTime.now(),
             createdAt: DateTime.now());
   }
 
@@ -136,7 +137,7 @@ class _TaskEditViewState extends State<TaskEditView> {
               ),
             TextButton(
               onPressed: () {
-                if (_globalKey.currentState!.validate()) {
+                if (_formKey.currentState!.validate()) {
                   if (widget.isAdd) {
                     widget.viewModel.insertTask(_getCurrentTask());
                   } else {
@@ -153,7 +154,7 @@ class _TaskEditViewState extends State<TaskEditView> {
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
               child: Form(
-            key: _globalKey,
+            key: _formKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
