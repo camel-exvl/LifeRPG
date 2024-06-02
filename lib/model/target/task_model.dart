@@ -48,7 +48,10 @@ class TaskTable extends Table {
   IntColumn get finishedCount =>
       integer()(); // how many times the task has been finished
 
-  RealColumn get rewardCoefficient => real().withDefault(const Constant(1.0))();
+  RealColumn get rewardCoefficient => real()();
+
+  DateTimeColumn get nextScheduledAt =>
+      dateTime()(); // next time can finish the task
 
   DateTimeColumn get lastFinishedAt => dateTime()();
 

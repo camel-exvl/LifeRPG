@@ -21,6 +21,8 @@ class _TaskViewState extends State<TaskView>
     with AutomaticKeepAliveClientMixin {
   final _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
 
+  DateTime dateTime = DateTime.now();
+
   @override
   void initState() {
     super.initState();
@@ -40,6 +42,7 @@ class _TaskViewState extends State<TaskView>
             body: RefreshIndicator(
                 key: _refreshIndicatorKey,
                 onRefresh: () {
+                  dateTime = DateTime.now();
                   return viewModel.loadTasks();
                 },
                 child: ReorderableListView.builder(
@@ -57,7 +60,11 @@ class _TaskViewState extends State<TaskView>
                           if (task.deadline != null &&
                               task.repeatType == RepeatType.none)
                             Text(
-                                "${AppLocalizations.of(context)!.deadline}: ${DateFormat('yyyy-MM-dd HH:mm').format(task.deadline!)}")
+                                "${AppLocalizations.of(context)!.deadline}: ${DateFormat('yyyy-MM-dd HH:mm').format(task.deadline!)}"),
+                          if (task.repeatType != RepeatType.none &&
+                              dateTime.isBefore(task.nextScheduledAt))
+                            Text(
+                                "${AppLocalizations.of(context)!.nextScheduledAt}: ${DateFormat('yyyy-MM-dd').format(task.nextScheduledAt)}"),
                         ],
                       ),
                       onTap: () {
@@ -68,17 +75,26 @@ class _TaskViewState extends State<TaskView>
                                 task: task)));
                       },
                       trailing: IconButton(
-                        icon: const Icon(Icons.add),
-                        onPressed: () async {
-                          final response = await viewModel.finishTask(task);
-                          if (context.mounted) {
-                            await FinishDialog().show(context, response);
-                          }
-                          if (context.mounted &&
-                              response.penaltyCoefficient < 0.8) {
-                            FrequentFinishWarningDialog().show(context);
-                          }
-                        },
+                        icon: Image(
+                          image: task.nextScheduledAt.isAfter(dateTime)
+                              ? const AssetImage('res/icons/finish_disable.png')
+                              : const AssetImage('res/icons/finish.png'),
+                          width: Theme.of(context).iconTheme.size,
+                          height: Theme.of(context).iconTheme.size,
+                        ),
+                        onPressed: task.nextScheduledAt.isAfter(dateTime)
+                            ? null
+                            : () async {
+                                final response =
+                                    await viewModel.finishTask(task);
+                                if (context.mounted) {
+                                  await FinishDialog().show(context, response);
+                                }
+                                if (context.mounted &&
+                                    response.penaltyCoefficient < 0.8) {
+                                  FrequentFinishWarningDialog().show(context);
+                                }
+                              },
                       ),
                     );
                   },
@@ -95,7 +111,11 @@ class _TaskViewState extends State<TaskView>
                         isAdd: true,
                         order: viewModel.tasks.length)));
               },
-              child: const Icon(Icons.add),
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              elevation: 0,
+              child: const Image(
+                image: AssetImage('res/icons/add.png'),
+              ),
             ),
           );
         }));

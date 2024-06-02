@@ -60,6 +60,15 @@ class _TaskRepeatEditViewState extends State<TaskRepeatEditView> {
           actions: [
             TextButton(
               onPressed: () {
+                final date = DateTime.now();
+                if (_repeatTypeValue == RepeatType.weekly &&
+                    _repeatDaysOfWeek.isEmpty) {
+                  _repeatDaysOfWeek = [date.weekday == 7 ? 0 : date.weekday];
+                }
+                if (_repeatTypeValue == RepeatType.monthly &&
+                    _repeatDaysOfMonth.isEmpty) {
+                  _repeatDaysOfMonth = [date.day];
+                }
                 Navigator.pop(context, {
                   'repeatTypeValue': _repeatTypeValue,
                   'repeatValue': _repeatValue,
