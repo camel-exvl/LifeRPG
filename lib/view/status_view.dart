@@ -191,14 +191,39 @@ class AttributeRow extends StatelessWidget {
             ),
           ),
           Expanded(
-              flex: 5,
-              child: Text(
-                  '${viewModel.getAttributeName(attribute.name, context)} ${AppLocalizations.of(context)!.lv}${attribute.level}',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onTertiaryContainer,
-                  ))),
+              flex:
+                  Localizations.localeOf(context).languageCode == 'zh' ? 5 : 6,
+              child: Localizations.localeOf(context).languageCode == 'zh'
+                  ? Text(
+                      '${viewModel.getAttributeName(attribute.name, context)} ${AppLocalizations.of(context)!.lv}${attribute.level}',
+                      style: TextStyle(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onTertiaryContainer,
+                      ))
+                  : Column(
+                      children: [
+                        Text(
+                            viewModel.getAttributeName(
+                                attribute.name, context),
+                            style: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onTertiaryContainer,
+                            )),
+                        Text(
+                            '${AppLocalizations.of(context)!.lv}${attribute.level}',
+                            style: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onTertiaryContainer,
+                            )),
+                      ],
+                    )),
           Expanded(
-              flex: 15,
+              flex: Localizations.localeOf(context).languageCode == 'zh'
+                  ? 15
+                  : 14,
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(0.0, 15.0, 15.0, 0.0),
                 child: Column(

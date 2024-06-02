@@ -8,6 +8,7 @@ import 'package:liferpg/database/database.dart';
 import '../model/common_model.dart';
 import '../model/reward/reward_request_model.dart';
 import '../model/reward/reward_response_model.dart';
+import '../model/target/habit_model.dart';
 
 class StatusViewModel extends ChangeNotifier {
   static final StatusViewModel _instance = StatusViewModel._internal();
@@ -190,10 +191,17 @@ class StatusViewModel extends ChangeNotifier {
   RewardResponseModel getReward(RewardRequestModel request) {
     final response = RewardResponseModel();
     double rewardCoefficient = request.rewardCoefficient;
-    int totalExp;
+    int totalExp = 0;
     int bonusExp = 0;
     int totalGold = 0;
     int bonusGold = 0;
+    int badCoefficient;
+
+    if (request.habitType == null || request.habitType == HabitType.good) {
+      badCoefficient = 1;
+    } else {
+      badCoefficient = -1;
+    }
 
     if (DateTime.now().difference(request.lastFinishedAt) < clickLimitation) {
       bonusExp = 0;
@@ -201,14 +209,14 @@ class StatusViewModel extends ChangeNotifier {
       if (rewardCoefficient < lowestRewardCoefficient) {
         rewardCoefficient = lowestRewardCoefficient;
       }
-    } else {
-      bonusExp = request.finishedCount > maxRewardCount
-          ? maxRewardCount * bonusRepeatExp
-          : request.finishedCount * bonusRepeatExp;
-      bonusGold = request.finishedCount > maxRewardCount
-          ? maxRewardCount * bonusRepeatGold
-          : request.finishedCount * bonusRepeatGold;
     }
+
+    bonusExp = request.finishedCount > maxRewardCount
+        ? maxRewardCount * bonusRepeatExp
+        : request.finishedCount * bonusRepeatExp;
+    bonusGold = request.finishedCount > maxRewardCount
+        ? maxRewardCount * bonusRepeatGold
+        : request.finishedCount * bonusRepeatGold;
 
     switch (request.difficulty) {
       case Difficulty.easy:
@@ -230,49 +238,49 @@ class StatusViewModel extends ChangeNotifier {
     switch (request.category) {
       case Category.general:
         response.expMap.forEach((key, value) =>
-            response.expMap[key] = (totalExp * rewardCoefficient / 6).round());
+            response.expMap[key] = (badCoefficient * totalExp * rewardCoefficient / 6).round());
         break;
       case Category.art:
         response.expMap[Attribute.talent] =
-            (totalExp * 0.6 * rewardCoefficient).round();
+            (badCoefficient * totalExp * 0.6 * rewardCoefficient).round();
         response.expMap[Attribute.culture] =
-            (totalExp * 0.2 * rewardCoefficient).round();
+            (badCoefficient * totalExp * 0.2 * rewardCoefficient).round();
         response.expMap[Attribute.charisma] =
-            (totalExp * 0.2 * rewardCoefficient).round();
+            (badCoefficient * totalExp * 0.2 * rewardCoefficient).round();
         break;
       case Category.career:
         response.expMap[Attribute.intelligence] =
-            (totalExp * 0.6 * rewardCoefficient).round();
+            (badCoefficient * totalExp * 0.6 * rewardCoefficient).round();
         response.expMap[Attribute.talent] =
-            (totalExp * 0.4 * rewardCoefficient).round();
+            (badCoefficient * totalExp * 0.4 * rewardCoefficient).round();
         break;
       case Category.health:
         response.expMap[Attribute.strength] =
-            (totalExp * 0.6 * rewardCoefficient).round();
+            (badCoefficient * totalExp * 0.6 * rewardCoefficient).round();
         response.expMap[Attribute.charisma] =
-            (totalExp * 0.4 * rewardCoefficient).round();
+            (badCoefficient * totalExp * 0.4 * rewardCoefficient).round();
         break;
       case Category.fun:
         response.expMap[Attribute.talent] =
-            (totalExp * 0.6 * rewardCoefficient).round();
+            (badCoefficient * totalExp * 0.6 * rewardCoefficient).round();
         response.expMap[Attribute.intelligence] =
-            (totalExp * 0.4 * rewardCoefficient).round();
+            (badCoefficient * totalExp * 0.4 * rewardCoefficient).round();
         break;
       case Category.learning:
         response.expMap[Attribute.intelligence] =
-            (totalExp * 0.6 * rewardCoefficient).round();
+            (badCoefficient * totalExp * 0.6 * rewardCoefficient).round();
         response.expMap[Attribute.culture] =
-            (totalExp * 0.4 * rewardCoefficient).round();
+            (badCoefficient * totalExp * 0.4 * rewardCoefficient).round();
         break;
       case Category.social:
         response.expMap[Attribute.environment] =
-            (totalExp * 0.6 * rewardCoefficient).round();
+            (badCoefficient * totalExp * 0.6 * rewardCoefficient).round();
         response.expMap[Attribute.charisma] =
-            (totalExp * 0.4 * rewardCoefficient).round();
+            (badCoefficient * totalExp * 0.4 * rewardCoefficient).round();
         break;
     }
 
-    totalGold = (totalGold * rewardCoefficient).round();
+    totalGold = (badCoefficient * totalGold * rewardCoefficient).round();
     response.gold = totalGold;
     response.penaltyCoefficient = rewardCoefficient;
 
@@ -285,9 +293,14 @@ class StatusViewModel extends ChangeNotifier {
     int newLifeLevel = _status.level;
     int newLifeExp =
         _status.exp + response.expMap.values.reduce((a, b) => a + b);
-    while (newLifeExp >= getLifeLevelMaxExp(newLifeLevel)) {
-      newLifeExp -= getLifeLevelMaxExp(newLifeLevel);
-      newLifeLevel++;
+    if(newLifeExp < 0) {
+      newLifeExp = 0;
+    }
+    else {
+      while (newLifeExp >= getLifeLevelMaxExp(newLifeLevel)) {
+        newLifeExp -= getLifeLevelMaxExp(newLifeLevel);
+        newLifeLevel++;
+      }
     }
     final newStatus = _status.copyWith(
       level: newLifeLevel,
@@ -305,9 +318,13 @@ class StatusViewModel extends ChangeNotifier {
         int newAttributeLevel = _attributes
             .firstWhere((element) => element.name == entry.key.name)
             .level;
-        while (newAttributeExp >= getAttributeMaxExp(newAttributeLevel)) {
-          newAttributeExp -= getAttributeMaxExp(newAttributeLevel);
-          newAttributeLevel++;
+        if(newAttributeExp < 0) {
+          newAttributeExp = 0;
+        } else {
+          while (newAttributeExp >= getAttributeMaxExp(newAttributeLevel)) {
+            newAttributeExp -= getAttributeMaxExp(newAttributeLevel);
+            newAttributeLevel++;
+          }
         }
         final newAttribute = _attributes
             .firstWhere((element) => element.name == entry.key.name)

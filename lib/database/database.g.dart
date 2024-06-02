@@ -3,14 +3,334 @@
 part of 'database.dart';
 
 // ignore_for_file: type=lint
+class $AttributeTableTable extends AttributeTable
+    with TableInfo<$AttributeTableTable, AttributeModel> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AttributeTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _iconPathMeta =
+      const VerificationMeta('iconPath');
+  @override
+  late final GeneratedColumn<String> iconPath = GeneratedColumn<String>(
+      'icon_path', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _levelMeta = const VerificationMeta('level');
+  @override
+  late final GeneratedColumn<int> level = GeneratedColumn<int>(
+      'level', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _expMeta = const VerificationMeta('exp');
+  @override
+  late final GeneratedColumn<int> exp = GeneratedColumn<int>(
+      'exp', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _statusIdMeta =
+      const VerificationMeta('statusId');
+  @override
+  late final GeneratedColumn<int> statusId = GeneratedColumn<int>(
+      'status_id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, iconPath, name, level, exp, statusId];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'attribute_table';
+  @override
+  VerificationContext validateIntegrity(Insertable<AttributeModel> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('icon_path')) {
+      context.handle(_iconPathMeta,
+          iconPath.isAcceptableOrUnknown(data['icon_path']!, _iconPathMeta));
+    } else if (isInserting) {
+      context.missing(_iconPathMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('level')) {
+      context.handle(
+          _levelMeta, level.isAcceptableOrUnknown(data['level']!, _levelMeta));
+    } else if (isInserting) {
+      context.missing(_levelMeta);
+    }
+    if (data.containsKey('exp')) {
+      context.handle(
+          _expMeta, exp.isAcceptableOrUnknown(data['exp']!, _expMeta));
+    } else if (isInserting) {
+      context.missing(_expMeta);
+    }
+    if (data.containsKey('status_id')) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableOrUnknown(data['status_id']!, _statusIdMeta));
+    } else if (isInserting) {
+      context.missing(_statusIdMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  AttributeModel map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AttributeModel(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      iconPath: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}icon_path'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      level: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}level'])!,
+      exp: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}exp'])!,
+      statusId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}status_id'])!,
+    );
+  }
+
+  @override
+  $AttributeTableTable createAlias(String alias) {
+    return $AttributeTableTable(attachedDatabase, alias);
+  }
+}
+
+class AttributeModel extends DataClass implements Insertable<AttributeModel> {
+  final int id;
+  final String iconPath;
+  final String name;
+  final int level;
+  final int exp;
+  final int statusId;
+  const AttributeModel(
+      {required this.id,
+      required this.iconPath,
+      required this.name,
+      required this.level,
+      required this.exp,
+      required this.statusId});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['icon_path'] = Variable<String>(iconPath);
+    map['name'] = Variable<String>(name);
+    map['level'] = Variable<int>(level);
+    map['exp'] = Variable<int>(exp);
+    map['status_id'] = Variable<int>(statusId);
+    return map;
+  }
+
+  AttributeTableCompanion toCompanion(bool nullToAbsent) {
+    return AttributeTableCompanion(
+      id: Value(id),
+      iconPath: Value(iconPath),
+      name: Value(name),
+      level: Value(level),
+      exp: Value(exp),
+      statusId: Value(statusId),
+    );
+  }
+
+  factory AttributeModel.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AttributeModel(
+      id: serializer.fromJson<int>(json['id']),
+      iconPath: serializer.fromJson<String>(json['iconPath']),
+      name: serializer.fromJson<String>(json['name']),
+      level: serializer.fromJson<int>(json['level']),
+      exp: serializer.fromJson<int>(json['exp']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'iconPath': serializer.toJson<String>(iconPath),
+      'name': serializer.toJson<String>(name),
+      'level': serializer.toJson<int>(level),
+      'exp': serializer.toJson<int>(exp),
+      'statusId': serializer.toJson<int>(statusId),
+    };
+  }
+
+  AttributeModel copyWith(
+          {int? id,
+          String? iconPath,
+          String? name,
+          int? level,
+          int? exp,
+          int? statusId}) =>
+      AttributeModel(
+        id: id ?? this.id,
+        iconPath: iconPath ?? this.iconPath,
+        name: name ?? this.name,
+        level: level ?? this.level,
+        exp: exp ?? this.exp,
+        statusId: statusId ?? this.statusId,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('AttributeModel(')
+          ..write('id: $id, ')
+          ..write('iconPath: $iconPath, ')
+          ..write('name: $name, ')
+          ..write('level: $level, ')
+          ..write('exp: $exp, ')
+          ..write('statusId: $statusId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, iconPath, name, level, exp, statusId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AttributeModel &&
+          other.id == this.id &&
+          other.iconPath == this.iconPath &&
+          other.name == this.name &&
+          other.level == this.level &&
+          other.exp == this.exp &&
+          other.statusId == this.statusId);
+}
+
+class AttributeTableCompanion extends UpdateCompanion<AttributeModel> {
+  final Value<int> id;
+  final Value<String> iconPath;
+  final Value<String> name;
+  final Value<int> level;
+  final Value<int> exp;
+  final Value<int> statusId;
+  const AttributeTableCompanion({
+    this.id = const Value.absent(),
+    this.iconPath = const Value.absent(),
+    this.name = const Value.absent(),
+    this.level = const Value.absent(),
+    this.exp = const Value.absent(),
+    this.statusId = const Value.absent(),
+  });
+  AttributeTableCompanion.insert({
+    this.id = const Value.absent(),
+    required String iconPath,
+    required String name,
+    required int level,
+    required int exp,
+    required int statusId,
+  })  : iconPath = Value(iconPath),
+        name = Value(name),
+        level = Value(level),
+        exp = Value(exp),
+        statusId = Value(statusId);
+  static Insertable<AttributeModel> custom({
+    Expression<int>? id,
+    Expression<String>? iconPath,
+    Expression<String>? name,
+    Expression<int>? level,
+    Expression<int>? exp,
+    Expression<int>? statusId,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (iconPath != null) 'icon_path': iconPath,
+      if (name != null) 'name': name,
+      if (level != null) 'level': level,
+      if (exp != null) 'exp': exp,
+      if (statusId != null) 'status_id': statusId,
+    });
+  }
+
+  AttributeTableCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? iconPath,
+      Value<String>? name,
+      Value<int>? level,
+      Value<int>? exp,
+      Value<int>? statusId}) {
+    return AttributeTableCompanion(
+      id: id ?? this.id,
+      iconPath: iconPath ?? this.iconPath,
+      name: name ?? this.name,
+      level: level ?? this.level,
+      exp: exp ?? this.exp,
+      statusId: statusId ?? this.statusId,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (iconPath.present) {
+      map['icon_path'] = Variable<String>(iconPath.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (level.present) {
+      map['level'] = Variable<int>(level.value);
+    }
+    if (exp.present) {
+      map['exp'] = Variable<int>(exp.value);
+    }
+    if (statusId.present) {
+      map['status_id'] = Variable<int>(statusId.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AttributeTableCompanion(')
+          ..write('id: $id, ')
+          ..write('iconPath: $iconPath, ')
+          ..write('name: $name, ')
+          ..write('level: $level, ')
+          ..write('exp: $exp, ')
+          ..write('statusId: $statusId')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $HabitTableTable extends HabitTable
     with TableInfo<$HabitTableTable, HabitModel> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-
   $HabitTableTable(this.attachedDatabase, [this._alias]);
-
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -82,7 +402,6 @@ class $HabitTableTable extends HabitTable
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
-
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -97,14 +416,11 @@ class $HabitTableTable extends HabitTable
         lastFinishedAt,
         createdAt
       ];
-
   @override
   String get aliasedName => _alias ?? actualTableName;
-
   @override
   String get actualTableName => $name;
   static const String $name = 'habit_table';
-
   @override
   VerificationContext validateIntegrity(Insertable<HabitModel> instance,
       {bool isInserting = false}) {
@@ -169,7 +485,6 @@ class $HabitTableTable extends HabitTable
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
-
   @override
   HabitModel map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -226,7 +541,6 @@ class HabitModel extends DataClass implements Insertable<HabitModel> {
   final double rewardCoefficient;
   final DateTime lastFinishedAt;
   final DateTime createdAt;
-
   const HabitModel(
       {required this.id,
       required this.order,
@@ -239,7 +553,6 @@ class HabitModel extends DataClass implements Insertable<HabitModel> {
       required this.rewardCoefficient,
       required this.lastFinishedAt,
       required this.createdAt});
-
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -301,7 +614,6 @@ class HabitModel extends DataClass implements Insertable<HabitModel> {
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
-
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
@@ -348,7 +660,6 @@ class HabitModel extends DataClass implements Insertable<HabitModel> {
         lastFinishedAt: lastFinishedAt ?? this.lastFinishedAt,
         createdAt: createdAt ?? this.createdAt,
       );
-
   @override
   String toString() {
     return (StringBuffer('HabitModel(')
@@ -380,7 +691,6 @@ class HabitModel extends DataClass implements Insertable<HabitModel> {
       rewardCoefficient,
       lastFinishedAt,
       createdAt);
-
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -410,7 +720,6 @@ class HabitTableCompanion extends UpdateCompanion<HabitModel> {
   final Value<double> rewardCoefficient;
   final Value<DateTime> lastFinishedAt;
   final Value<DateTime> createdAt;
-
   const HabitTableCompanion({
     this.id = const Value.absent(),
     this.order = const Value.absent(),
@@ -424,7 +733,6 @@ class HabitTableCompanion extends UpdateCompanion<HabitModel> {
     this.lastFinishedAt = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
-
   HabitTableCompanion.insert({
     this.id = const Value.absent(),
     required int order,
@@ -446,7 +754,6 @@ class HabitTableCompanion extends UpdateCompanion<HabitModel> {
         finishedCount = Value(finishedCount),
         lastFinishedAt = Value(lastFinishedAt),
         createdAt = Value(createdAt);
-
   static Insertable<HabitModel> custom({
     Expression<int>? id,
     Expression<int>? order,
@@ -568,9 +875,7 @@ class $TaskTableTable extends TaskTable
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-
   $TaskTableTable(this.attachedDatabase, [this._alias]);
-
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -662,7 +967,6 @@ class $TaskTableTable extends TaskTable
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
-
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -680,14 +984,11 @@ class $TaskTableTable extends TaskTable
         lastFinishedAt,
         createdAt
       ];
-
   @override
   String get aliasedName => _alias ?? actualTableName;
-
   @override
   String get actualTableName => $name;
   static const String $name = 'task_table';
-
   @override
   VerificationContext validateIntegrity(Insertable<TaskModel> instance,
       {bool isInserting = false}) {
@@ -765,7 +1066,6 @@ class $TaskTableTable extends TaskTable
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
-
   @override
   TaskModel map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -835,7 +1135,6 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
   final double rewardCoefficient;
   final DateTime lastFinishedAt;
   final DateTime createdAt;
-
   const TaskModel(
       {required this.id,
       required this.order,
@@ -851,7 +1150,6 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
       required this.rewardCoefficient,
       required this.lastFinishedAt,
       required this.createdAt});
-
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -930,7 +1228,6 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
-
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
@@ -986,7 +1283,6 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
         lastFinishedAt: lastFinishedAt ?? this.lastFinishedAt,
         createdAt: createdAt ?? this.createdAt,
       );
-
   @override
   String toString() {
     return (StringBuffer('TaskModel(')
@@ -1024,7 +1320,6 @@ class TaskModel extends DataClass implements Insertable<TaskModel> {
       rewardCoefficient,
       lastFinishedAt,
       createdAt);
-
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1060,7 +1355,6 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
   final Value<double> rewardCoefficient;
   final Value<DateTime> lastFinishedAt;
   final Value<DateTime> createdAt;
-
   const TaskTableCompanion({
     this.id = const Value.absent(),
     this.order = const Value.absent(),
@@ -1077,7 +1371,6 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
     this.lastFinishedAt = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
-
   TaskTableCompanion.insert({
     this.id = const Value.absent(),
     required int order,
@@ -1104,7 +1397,6 @@ class TaskTableCompanion extends UpdateCompanion<TaskModel> {
         finishedCount = Value(finishedCount),
         lastFinishedAt = Value(lastFinishedAt),
         createdAt = Value(createdAt);
-
   static Insertable<TaskModel> custom({
     Expression<int>? id,
     Expression<int>? order,
@@ -1251,9 +1543,7 @@ class $StatusTableTable extends StatusTable
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-
   $StatusTableTable(this.attachedDatabase, [this._alias]);
-
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -1278,17 +1568,13 @@ class $StatusTableTable extends StatusTable
   late final GeneratedColumn<int> gold = GeneratedColumn<int>(
       'gold', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-
   @override
   List<GeneratedColumn> get $columns => [id, level, exp, gold];
-
   @override
   String get aliasedName => _alias ?? actualTableName;
-
   @override
   String get actualTableName => $name;
   static const String $name = 'status_table';
-
   @override
   VerificationContext validateIntegrity(Insertable<StatusModel> instance,
       {bool isInserting = false}) {
@@ -1320,7 +1606,6 @@ class $StatusTableTable extends StatusTable
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
-
   @override
   StatusModel map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -1347,13 +1632,11 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
   final int level;
   final int exp;
   final int gold;
-
   const StatusModel(
       {required this.id,
       required this.level,
       required this.exp,
       required this.gold});
-
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -1383,7 +1666,6 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
       gold: serializer.fromJson<int>(json['gold']),
     );
   }
-
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
@@ -1402,7 +1684,6 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
         exp: exp ?? this.exp,
         gold: gold ?? this.gold,
       );
-
   @override
   String toString() {
     return (StringBuffer('StatusModel(')
@@ -1416,7 +1697,6 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
 
   @override
   int get hashCode => Object.hash(id, level, exp, gold);
-
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1432,14 +1712,12 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
   final Value<int> level;
   final Value<int> exp;
   final Value<int> gold;
-
   const StatusTableCompanion({
     this.id = const Value.absent(),
     this.level = const Value.absent(),
     this.exp = const Value.absent(),
     this.gold = const Value.absent(),
   });
-
   StatusTableCompanion.insert({
     this.id = const Value.absent(),
     required int level,
@@ -1448,7 +1726,6 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
   })  : level = Value(level),
         exp = Value(exp),
         gold = Value(gold);
-
   static Insertable<StatusModel> custom({
     Expression<int>? id,
     Expression<int>? level,
@@ -1503,361 +1780,173 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
   }
 }
 
-class $AttributeTableTable extends AttributeTable
-    with TableInfo<$AttributeTableTable, AttributeModel> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-
-  $AttributeTableTable(this.attachedDatabase, [this._alias]);
-
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
-      hasAutoIncrement: true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _iconPathMeta =
-      const VerificationMeta('iconPath');
-  @override
-  late final GeneratedColumn<String> iconPath = GeneratedColumn<String>(
-      'icon_path', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _nameMeta = const VerificationMeta('name');
-  @override
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-      'name', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _levelMeta = const VerificationMeta('level');
-  @override
-  late final GeneratedColumn<int> level = GeneratedColumn<int>(
-      'level', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _expMeta = const VerificationMeta('exp');
-  @override
-  late final GeneratedColumn<int> exp = GeneratedColumn<int>(
-      'exp', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _statusIdMeta =
-      const VerificationMeta('statusId');
-  @override
-  late final GeneratedColumn<int> statusId = GeneratedColumn<int>(
-      'status_id', aliasedName, false,
-      type: DriftSqlType.int,
-      requiredDuringInsert: true,
-      $customConstraints: 'REFERENCES StatusTable(id)');
-
-  @override
-  List<GeneratedColumn> get $columns =>
-      [id, iconPath, name, level, exp, statusId];
-
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'attribute_table';
-
-  @override
-  VerificationContext validateIntegrity(Insertable<AttributeModel> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('icon_path')) {
-      context.handle(_iconPathMeta,
-          iconPath.isAcceptableOrUnknown(data['icon_path']!, _iconPathMeta));
-    } else if (isInserting) {
-      context.missing(_iconPathMeta);
-    }
-    if (data.containsKey('name')) {
-      context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
-    } else if (isInserting) {
-      context.missing(_nameMeta);
-    }
-    if (data.containsKey('level')) {
-      context.handle(
-          _levelMeta, level.isAcceptableOrUnknown(data['level']!, _levelMeta));
-    } else if (isInserting) {
-      context.missing(_levelMeta);
-    }
-    if (data.containsKey('exp')) {
-      context.handle(
-          _expMeta, exp.isAcceptableOrUnknown(data['exp']!, _expMeta));
-    } else if (isInserting) {
-      context.missing(_expMeta);
-    }
-    if (data.containsKey('status_id')) {
-      context.handle(_statusIdMeta,
-          statusId.isAcceptableOrUnknown(data['status_id']!, _statusIdMeta));
-    } else if (isInserting) {
-      context.missing(_statusIdMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-
-  @override
-  AttributeModel map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return AttributeModel(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      iconPath: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}icon_path'])!,
-      name: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
-      level: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}level'])!,
-      exp: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}exp'])!,
-      statusId: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}status_id'])!,
-    );
-  }
-
-  @override
-  $AttributeTableTable createAlias(String alias) {
-    return $AttributeTableTable(attachedDatabase, alias);
-  }
-}
-
-class AttributeModel extends DataClass implements Insertable<AttributeModel> {
-  final int id;
-  final String iconPath;
-  final String name;
-  final int level;
-  final int exp;
-  final int statusId;
-
-  const AttributeModel(
-      {required this.id,
-      required this.iconPath,
-      required this.name,
-      required this.level,
-      required this.exp,
-      required this.statusId});
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['icon_path'] = Variable<String>(iconPath);
-    map['name'] = Variable<String>(name);
-    map['level'] = Variable<int>(level);
-    map['exp'] = Variable<int>(exp);
-    map['status_id'] = Variable<int>(statusId);
-    return map;
-  }
-
-  AttributeTableCompanion toCompanion(bool nullToAbsent) {
-    return AttributeTableCompanion(
-      id: Value(id),
-      iconPath: Value(iconPath),
-      name: Value(name),
-      level: Value(level),
-      exp: Value(exp),
-      statusId: Value(statusId),
-    );
-  }
-
-  factory AttributeModel.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return AttributeModel(
-      id: serializer.fromJson<int>(json['id']),
-      iconPath: serializer.fromJson<String>(json['iconPath']),
-      name: serializer.fromJson<String>(json['name']),
-      level: serializer.fromJson<int>(json['level']),
-      exp: serializer.fromJson<int>(json['exp']),
-      statusId: serializer.fromJson<int>(json['statusId']),
-    );
-  }
-
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'iconPath': serializer.toJson<String>(iconPath),
-      'name': serializer.toJson<String>(name),
-      'level': serializer.toJson<int>(level),
-      'exp': serializer.toJson<int>(exp),
-      'statusId': serializer.toJson<int>(statusId),
-    };
-  }
-
-  AttributeModel copyWith(
-          {int? id,
-          String? iconPath,
-          String? name,
-          int? level,
-          int? exp,
-          int? statusId}) =>
-      AttributeModel(
-        id: id ?? this.id,
-        iconPath: iconPath ?? this.iconPath,
-        name: name ?? this.name,
-        level: level ?? this.level,
-        exp: exp ?? this.exp,
-        statusId: statusId ?? this.statusId,
-      );
-
-  @override
-  String toString() {
-    return (StringBuffer('AttributeModel(')
-          ..write('id: $id, ')
-          ..write('iconPath: $iconPath, ')
-          ..write('name: $name, ')
-          ..write('level: $level, ')
-          ..write('exp: $exp, ')
-          ..write('statusId: $statusId')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(id, iconPath, name, level, exp, statusId);
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is AttributeModel &&
-          other.id == this.id &&
-          other.iconPath == this.iconPath &&
-          other.name == this.name &&
-          other.level == this.level &&
-          other.exp == this.exp &&
-          other.statusId == this.statusId);
-}
-
-class AttributeTableCompanion extends UpdateCompanion<AttributeModel> {
-  final Value<int> id;
-  final Value<String> iconPath;
-  final Value<String> name;
-  final Value<int> level;
-  final Value<int> exp;
-  final Value<int> statusId;
-
-  const AttributeTableCompanion({
-    this.id = const Value.absent(),
-    this.iconPath = const Value.absent(),
-    this.name = const Value.absent(),
-    this.level = const Value.absent(),
-    this.exp = const Value.absent(),
-    this.statusId = const Value.absent(),
-  });
-
-  AttributeTableCompanion.insert({
-    this.id = const Value.absent(),
-    required String iconPath,
-    required String name,
-    required int level,
-    required int exp,
-    required int statusId,
-  })  : iconPath = Value(iconPath),
-        name = Value(name),
-        level = Value(level),
-        exp = Value(exp),
-        statusId = Value(statusId);
-
-  static Insertable<AttributeModel> custom({
-    Expression<int>? id,
-    Expression<String>? iconPath,
-    Expression<String>? name,
-    Expression<int>? level,
-    Expression<int>? exp,
-    Expression<int>? statusId,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (iconPath != null) 'icon_path': iconPath,
-      if (name != null) 'name': name,
-      if (level != null) 'level': level,
-      if (exp != null) 'exp': exp,
-      if (statusId != null) 'status_id': statusId,
-    });
-  }
-
-  AttributeTableCompanion copyWith(
-      {Value<int>? id,
-      Value<String>? iconPath,
-      Value<String>? name,
-      Value<int>? level,
-      Value<int>? exp,
-      Value<int>? statusId}) {
-    return AttributeTableCompanion(
-      id: id ?? this.id,
-      iconPath: iconPath ?? this.iconPath,
-      name: name ?? this.name,
-      level: level ?? this.level,
-      exp: exp ?? this.exp,
-      statusId: statusId ?? this.statusId,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (iconPath.present) {
-      map['icon_path'] = Variable<String>(iconPath.value);
-    }
-    if (name.present) {
-      map['name'] = Variable<String>(name.value);
-    }
-    if (level.present) {
-      map['level'] = Variable<int>(level.value);
-    }
-    if (exp.present) {
-      map['exp'] = Variable<int>(exp.value);
-    }
-    if (statusId.present) {
-      map['status_id'] = Variable<int>(statusId.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('AttributeTableCompanion(')
-          ..write('id: $id, ')
-          ..write('iconPath: $iconPath, ')
-          ..write('name: $name, ')
-          ..write('level: $level, ')
-          ..write('exp: $exp, ')
-          ..write('statusId: $statusId')
-          ..write(')'))
-        .toString();
-  }
-}
-
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
-
   _$AppDatabaseManager get managers => _$AppDatabaseManager(this);
+  late final $AttributeTableTable attributeTable = $AttributeTableTable(this);
   late final $HabitTableTable habitTable = $HabitTableTable(this);
   late final $TaskTableTable taskTable = $TaskTableTable(this);
   late final $StatusTableTable statusTable = $StatusTableTable(this);
-  late final $AttributeTableTable attributeTable = $AttributeTableTable(this);
-
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
-
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [habitTable, taskTable, statusTable, attributeTable];
+      [attributeTable, habitTable, taskTable, statusTable];
+}
+
+typedef $$AttributeTableTableInsertCompanionBuilder = AttributeTableCompanion
+    Function({
+  Value<int> id,
+  required String iconPath,
+  required String name,
+  required int level,
+  required int exp,
+  required int statusId,
+});
+typedef $$AttributeTableTableUpdateCompanionBuilder = AttributeTableCompanion
+    Function({
+  Value<int> id,
+  Value<String> iconPath,
+  Value<String> name,
+  Value<int> level,
+  Value<int> exp,
+  Value<int> statusId,
+});
+
+class $$AttributeTableTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $AttributeTableTable,
+    AttributeModel,
+    $$AttributeTableTableFilterComposer,
+    $$AttributeTableTableOrderingComposer,
+    $$AttributeTableTableProcessedTableManager,
+    $$AttributeTableTableInsertCompanionBuilder,
+    $$AttributeTableTableUpdateCompanionBuilder> {
+  $$AttributeTableTableTableManager(
+      _$AppDatabase db, $AttributeTableTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$AttributeTableTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$AttributeTableTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$AttributeTableTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<int> id = const Value.absent(),
+            Value<String> iconPath = const Value.absent(),
+            Value<String> name = const Value.absent(),
+            Value<int> level = const Value.absent(),
+            Value<int> exp = const Value.absent(),
+            Value<int> statusId = const Value.absent(),
+          }) =>
+              AttributeTableCompanion(
+            id: id,
+            iconPath: iconPath,
+            name: name,
+            level: level,
+            exp: exp,
+            statusId: statusId,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<int> id = const Value.absent(),
+            required String iconPath,
+            required String name,
+            required int level,
+            required int exp,
+            required int statusId,
+          }) =>
+              AttributeTableCompanion.insert(
+            id: id,
+            iconPath: iconPath,
+            name: name,
+            level: level,
+            exp: exp,
+            statusId: statusId,
+          ),
+        ));
+}
+
+class $$AttributeTableTableProcessedTableManager extends ProcessedTableManager<
+    _$AppDatabase,
+    $AttributeTableTable,
+    AttributeModel,
+    $$AttributeTableTableFilterComposer,
+    $$AttributeTableTableOrderingComposer,
+    $$AttributeTableTableProcessedTableManager,
+    $$AttributeTableTableInsertCompanionBuilder,
+    $$AttributeTableTableUpdateCompanionBuilder> {
+  $$AttributeTableTableProcessedTableManager(super.$state);
+}
+
+class $$AttributeTableTableFilterComposer
+    extends FilterComposer<_$AppDatabase, $AttributeTableTable> {
+  $$AttributeTableTableFilterComposer(super.$state);
+  ColumnFilters<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get iconPath => $state.composableBuilder(
+      column: $state.table.iconPath,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get level => $state.composableBuilder(
+      column: $state.table.level,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get exp => $state.composableBuilder(
+      column: $state.table.exp,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get statusId => $state.composableBuilder(
+      column: $state.table.statusId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$AttributeTableTableOrderingComposer
+    extends OrderingComposer<_$AppDatabase, $AttributeTableTable> {
+  $$AttributeTableTableOrderingComposer(super.$state);
+  ColumnOrderings<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get iconPath => $state.composableBuilder(
+      column: $state.table.iconPath,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get level => $state.composableBuilder(
+      column: $state.table.level,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get exp => $state.composableBuilder(
+      column: $state.table.exp,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get statusId => $state.composableBuilder(
+      column: $state.table.statusId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
 typedef $$HabitTableTableInsertCompanionBuilder = HabitTableCompanion Function({
@@ -1976,7 +2065,6 @@ class $$HabitTableTableProcessedTableManager extends ProcessedTableManager<
 class $$HabitTableTableFilterComposer
     extends FilterComposer<_$AppDatabase, $HabitTableTable> {
   $$HabitTableTableFilterComposer(super.$state);
-
   ColumnFilters<int> get id => $state.composableBuilder(
       column: $state.table.id,
       builder: (column, joinBuilders) =>
@@ -2042,7 +2130,6 @@ class $$HabitTableTableFilterComposer
 class $$HabitTableTableOrderingComposer
     extends OrderingComposer<_$AppDatabase, $HabitTableTable> {
   $$HabitTableTableOrderingComposer(super.$state);
-
   ColumnOrderings<int> get id => $state.composableBuilder(
       column: $state.table.id,
       builder: (column, joinBuilders) =>
@@ -2233,7 +2320,6 @@ class $$TaskTableTableProcessedTableManager extends ProcessedTableManager<
 class $$TaskTableTableFilterComposer
     extends FilterComposer<_$AppDatabase, $TaskTableTable> {
   $$TaskTableTableFilterComposer(super.$state);
-
   ColumnFilters<int> get id => $state.composableBuilder(
       column: $state.table.id,
       builder: (column, joinBuilders) =>
@@ -2316,7 +2402,6 @@ class $$TaskTableTableFilterComposer
 class $$TaskTableTableOrderingComposer
     extends OrderingComposer<_$AppDatabase, $TaskTableTable> {
   $$TaskTableTableOrderingComposer(super.$state);
-
   ColumnOrderings<int> get id => $state.composableBuilder(
       column: $state.table.id,
       builder: (column, joinBuilders) =>
@@ -2464,7 +2549,6 @@ class $$StatusTableTableProcessedTableManager extends ProcessedTableManager<
 class $$StatusTableTableFilterComposer
     extends FilterComposer<_$AppDatabase, $StatusTableTable> {
   $$StatusTableTableFilterComposer(super.$state);
-
   ColumnFilters<int> get id => $state.composableBuilder(
       column: $state.table.id,
       builder: (column, joinBuilders) =>
@@ -2489,7 +2573,6 @@ class $$StatusTableTableFilterComposer
 class $$StatusTableTableOrderingComposer
     extends OrderingComposer<_$AppDatabase, $StatusTableTable> {
   $$StatusTableTableOrderingComposer(super.$state);
-
   ColumnOrderings<int> get id => $state.composableBuilder(
       column: $state.table.id,
       builder: (column, joinBuilders) =>
@@ -2511,176 +2594,15 @@ class $$StatusTableTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
-typedef $$AttributeTableTableInsertCompanionBuilder = AttributeTableCompanion
-    Function({
-  Value<int> id,
-  required String iconPath,
-  required String name,
-  required int level,
-  required int exp,
-  required int statusId,
-});
-typedef $$AttributeTableTableUpdateCompanionBuilder = AttributeTableCompanion
-    Function({
-  Value<int> id,
-  Value<String> iconPath,
-  Value<String> name,
-  Value<int> level,
-  Value<int> exp,
-  Value<int> statusId,
-});
-
-class $$AttributeTableTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $AttributeTableTable,
-    AttributeModel,
-    $$AttributeTableTableFilterComposer,
-    $$AttributeTableTableOrderingComposer,
-    $$AttributeTableTableProcessedTableManager,
-    $$AttributeTableTableInsertCompanionBuilder,
-    $$AttributeTableTableUpdateCompanionBuilder> {
-  $$AttributeTableTableTableManager(
-      _$AppDatabase db, $AttributeTableTable table)
-      : super(TableManagerState(
-          db: db,
-          table: table,
-          filteringComposer:
-              $$AttributeTableTableFilterComposer(ComposerState(db, table)),
-          orderingComposer:
-              $$AttributeTableTableOrderingComposer(ComposerState(db, table)),
-          getChildManagerBuilder: (p) =>
-              $$AttributeTableTableProcessedTableManager(p),
-          getUpdateCompanionBuilder: ({
-            Value<int> id = const Value.absent(),
-            Value<String> iconPath = const Value.absent(),
-            Value<String> name = const Value.absent(),
-            Value<int> level = const Value.absent(),
-            Value<int> exp = const Value.absent(),
-            Value<int> statusId = const Value.absent(),
-          }) =>
-              AttributeTableCompanion(
-            id: id,
-            iconPath: iconPath,
-            name: name,
-            level: level,
-            exp: exp,
-            statusId: statusId,
-          ),
-          getInsertCompanionBuilder: ({
-            Value<int> id = const Value.absent(),
-            required String iconPath,
-            required String name,
-            required int level,
-            required int exp,
-            required int statusId,
-          }) =>
-              AttributeTableCompanion.insert(
-            id: id,
-            iconPath: iconPath,
-            name: name,
-            level: level,
-            exp: exp,
-            statusId: statusId,
-          ),
-        ));
-}
-
-class $$AttributeTableTableProcessedTableManager extends ProcessedTableManager<
-    _$AppDatabase,
-    $AttributeTableTable,
-    AttributeModel,
-    $$AttributeTableTableFilterComposer,
-    $$AttributeTableTableOrderingComposer,
-    $$AttributeTableTableProcessedTableManager,
-    $$AttributeTableTableInsertCompanionBuilder,
-    $$AttributeTableTableUpdateCompanionBuilder> {
-  $$AttributeTableTableProcessedTableManager(super.$state);
-}
-
-class $$AttributeTableTableFilterComposer
-    extends FilterComposer<_$AppDatabase, $AttributeTableTable> {
-  $$AttributeTableTableFilterComposer(super.$state);
-
-  ColumnFilters<int> get id => $state.composableBuilder(
-      column: $state.table.id,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get iconPath => $state.composableBuilder(
-      column: $state.table.iconPath,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get name => $state.composableBuilder(
-      column: $state.table.name,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<int> get level => $state.composableBuilder(
-      column: $state.table.level,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<int> get exp => $state.composableBuilder(
-      column: $state.table.exp,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<int> get statusId => $state.composableBuilder(
-      column: $state.table.statusId,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-}
-
-class $$AttributeTableTableOrderingComposer
-    extends OrderingComposer<_$AppDatabase, $AttributeTableTable> {
-  $$AttributeTableTableOrderingComposer(super.$state);
-
-  ColumnOrderings<int> get id => $state.composableBuilder(
-      column: $state.table.id,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get iconPath => $state.composableBuilder(
-      column: $state.table.iconPath,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get name => $state.composableBuilder(
-      column: $state.table.name,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<int> get level => $state.composableBuilder(
-      column: $state.table.level,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<int> get exp => $state.composableBuilder(
-      column: $state.table.exp,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<int> get statusId => $state.composableBuilder(
-      column: $state.table.statusId,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-}
-
 class _$AppDatabaseManager {
   final _$AppDatabase _db;
-
   _$AppDatabaseManager(this._db);
-
-  $$HabitTableTableTableManager get habitTable =>
-      $$HabitTableTableTableManager(_db, _db.habitTable);
-
-  $$TaskTableTableTableManager get taskTable =>
-      $$TaskTableTableTableManager(_db, _db.taskTable);
-
-  $$StatusTableTableTableManager get statusTable =>
-      $$StatusTableTableTableManager(_db, _db.statusTable);
-
   $$AttributeTableTableTableManager get attributeTable =>
       $$AttributeTableTableTableManager(_db, _db.attributeTable);
+  $$HabitTableTableTableManager get habitTable =>
+      $$HabitTableTableTableManager(_db, _db.habitTable);
+  $$TaskTableTableTableManager get taskTable =>
+      $$TaskTableTableTableManager(_db, _db.taskTable);
+  $$StatusTableTableTableManager get statusTable =>
+      $$StatusTableTableTableManager(_db, _db.statusTable);
 }
