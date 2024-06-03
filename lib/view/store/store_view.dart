@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 enum MoneyType {
   gold("gold", "res/icons/coin_04d.png"),
@@ -31,7 +32,7 @@ class StoreViewState extends State<StoreView> {
           crossAxisCount: 3,
           children: List.generate(
               15,
-              (index) => const EquipmentCard(
+              (index) => const Equipment(
                     name: 'sword',
                     description: 'this is a sword',
                     price: Price(100, MoneyType.gold),
@@ -106,45 +107,68 @@ class MoneyDetail extends StatefulWidget {
   MoneyDetailState createState() => MoneyDetailState();
 }
 
-class EquipmentCard extends StatelessWidget {
+class Equipment extends StatelessWidget {
   final String name;
   final String description;
   final Price price;
   final String assetName;
-  final VoidCallback? onPressed;
-  const EquipmentCard(
-      {super.key,
-      required this.name,
-      required this.description,
-      required this.price,
-      required this.assetName,
-      this.onPressed});
+  const Equipment({
+    super.key,
+    required this.name,
+    required this.description,
+    required this.price,
+    required this.assetName,
+  });
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Image(
-          image: AssetImage(assetName),
-          width: 30,
-          height: 30,
-        ),
-        Text(name,
-            style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.center),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Image(
-              image: AssetImage(price.moneyType.assetName),
-              width: 20,
-              height: 20,
-            ),
-            Text(price.amount.toString(),
-                style: Theme.of(context).textTheme.labelLarge,
-                textAlign: TextAlign.center),
-          ],
-        ),
-      ],
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+                  title: Text(name),
+                  content: Text(description),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Cancel'),
+                    ),
+                  ],
+                ));
+      },
+      child: Container(
+          padding: const EdgeInsets.all(8),
+          // decoration: BoxDecoration(
+          //   color: Theme.of(context).colorScheme.secondary,
+          //   borderRadius: BorderRadius.circular(10),
+          // ),
+          child: Column(
+            children: <Widget>[
+              Image(
+                image: AssetImage(assetName),
+                width: 30,
+                height: 30,
+              ),
+              Text(name,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                  textAlign: TextAlign.center),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Image(
+                    image: AssetImage(price.moneyType.assetName),
+                    width: 20,
+                    height: 20,
+                  ),
+                  Text(price.amount.toString(),
+                      style: Theme.of(context).textTheme.labelLarge,
+                      textAlign: TextAlign.center),
+                ],
+              ),
+            ],
+          )),
     );
   }
 }
