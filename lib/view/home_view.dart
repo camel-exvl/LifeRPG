@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:liferpg/view/store_view.dart';
+import 'package:liferpg/view/store/store_view.dart';
 import 'package:liferpg/view/status_view.dart';
 import 'package:liferpg/view/target/target_view.dart';
 import 'package:liferpg/viewmodel/habit_viewmodel.dart';
