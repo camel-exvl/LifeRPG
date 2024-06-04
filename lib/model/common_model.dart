@@ -13,6 +13,8 @@ enum Attribute {
   intelligence
 }
 
+enum MoneyType { gold, diamond }
+
 extension DifficultyExtension on Difficulty {
   String localizedString(context) {
     switch (this) {
