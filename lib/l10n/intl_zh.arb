@@ -90,5 +90,8 @@
   "frequentFinishWarningTitle": "您完成得太频繁了",
   "frequentFinishWarningMessage": "此应用程序旨在帮助您养成良好的习惯并实现长期目标。如果您完成得太频繁，可能对您没有帮助。",
   "gold": "金币",
-  "nextScheduledAt": "下次计划在"
+  "nextScheduledAt": "下次计划在",
+  "setting": "设置",
+  "backpack": "背包",
+  "achievement": "成就"
 }

@@ -43,6 +43,7 @@ class _StatusViewState extends State<StatusView>
                   children: [
                 StatusCard(viewModel: viewModel),
                 AttributesCard(viewModel: viewModel),
+                OptionsCard(viewModel: viewModel),
               ]));
         }));
   }
@@ -197,15 +198,13 @@ class AttributeRow extends StatelessWidget {
                   ? Text(
                       '${viewModel.getAttributeName(attribute.name, context)} ${AppLocalizations.of(context)!.lv}${attribute.level}',
                       style: TextStyle(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onTertiaryContainer,
+                        color:
+                            Theme.of(context).colorScheme.onTertiaryContainer,
                       ))
                   : Column(
                       children: [
                         Text(
-                            viewModel.getAttributeName(
-                                attribute.name, context),
+                            viewModel.getAttributeName(attribute.name, context),
                             style: TextStyle(
                               color: Theme.of(context)
                                   .colorScheme
@@ -251,6 +250,142 @@ class AttributeRow extends StatelessWidget {
                 ),
               )),
         ],
+      ),
+    );
+  }
+}
+
+class OptionsCard extends StatelessWidget {
+  final StatusViewModel viewModel;
+
+  const OptionsCard({super.key, required this.viewModel});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+      child: Card(
+        elevation: 8.0,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10.0), // 圆角半径和卡片相同
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: Image.asset(
+                    "res/icons/backpack.png",
+                    width:
+                        (Theme.of(context).textTheme.headlineSmall?.fontSize ??
+                                15) *
+                            1.2,
+                    height:
+                        (Theme.of(context).textTheme.headlineSmall?.fontSize ??
+                                15) *
+                            1.2,
+                  ),
+                ),
+                title: Text(AppLocalizations.of(context)!.backpack),
+                trailing: Padding(
+                  padding: const EdgeInsets.only(right: 4.0),
+                  child: Image.asset(
+                    "res/icons/right_arrow.png",
+                    width:
+                        (Theme.of(context).textTheme.headlineSmall?.fontSize ??
+                                15) *
+                            1.0,
+                    height:
+                        (Theme.of(context).textTheme.headlineSmall?.fontSize ??
+                                15) *
+                            1.0,
+                  ),
+                ),
+                onTap: () {
+                  //在这里添加你的背包功能
+                },
+              ),
+              const Divider(
+                height: 0.0,
+                indent: 16,
+                endIndent: 16,
+              ),
+              ListTile(
+                leading: Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: Image.asset(
+                    "res/icons/achievement.png",
+                    width:
+                        (Theme.of(context).textTheme.headlineSmall?.fontSize ??
+                                15) *
+                            1.2,
+                    height:
+                        (Theme.of(context).textTheme.headlineSmall?.fontSize ??
+                                15) *
+                            1.2,
+                  ),
+                ),
+                title: Text(AppLocalizations.of(context)!.achievement),
+                trailing: Padding(
+                  padding: const EdgeInsets.only(right: 4.0),
+                  child: Image.asset(
+                    "res/icons/right_arrow.png",
+                    width:
+                        (Theme.of(context).textTheme.headlineSmall?.fontSize ??
+                                15) *
+                            1.0,
+                    height:
+                        (Theme.of(context).textTheme.headlineSmall?.fontSize ??
+                                15) *
+                            1.0,
+                  ),
+                ),
+                onTap: () {
+                  //在这里添加你的成就列表功能
+                },
+              ),
+              const Divider(
+                height: 0.0,
+                indent: 16,
+                endIndent: 16,
+              ),
+              ListTile(
+                leading: Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: Image.asset(
+                    "res/icons/setting.png",
+                    width:
+                        (Theme.of(context).textTheme.headlineSmall?.fontSize ??
+                                15) *
+                            1.2,
+                    height:
+                        (Theme.of(context).textTheme.headlineSmall?.fontSize ??
+                                15) *
+                            1.2,
+                  ),
+                ),
+                title: Text(AppLocalizations.of(context)!.setting),
+                trailing: Padding(
+                  padding: const EdgeInsets.only(right: 4.0),
+                  child: Image.asset(
+                    "res/icons/right_arrow.png",
+                    width:
+                        (Theme.of(context).textTheme.headlineSmall?.fontSize ??
+                                15) *
+                            1.0,
+                    height:
+                        (Theme.of(context).textTheme.headlineSmall?.fontSize ??
+                                15) *
+                            1.0,
+                  ),
+                ),
+                onTap: () {
+                  //在这里添加你的设置功能
+                },
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
