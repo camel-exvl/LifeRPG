@@ -4,6 +4,7 @@ import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/database/database.dart';
+import 'dart:math' as math;
 
 import '../model/common_model.dart';
 import '../model/reward/reward_request_model.dart';
@@ -23,9 +24,12 @@ class StatusViewModel extends ChangeNotifier {
   static const int easyGold = 15;
   static const int mediumGold = 25;
   static const int hardGold = 35;
-  static const int maxRewardCount = 5;
-  static const int bonusRepeatExp = 3;
-  static const int bonusRepeatGold = 5;
+  static const int bonusRepeatEasyExp = 1;
+  static const int bonusRepeatMediumExp = 2;
+  static const int bonusRepeatHardExp = 3;
+  static const int bonusRepeatEasyGold = 1;
+  static const int bonusRepeatMediumGold = 2;
+  static const int bonusRepeatHardGold = 3;
   static const double lowestRewardCoefficient = 0.6;
   static const Duration clickLimitation = Duration(minutes: 5);
   static const double penaltyCoefficient = 0.95;
@@ -211,25 +215,24 @@ class StatusViewModel extends ChangeNotifier {
       }
     }
 
-    bonusExp = request.finishedCount > maxRewardCount
-        ? maxRewardCount * bonusRepeatExp
-        : request.finishedCount * bonusRepeatExp;
-    bonusGold = request.finishedCount > maxRewardCount
-        ? maxRewardCount * bonusRepeatGold
-        : request.finishedCount * bonusRepeatGold;
-
     switch (request.difficulty) {
       case Difficulty.easy:
         totalExp = easyExp;
         totalGold = easyGold;
+        bonusExp  = (math.log(request.finishedCount) * bonusRepeatEasyExp).round();
+        bonusGold = (math.log(request.finishedCount) * bonusRepeatEasyGold).round();
         break;
       case Difficulty.medium:
         totalExp = mediumExp;
         totalGold = mediumGold;
+        bonusExp  = (math.log(request.finishedCount) * bonusRepeatMediumExp).round();
+        bonusGold = (math.log(request.finishedCount) * bonusRepeatMediumGold).round();
         break;
       case Difficulty.hard:
         totalExp = hardExp;
         totalGold = hardGold;
+        bonusExp  = (math.log(request.finishedCount) * bonusRepeatHardExp).round();
+        bonusGold = (math.log(request.finishedCount) * bonusRepeatHardGold).round();
         break;
     }
     totalExp += bonusExp;
