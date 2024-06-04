@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:liferpg/viewmodel/store_viewmodel.dart';
 
 enum MoneyType {
-  gold("gold", "res/icons/coin_04d.png"),
-  diamond("diamond", "res/icons/crystal_01e.png");
+  gold("gold", "res/icons/kyrise/coin_04d.png"),
+  diamond("diamond", "res/icons/kyrise/crystal_01e.png");
 
   const MoneyType(this.name, this.assetName);
   final String name;
@@ -17,6 +17,8 @@ class Price {
 }
 
 class StoreViewState extends State<StoreView> {
+  // final viewModel = StoreViewModel();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +38,7 @@ class StoreViewState extends State<StoreView> {
                     name: 'sword',
                     description: 'this is a sword',
                     price: Price(100, MoneyType.gold),
-                    assetName: 'res/icons/sword_01c.png',
+                    assetName: 'res/icons/kyrise/sword_01c.png',
                   )),
         ))
       ],
