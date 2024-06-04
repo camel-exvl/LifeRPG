@@ -1822,6 +1822,545 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
   }
 }
 
+class $StoreTableTable extends StoreTable
+    with TableInfo<$StoreTableTable, StoreModel> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $StoreTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _priceMeta = const VerificationMeta('price');
+  @override
+  late final GeneratedColumn<int> price = GeneratedColumn<int>(
+      'price', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _iconPathMeta =
+      const VerificationMeta('iconPath');
+  @override
+  late final GeneratedColumn<String> iconPath = GeneratedColumn<String>(
+      'icon_path', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _stockMeta = const VerificationMeta('stock');
+  @override
+  late final GeneratedColumn<int> stock = GeneratedColumn<int>(
+      'stock', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, name, description, price, iconPath, stock];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'store_table';
+  @override
+  VerificationContext validateIntegrity(Insertable<StoreModel> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    } else if (isInserting) {
+      context.missing(_descriptionMeta);
+    }
+    if (data.containsKey('price')) {
+      context.handle(
+          _priceMeta, price.isAcceptableOrUnknown(data['price']!, _priceMeta));
+    } else if (isInserting) {
+      context.missing(_priceMeta);
+    }
+    if (data.containsKey('icon_path')) {
+      context.handle(_iconPathMeta,
+          iconPath.isAcceptableOrUnknown(data['icon_path']!, _iconPathMeta));
+    } else if (isInserting) {
+      context.missing(_iconPathMeta);
+    }
+    if (data.containsKey('stock')) {
+      context.handle(
+          _stockMeta, stock.isAcceptableOrUnknown(data['stock']!, _stockMeta));
+    } else if (isInserting) {
+      context.missing(_stockMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  StoreModel map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return StoreModel(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
+      price: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}price'])!,
+      iconPath: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}icon_path'])!,
+      stock: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}stock'])!,
+    );
+  }
+
+  @override
+  $StoreTableTable createAlias(String alias) {
+    return $StoreTableTable(attachedDatabase, alias);
+  }
+}
+
+class StoreModel extends DataClass implements Insertable<StoreModel> {
+  final int id;
+  final String name;
+  final String description;
+  final int price;
+  final String iconPath;
+  final int stock;
+  const StoreModel(
+      {required this.id,
+      required this.name,
+      required this.description,
+      required this.price,
+      required this.iconPath,
+      required this.stock});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['name'] = Variable<String>(name);
+    map['description'] = Variable<String>(description);
+    map['price'] = Variable<int>(price);
+    map['icon_path'] = Variable<String>(iconPath);
+    map['stock'] = Variable<int>(stock);
+    return map;
+  }
+
+  StoreTableCompanion toCompanion(bool nullToAbsent) {
+    return StoreTableCompanion(
+      id: Value(id),
+      name: Value(name),
+      description: Value(description),
+      price: Value(price),
+      iconPath: Value(iconPath),
+      stock: Value(stock),
+    );
+  }
+
+  factory StoreModel.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return StoreModel(
+      id: serializer.fromJson<int>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      description: serializer.fromJson<String>(json['description']),
+      price: serializer.fromJson<int>(json['price']),
+      iconPath: serializer.fromJson<String>(json['iconPath']),
+      stock: serializer.fromJson<int>(json['stock']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'name': serializer.toJson<String>(name),
+      'description': serializer.toJson<String>(description),
+      'price': serializer.toJson<int>(price),
+      'iconPath': serializer.toJson<String>(iconPath),
+      'stock': serializer.toJson<int>(stock),
+    };
+  }
+
+  StoreModel copyWith(
+          {int? id,
+          String? name,
+          String? description,
+          int? price,
+          String? iconPath,
+          int? stock}) =>
+      StoreModel(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        price: price ?? this.price,
+        iconPath: iconPath ?? this.iconPath,
+        stock: stock ?? this.stock,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('StoreModel(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('price: $price, ')
+          ..write('iconPath: $iconPath, ')
+          ..write('stock: $stock')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, name, description, price, iconPath, stock);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is StoreModel &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.description == this.description &&
+          other.price == this.price &&
+          other.iconPath == this.iconPath &&
+          other.stock == this.stock);
+}
+
+class StoreTableCompanion extends UpdateCompanion<StoreModel> {
+  final Value<int> id;
+  final Value<String> name;
+  final Value<String> description;
+  final Value<int> price;
+  final Value<String> iconPath;
+  final Value<int> stock;
+  const StoreTableCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.description = const Value.absent(),
+    this.price = const Value.absent(),
+    this.iconPath = const Value.absent(),
+    this.stock = const Value.absent(),
+  });
+  StoreTableCompanion.insert({
+    this.id = const Value.absent(),
+    required String name,
+    required String description,
+    required int price,
+    required String iconPath,
+    required int stock,
+  })  : name = Value(name),
+        description = Value(description),
+        price = Value(price),
+        iconPath = Value(iconPath),
+        stock = Value(stock);
+  static Insertable<StoreModel> custom({
+    Expression<int>? id,
+    Expression<String>? name,
+    Expression<String>? description,
+    Expression<int>? price,
+    Expression<String>? iconPath,
+    Expression<int>? stock,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (description != null) 'description': description,
+      if (price != null) 'price': price,
+      if (iconPath != null) 'icon_path': iconPath,
+      if (stock != null) 'stock': stock,
+    });
+  }
+
+  StoreTableCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? name,
+      Value<String>? description,
+      Value<int>? price,
+      Value<String>? iconPath,
+      Value<int>? stock}) {
+    return StoreTableCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      price: price ?? this.price,
+      iconPath: iconPath ?? this.iconPath,
+      stock: stock ?? this.stock,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (price.present) {
+      map['price'] = Variable<int>(price.value);
+    }
+    if (iconPath.present) {
+      map['icon_path'] = Variable<String>(iconPath.value);
+    }
+    if (stock.present) {
+      map['stock'] = Variable<int>(stock.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('StoreTableCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('price: $price, ')
+          ..write('iconPath: $iconPath, ')
+          ..write('stock: $stock')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $PropertyTableTable extends PropertyTable
+    with TableInfo<$PropertyTableTable, PropertyModel> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PropertyTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _moneyTypeMeta =
+      const VerificationMeta('moneyType');
+  @override
+  late final GeneratedColumnWithTypeConverter<MoneyType, int> moneyType =
+      GeneratedColumn<int>('money_type', aliasedName, false,
+              type: DriftSqlType.int, requiredDuringInsert: true)
+          .withConverter<MoneyType>($PropertyTableTable.$convertermoneyType);
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<int> amount = GeneratedColumn<int>(
+      'amount', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, moneyType, amount];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'property_table';
+  @override
+  VerificationContext validateIntegrity(Insertable<PropertyModel> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    context.handle(_moneyTypeMeta, const VerificationResult.success());
+    if (data.containsKey('amount')) {
+      context.handle(_amountMeta,
+          amount.isAcceptableOrUnknown(data['amount']!, _amountMeta));
+    } else if (isInserting) {
+      context.missing(_amountMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PropertyModel map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PropertyModel(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      moneyType: $PropertyTableTable.$convertermoneyType.fromSql(
+          attachedDatabase.typeMapping
+              .read(DriftSqlType.int, data['${effectivePrefix}money_type'])!),
+      amount: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}amount'])!,
+    );
+  }
+
+  @override
+  $PropertyTableTable createAlias(String alias) {
+    return $PropertyTableTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<MoneyType, int, int> $convertermoneyType =
+      const EnumIndexConverter<MoneyType>(MoneyType.values);
+}
+
+class PropertyModel extends DataClass implements Insertable<PropertyModel> {
+  final int id;
+  final MoneyType moneyType;
+  final int amount;
+  const PropertyModel(
+      {required this.id, required this.moneyType, required this.amount});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    {
+      map['money_type'] = Variable<int>(
+          $PropertyTableTable.$convertermoneyType.toSql(moneyType));
+    }
+    map['amount'] = Variable<int>(amount);
+    return map;
+  }
+
+  PropertyTableCompanion toCompanion(bool nullToAbsent) {
+    return PropertyTableCompanion(
+      id: Value(id),
+      moneyType: Value(moneyType),
+      amount: Value(amount),
+    );
+  }
+
+  factory PropertyModel.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PropertyModel(
+      id: serializer.fromJson<int>(json['id']),
+      moneyType: $PropertyTableTable.$convertermoneyType
+          .fromJson(serializer.fromJson<int>(json['moneyType'])),
+      amount: serializer.fromJson<int>(json['amount']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'moneyType': serializer.toJson<int>(
+          $PropertyTableTable.$convertermoneyType.toJson(moneyType)),
+      'amount': serializer.toJson<int>(amount),
+    };
+  }
+
+  PropertyModel copyWith({int? id, MoneyType? moneyType, int? amount}) =>
+      PropertyModel(
+        id: id ?? this.id,
+        moneyType: moneyType ?? this.moneyType,
+        amount: amount ?? this.amount,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('PropertyModel(')
+          ..write('id: $id, ')
+          ..write('moneyType: $moneyType, ')
+          ..write('amount: $amount')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, moneyType, amount);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PropertyModel &&
+          other.id == this.id &&
+          other.moneyType == this.moneyType &&
+          other.amount == this.amount);
+}
+
+class PropertyTableCompanion extends UpdateCompanion<PropertyModel> {
+  final Value<int> id;
+  final Value<MoneyType> moneyType;
+  final Value<int> amount;
+  const PropertyTableCompanion({
+    this.id = const Value.absent(),
+    this.moneyType = const Value.absent(),
+    this.amount = const Value.absent(),
+  });
+  PropertyTableCompanion.insert({
+    this.id = const Value.absent(),
+    required MoneyType moneyType,
+    required int amount,
+  })  : moneyType = Value(moneyType),
+        amount = Value(amount);
+  static Insertable<PropertyModel> custom({
+    Expression<int>? id,
+    Expression<int>? moneyType,
+    Expression<int>? amount,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (moneyType != null) 'money_type': moneyType,
+      if (amount != null) 'amount': amount,
+    });
+  }
+
+  PropertyTableCompanion copyWith(
+      {Value<int>? id, Value<MoneyType>? moneyType, Value<int>? amount}) {
+    return PropertyTableCompanion(
+      id: id ?? this.id,
+      moneyType: moneyType ?? this.moneyType,
+      amount: amount ?? this.amount,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (moneyType.present) {
+      map['money_type'] = Variable<int>(
+          $PropertyTableTable.$convertermoneyType.toSql(moneyType.value));
+    }
+    if (amount.present) {
+      map['amount'] = Variable<int>(amount.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PropertyTableCompanion(')
+          ..write('id: $id, ')
+          ..write('moneyType: $moneyType, ')
+          ..write('amount: $amount')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   _$AppDatabaseManager get managers => _$AppDatabaseManager(this);
@@ -1829,12 +2368,20 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $HabitTableTable habitTable = $HabitTableTable(this);
   late final $TaskTableTable taskTable = $TaskTableTable(this);
   late final $StatusTableTable statusTable = $StatusTableTable(this);
+  late final $StoreTableTable storeTable = $StoreTableTable(this);
+  late final $PropertyTableTable propertyTable = $PropertyTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [attributeTable, habitTable, taskTable, statusTable];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+        attributeTable,
+        habitTable,
+        taskTable,
+        statusTable,
+        storeTable,
+        propertyTable
+      ];
 }
 
 typedef $$AttributeTableTableInsertCompanionBuilder = AttributeTableCompanion
@@ -2652,6 +3199,264 @@ class $$StatusTableTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
+typedef $$StoreTableTableInsertCompanionBuilder = StoreTableCompanion Function({
+  Value<int> id,
+  required String name,
+  required String description,
+  required int price,
+  required String iconPath,
+  required int stock,
+});
+typedef $$StoreTableTableUpdateCompanionBuilder = StoreTableCompanion Function({
+  Value<int> id,
+  Value<String> name,
+  Value<String> description,
+  Value<int> price,
+  Value<String> iconPath,
+  Value<int> stock,
+});
+
+class $$StoreTableTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $StoreTableTable,
+    StoreModel,
+    $$StoreTableTableFilterComposer,
+    $$StoreTableTableOrderingComposer,
+    $$StoreTableTableProcessedTableManager,
+    $$StoreTableTableInsertCompanionBuilder,
+    $$StoreTableTableUpdateCompanionBuilder> {
+  $$StoreTableTableTableManager(_$AppDatabase db, $StoreTableTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$StoreTableTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$StoreTableTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$StoreTableTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<int> id = const Value.absent(),
+            Value<String> name = const Value.absent(),
+            Value<String> description = const Value.absent(),
+            Value<int> price = const Value.absent(),
+            Value<String> iconPath = const Value.absent(),
+            Value<int> stock = const Value.absent(),
+          }) =>
+              StoreTableCompanion(
+            id: id,
+            name: name,
+            description: description,
+            price: price,
+            iconPath: iconPath,
+            stock: stock,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<int> id = const Value.absent(),
+            required String name,
+            required String description,
+            required int price,
+            required String iconPath,
+            required int stock,
+          }) =>
+              StoreTableCompanion.insert(
+            id: id,
+            name: name,
+            description: description,
+            price: price,
+            iconPath: iconPath,
+            stock: stock,
+          ),
+        ));
+}
+
+class $$StoreTableTableProcessedTableManager extends ProcessedTableManager<
+    _$AppDatabase,
+    $StoreTableTable,
+    StoreModel,
+    $$StoreTableTableFilterComposer,
+    $$StoreTableTableOrderingComposer,
+    $$StoreTableTableProcessedTableManager,
+    $$StoreTableTableInsertCompanionBuilder,
+    $$StoreTableTableUpdateCompanionBuilder> {
+  $$StoreTableTableProcessedTableManager(super.$state);
+}
+
+class $$StoreTableTableFilterComposer
+    extends FilterComposer<_$AppDatabase, $StoreTableTable> {
+  $$StoreTableTableFilterComposer(super.$state);
+  ColumnFilters<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get description => $state.composableBuilder(
+      column: $state.table.description,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get price => $state.composableBuilder(
+      column: $state.table.price,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get iconPath => $state.composableBuilder(
+      column: $state.table.iconPath,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get stock => $state.composableBuilder(
+      column: $state.table.stock,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$StoreTableTableOrderingComposer
+    extends OrderingComposer<_$AppDatabase, $StoreTableTable> {
+  $$StoreTableTableOrderingComposer(super.$state);
+  ColumnOrderings<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get description => $state.composableBuilder(
+      column: $state.table.description,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get price => $state.composableBuilder(
+      column: $state.table.price,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get iconPath => $state.composableBuilder(
+      column: $state.table.iconPath,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get stock => $state.composableBuilder(
+      column: $state.table.stock,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$PropertyTableTableInsertCompanionBuilder = PropertyTableCompanion
+    Function({
+  Value<int> id,
+  required MoneyType moneyType,
+  required int amount,
+});
+typedef $$PropertyTableTableUpdateCompanionBuilder = PropertyTableCompanion
+    Function({
+  Value<int> id,
+  Value<MoneyType> moneyType,
+  Value<int> amount,
+});
+
+class $$PropertyTableTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $PropertyTableTable,
+    PropertyModel,
+    $$PropertyTableTableFilterComposer,
+    $$PropertyTableTableOrderingComposer,
+    $$PropertyTableTableProcessedTableManager,
+    $$PropertyTableTableInsertCompanionBuilder,
+    $$PropertyTableTableUpdateCompanionBuilder> {
+  $$PropertyTableTableTableManager(_$AppDatabase db, $PropertyTableTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$PropertyTableTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$PropertyTableTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$PropertyTableTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<int> id = const Value.absent(),
+            Value<MoneyType> moneyType = const Value.absent(),
+            Value<int> amount = const Value.absent(),
+          }) =>
+              PropertyTableCompanion(
+            id: id,
+            moneyType: moneyType,
+            amount: amount,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<int> id = const Value.absent(),
+            required MoneyType moneyType,
+            required int amount,
+          }) =>
+              PropertyTableCompanion.insert(
+            id: id,
+            moneyType: moneyType,
+            amount: amount,
+          ),
+        ));
+}
+
+class $$PropertyTableTableProcessedTableManager extends ProcessedTableManager<
+    _$AppDatabase,
+    $PropertyTableTable,
+    PropertyModel,
+    $$PropertyTableTableFilterComposer,
+    $$PropertyTableTableOrderingComposer,
+    $$PropertyTableTableProcessedTableManager,
+    $$PropertyTableTableInsertCompanionBuilder,
+    $$PropertyTableTableUpdateCompanionBuilder> {
+  $$PropertyTableTableProcessedTableManager(super.$state);
+}
+
+class $$PropertyTableTableFilterComposer
+    extends FilterComposer<_$AppDatabase, $PropertyTableTable> {
+  $$PropertyTableTableFilterComposer(super.$state);
+  ColumnFilters<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnWithTypeConverterFilters<MoneyType, MoneyType, int> get moneyType =>
+      $state.composableBuilder(
+          column: $state.table.moneyType,
+          builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
+              column,
+              joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get amount => $state.composableBuilder(
+      column: $state.table.amount,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$PropertyTableTableOrderingComposer
+    extends OrderingComposer<_$AppDatabase, $PropertyTableTable> {
+  $$PropertyTableTableOrderingComposer(super.$state);
+  ColumnOrderings<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get moneyType => $state.composableBuilder(
+      column: $state.table.moneyType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get amount => $state.composableBuilder(
+      column: $state.table.amount,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
 class _$AppDatabaseManager {
   final _$AppDatabase _db;
   _$AppDatabaseManager(this._db);
@@ -2663,4 +3468,8 @@ class _$AppDatabaseManager {
       $$TaskTableTableTableManager(_db, _db.taskTable);
   $$StatusTableTableTableManager get statusTable =>
       $$StatusTableTableTableManager(_db, _db.statusTable);
+  $$StoreTableTableTableManager get storeTable =>
+      $$StoreTableTableTableManager(_db, _db.storeTable);
+  $$PropertyTableTableTableManager get propertyTable =>
+      $$PropertyTableTableTableManager(_db, _db.propertyTable);
 }
