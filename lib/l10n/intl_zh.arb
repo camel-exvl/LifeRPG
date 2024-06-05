@@ -95,6 +95,12 @@
   "backpack": "背包",
   "achievement": "成就",
   "language": "语言",
+  "brightness": "亮度",
   "dayMode": "日间模式",
-  "nightMode": "夜间模式"
+  "nightMode": "夜间模式",
+  "followingSystem": "跟随系统",
+  "restartApp": "重启应用",
+  "restartAppMessage": "设置重启后生效，您确定要重启应用吗？",
+  "zh": "简体中文",
+  "en": "English"
 }

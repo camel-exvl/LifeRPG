@@ -95,6 +95,12 @@
   "backpack": "Backpack",
   "achievement": "Achievement",
   "language": "Language",
+  "brightness": "Brightness",
   "dayMode": "Day Mode",
-  "nightMode": "Night Mode"
+  "nightMode": "Night Mode",
+  "followingSystem": "Following System",
+  "restartApp": "Restart App",
+  "restartAppMessage": "Restart app to apply changes?",
+  "zh": "简体中文",
+  "en": "English"
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:liferpg/main.dart';
+import 'package:liferpg/view/setting/brightness_setting_view.dart';
 import 'package:liferpg/view/setting/language_setting_view.dart';
 
 class SettingView extends StatefulWidget {
@@ -58,16 +58,26 @@ class _SettingView extends State<SettingView> {
             ListTile(
               title: Padding(
                   padding: const EdgeInsets.only(left: 16.0),
-                  child: Text(
-                    Theme.of(context).brightness == Brightness.dark
-                        ? AppLocalizations.of(context)!.dayMode
-                        : AppLocalizations.of(context)!.nightMode,
-                  )),
+                  child: Text(AppLocalizations.of(context)!.brightness)),
               trailing: Padding(
                 padding: const EdgeInsets.only(right: 4.0),
+                child: Image.asset(
+                  "res/icons/right_arrow.png",
+                  width: (Theme.of(context).textTheme.headlineSmall?.fontSize ??
+                          15) *
+                      1.0,
+                  height:
+                      (Theme.of(context).textTheme.headlineSmall?.fontSize ??
+                              15) *
+                          1.0,
+                ),
               ),
               onTap: () {
-
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const BrightnessSettingView()),
+                );
               },
             ),
           ],

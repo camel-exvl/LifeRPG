@@ -2367,6 +2367,15 @@ class $SettingTableTable extends SettingTable
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $SettingTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
   static const VerificationMeta _languageTypeMeta =
       const VerificationMeta('languageType');
   @override
@@ -2380,7 +2389,7 @@ class $SettingTableTable extends SettingTable
       'brightness_type', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns => [languageType, brightnessType];
+  List<GeneratedColumn> get $columns => [id, languageType, brightnessType];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -2391,6 +2400,9 @@ class $SettingTableTable extends SettingTable
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
     if (data.containsKey('language_type')) {
       context.handle(
           _languageTypeMeta,
@@ -2411,11 +2423,13 @@ class $SettingTableTable extends SettingTable
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => const {};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   SettingModel map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return SettingModel(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       languageType: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}language_type'])!,
       brightnessType: attachedDatabase.typeMapping
@@ -2430,13 +2444,17 @@ class $SettingTableTable extends SettingTable
 }
 
 class SettingModel extends DataClass implements Insertable<SettingModel> {
+  final int id;
   final int languageType;
   final int brightnessType;
   const SettingModel(
-      {required this.languageType, required this.brightnessType});
+      {required this.id,
+      required this.languageType,
+      required this.brightnessType});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
     map['language_type'] = Variable<int>(languageType);
     map['brightness_type'] = Variable<int>(brightnessType);
     return map;
@@ -2444,6 +2462,7 @@ class SettingModel extends DataClass implements Insertable<SettingModel> {
 
   SettingTableCompanion toCompanion(bool nullToAbsent) {
     return SettingTableCompanion(
+      id: Value(id),
       languageType: Value(languageType),
       brightnessType: Value(brightnessType),
     );
@@ -2453,6 +2472,7 @@ class SettingModel extends DataClass implements Insertable<SettingModel> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return SettingModel(
+      id: serializer.fromJson<int>(json['id']),
       languageType: serializer.fromJson<int>(json['languageType']),
       brightnessType: serializer.fromJson<int>(json['brightnessType']),
     );
@@ -2461,19 +2481,22 @@ class SettingModel extends DataClass implements Insertable<SettingModel> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
       'languageType': serializer.toJson<int>(languageType),
       'brightnessType': serializer.toJson<int>(brightnessType),
     };
   }
 
-  SettingModel copyWith({int? languageType, int? brightnessType}) =>
+  SettingModel copyWith({int? id, int? languageType, int? brightnessType}) =>
       SettingModel(
+        id: id ?? this.id,
         languageType: languageType ?? this.languageType,
         brightnessType: brightnessType ?? this.brightnessType,
       );
   @override
   String toString() {
     return (StringBuffer('SettingModel(')
+          ..write('id: $id, ')
           ..write('languageType: $languageType, ')
           ..write('brightnessType: $brightnessType')
           ..write(')'))
@@ -2481,64 +2504,63 @@ class SettingModel extends DataClass implements Insertable<SettingModel> {
   }
 
   @override
-  int get hashCode => Object.hash(languageType, brightnessType);
+  int get hashCode => Object.hash(id, languageType, brightnessType);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is SettingModel &&
+          other.id == this.id &&
           other.languageType == this.languageType &&
           other.brightnessType == this.brightnessType);
 }
 
 class SettingTableCompanion extends UpdateCompanion<SettingModel> {
+  final Value<int> id;
   final Value<int> languageType;
   final Value<int> brightnessType;
-  final Value<int> rowid;
   const SettingTableCompanion({
+    this.id = const Value.absent(),
     this.languageType = const Value.absent(),
     this.brightnessType = const Value.absent(),
-    this.rowid = const Value.absent(),
   });
   SettingTableCompanion.insert({
+    this.id = const Value.absent(),
     required int languageType,
     required int brightnessType,
-    this.rowid = const Value.absent(),
   })  : languageType = Value(languageType),
         brightnessType = Value(brightnessType);
   static Insertable<SettingModel> custom({
+    Expression<int>? id,
     Expression<int>? languageType,
     Expression<int>? brightnessType,
-    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
+      if (id != null) 'id': id,
       if (languageType != null) 'language_type': languageType,
       if (brightnessType != null) 'brightness_type': brightnessType,
-      if (rowid != null) 'rowid': rowid,
     });
   }
 
   SettingTableCompanion copyWith(
-      {Value<int>? languageType,
-      Value<int>? brightnessType,
-      Value<int>? rowid}) {
+      {Value<int>? id, Value<int>? languageType, Value<int>? brightnessType}) {
     return SettingTableCompanion(
+      id: id ?? this.id,
       languageType: languageType ?? this.languageType,
       brightnessType: brightnessType ?? this.brightnessType,
-      rowid: rowid ?? this.rowid,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
     if (languageType.present) {
       map['language_type'] = Variable<int>(languageType.value);
     }
     if (brightnessType.present) {
       map['brightness_type'] = Variable<int>(brightnessType.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
@@ -2546,9 +2568,9 @@ class SettingTableCompanion extends UpdateCompanion<SettingModel> {
   @override
   String toString() {
     return (StringBuffer('SettingTableCompanion(')
+          ..write('id: $id, ')
           ..write('languageType: $languageType, ')
-          ..write('brightnessType: $brightnessType, ')
-          ..write('rowid: $rowid')
+          ..write('brightnessType: $brightnessType')
           ..write(')'))
         .toString();
   }
@@ -3654,15 +3676,15 @@ class $$PropertyTableTableOrderingComposer
 
 typedef $$SettingTableTableInsertCompanionBuilder = SettingTableCompanion
     Function({
+  Value<int> id,
   required int languageType,
   required int brightnessType,
-  Value<int> rowid,
 });
 typedef $$SettingTableTableUpdateCompanionBuilder = SettingTableCompanion
     Function({
+  Value<int> id,
   Value<int> languageType,
   Value<int> brightnessType,
-  Value<int> rowid,
 });
 
 class $$SettingTableTableTableManager extends RootTableManager<
@@ -3685,24 +3707,24 @@ class $$SettingTableTableTableManager extends RootTableManager<
           getChildManagerBuilder: (p) =>
               $$SettingTableTableProcessedTableManager(p),
           getUpdateCompanionBuilder: ({
+            Value<int> id = const Value.absent(),
             Value<int> languageType = const Value.absent(),
             Value<int> brightnessType = const Value.absent(),
-            Value<int> rowid = const Value.absent(),
           }) =>
               SettingTableCompanion(
+            id: id,
             languageType: languageType,
             brightnessType: brightnessType,
-            rowid: rowid,
           ),
           getInsertCompanionBuilder: ({
+            Value<int> id = const Value.absent(),
             required int languageType,
             required int brightnessType,
-            Value<int> rowid = const Value.absent(),
           }) =>
               SettingTableCompanion.insert(
+            id: id,
             languageType: languageType,
             brightnessType: brightnessType,
-            rowid: rowid,
           ),
         ));
 }
@@ -3722,6 +3744,11 @@ class $$SettingTableTableProcessedTableManager extends ProcessedTableManager<
 class $$SettingTableTableFilterComposer
     extends FilterComposer<_$AppDatabase, $SettingTableTable> {
   $$SettingTableTableFilterComposer(super.$state);
+  ColumnFilters<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
   ColumnFilters<int> get languageType => $state.composableBuilder(
       column: $state.table.languageType,
       builder: (column, joinBuilders) =>
@@ -3736,6 +3763,11 @@ class $$SettingTableTableFilterComposer
 class $$SettingTableTableOrderingComposer
     extends OrderingComposer<_$AppDatabase, $SettingTableTable> {
   $$SettingTableTableOrderingComposer(super.$state);
+  ColumnOrderings<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
   ColumnOrderings<int> get languageType => $state.composableBuilder(
       column: $state.table.languageType,
       builder: (column, joinBuilders) =>

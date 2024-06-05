@@ -12,9 +12,12 @@ class SettingViewModel extends ChangeNotifier {
 
   final database = AppDatabase();
   SettingModel _setting = SettingModel(
+    id: 1,
     languageType: LanguageType.values.indexOf(LanguageType.system),
     brightnessType: BrightnessType.values.indexOf(BrightnessType.system),
   );
+
+  SettingModel get setting => _setting;
 
   Future<void> initOnFirstRun() async {
     await insertSetting(_setting);
@@ -26,7 +29,7 @@ class SettingViewModel extends ChangeNotifier {
   }
 
   Future<void> insertSetting(SettingModel setting) async {
-    database.insertSetting(SettingTableCompanion(
+    await database.insertSetting(SettingTableCompanion(
       languageType: Value(setting.languageType),
       brightnessType: Value(setting.brightnessType),
     ));
@@ -34,10 +37,33 @@ class SettingViewModel extends ChangeNotifier {
 
   Future<void> updateSetting(SettingModel setting) async {
     _setting = setting;
-    database.updateSetting(setting);
+    await database.updateSetting(setting);
   }
 
   Future<void> deleteSetting(SettingModel setting) async {
-    database.deleteSetting(setting);
+    await database.deleteSetting(setting);
+  }
+
+  ThemeMode getThemeMode() {
+    switch (BrightnessType.values[_setting.brightnessType]) {
+      case BrightnessType.light:
+        return ThemeMode.light;
+      case BrightnessType.dark:
+        return ThemeMode.dark;
+      case BrightnessType.system:
+      default:
+        return ThemeMode.system;
+    }
+  }
+  Locale getLocale() {
+    switch (LanguageType.values[_setting.languageType]) {
+      case LanguageType.zh:
+        return const Locale('zh');
+      case LanguageType.en:
+        return const Locale('en');
+      case LanguageType.system:
+      default:
+      return WidgetsBinding.instance.platformDispatcher.locale;
+    }
   }
 }
