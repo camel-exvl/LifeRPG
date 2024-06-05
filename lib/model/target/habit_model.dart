@@ -51,4 +51,13 @@ extension HabitTypeExtension on HabitType {
         return AppLocalizations.of(context)!.bad;
     }
   }
+
+  String iconPath() {
+    switch (this) {
+      case HabitType.good:
+        return 'res/icons/habit_good.png';
+      case HabitType.bad:
+        return 'res/icons/habit_bad.png';
+    }
+  }
 }
