@@ -91,6 +91,7 @@
   "frequentFinishWarningMessage": "This app aims to help you build good habits and achieve long-term goals. If you finish too frequent, it may not be helpful for you. ",
   "gold": "Gold",
   "nextScheduledAt": "Next Scheduled At",
+<<<<<<< HEAD
   "setting": "Setting",
   "backpack": "Backpack",
   "achievement": "Achievement",
@@ -103,4 +104,28 @@
   "restartAppMessage": "Restart app to apply changes?",
   "zh": "简体中文",
   "en": "English"
+=======
+  "armor": "Armor",
+  "armorDescription": "This sturdy armor effectively protects the wearer from harm, greatly increasing your defense.",
+  "arrow": "Arrow",
+  "arrowDescription": "A bundle of finely crafted arrows, suitable for long-range combat, enhancing your attack range and accuracy.",
+  "boots": "Boot",
+  "bootsDescription": "These lightweight and durable boots allow you to walk effortlessly on any terrain, boosting your movement speed and agility.",
+  "fruit": "Fruit",
+  "fruitDescription": "Fresh fruits that not only taste delicious but also quickly restore your vitality and spirit.",
+  "secretGift": "Secret Gift",
+  "secretGiftDescription": "A mysterious gift that reveals its surprise only when opened. It could be wealth, strength, or wisdom.",
+  "magicHat": "Magic Hat",
+  "magicHatDescription": "This seemingly ordinary magic hat reveals its true power when worn, enhancing your magical abilities.",
+  "key": "Key",
+  "keyDescription": "An ancient key that unlocks mysterious treasures or unknown secrets.",
+  "magicBook": "Magic Book",
+  "magicBookDescription": "An ancient book of magic that contains many lost spells and incantations. Reading it greatly enhances your knowledge of magic.",
+  "necklace": "Necklace",
+  "necklaceDescription": "A beautiful necklace that makes the wearer feel surrounded by invisible power, increasing your charm and defense.",
+  "potion": "Potion",
+  "potionDescription": "A bottle of magical potion that, when consumed, quickly restores your health and energy.",
+  "sword": "Sword",
+  "swordDescription": "A sharp sword suitable for close combat, greatly increasing your attack power."
+>>>>>>> main
 }

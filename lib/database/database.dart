@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:liferpg/model/store/property_model.dart';
-import 'package:liferpg/model/store/store_model.dart';
+import 'package:liferpg/model/store/equipment_model.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqlite3/sqlite3.dart';
@@ -24,9 +24,9 @@ part 'database.g.dart';
   HabitTable,
   TaskTable,
   StatusTable,
-  StoreTable,
-  PropertyTable,
-  SettingTable
+  SettingTable,
+  EquipmentTable,
+  PropertyTable
 ])
 class AppDatabase extends _$AppDatabase {
   static final AppDatabase instance = AppDatabase._internal();
@@ -119,20 +119,20 @@ class AppDatabase extends _$AppDatabase {
       delete(attributeTable).delete(attribute);
 
   // Store
-  Future<List<StoreModel>> getAllStores() async {
-    return (select(storeTable)
+  Future<List<EquipmentModel>> getAllEquipments() async {
+    return (select(equipmentTable)
           ..orderBy([(t) => OrderingTerm(expression: t.id)]))
         .get();
   }
 
-  Future<void> insertStore(StoreTableCompanion store) =>
-      into(storeTable).insert(store);
+  Future<void> insertEquipment(EquipmentTableCompanion equipment) =>
+      into(equipmentTable).insert(equipment);
 
-  Future<void> updateStore(StoreModel store) =>
-      update(storeTable).replace(store);
+  Future<void> updateEquipment(EquipmentModel equipment) =>
+      update(equipmentTable).replace(equipment);
 
-  Future<void> deleteStore(StoreModel store) =>
-      delete(storeTable).delete(store);
+  Future<void> deleteEquipment(EquipmentModel equipment) =>
+      delete(equipmentTable).delete(equipment);
 
   Future<List<PropertyModel>> getAllProperties() async {
     return (select(propertyTable)

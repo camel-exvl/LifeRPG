@@ -7,7 +7,8 @@ class DiscardChangeDialog {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Row(children: [
+          title:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Text(AppLocalizations.of(context)!.unsavedChanges),
             Image(
               image: const AssetImage('res/icons/warning.png'),

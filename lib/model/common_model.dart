@@ -30,6 +30,17 @@ extension DifficultyExtension on Difficulty {
         return AppLocalizations.of(context)!.hard;
     }
   }
+
+  String iconPath() {
+    switch (this) {
+      case Difficulty.easy:
+        return 'res/icons/easy.png';
+      case Difficulty.medium:
+        return 'res/icons/medium.png';
+      case Difficulty.hard:
+        return 'res/icons/hard.png';
+    }
+  }
 }
 
 extension CategoryExtension on Category {
@@ -85,6 +96,17 @@ extension AttributeExtension on Attribute {
         return 'res/icons/attribute_environment.png';
       case Attribute.intelligence:
         return 'res/icons/attribute_intelligence.png';
+    }
+  }
+}
+
+extension MoneyTypeExtension on MoneyType {
+  String get iconPath {
+    switch (this) {
+      case MoneyType.gold:
+        return 'res/icons/kyrise/coin_04d.png';
+      case MoneyType.diamond:
+        return 'res/icons/kyrise/crystal_01e.png';
     }
   }
 }
