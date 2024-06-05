@@ -161,6 +161,11 @@ class _TaskEditViewState extends State<TaskEditView> {
                 TextFormField(
                   controller: _titleController,
                   decoration: InputDecoration(
+                      icon: Image(
+                        image: const AssetImage('res/icons/title.png'),
+                        width: Theme.of(context).iconTheme.size,
+                        height: Theme.of(context).iconTheme.size,
+                      ),
                       labelText: AppLocalizations.of(context)!.title),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -172,10 +177,20 @@ class _TaskEditViewState extends State<TaskEditView> {
                 TextFormField(
                     controller: _descriptionController,
                     decoration: InputDecoration(
+                        icon: Image(
+                          image: const AssetImage('res/icons/description.png'),
+                          width: Theme.of(context).iconTheme.size,
+                          height: Theme.of(context).iconTheme.size,
+                        ),
                         labelText: AppLocalizations.of(context)!.description),
                     maxLines: null),
                 DropdownButtonFormField<Category>(
                   decoration: InputDecoration(
+                      icon: Image(
+                        image: const AssetImage('res/icons/category.png'),
+                        width: Theme.of(context).iconTheme.size,
+                        height: Theme.of(context).iconTheme.size,
+                      ),
                       labelText: AppLocalizations.of(context)!.category),
                   items: Category.values
                       .map((category) => DropdownMenuItem(
@@ -193,12 +208,24 @@ class _TaskEditViewState extends State<TaskEditView> {
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Align(
                         alignment: Alignment.centerLeft,
-                        child: Text(
-                          AppLocalizations.of(context)!.difficulty,
-                        ))),
+                        child: Row(children: [
+                          Image(
+                              image:
+                                  const AssetImage('res/icons/difficulty.png'),
+                              width: Theme.of(context).iconTheme.size,
+                              height: Theme.of(context).iconTheme.size),
+                          Padding(
+                              padding: const EdgeInsets.only(left: 16.0),
+                              child: Text(
+                                  AppLocalizations.of(context)!.difficulty))
+                        ]))),
                 SegmentedButton<Difficulty>(
                     segments: Difficulty.values
                         .map((difficulty) => ButtonSegment(
+                            icon: Image(
+                                image: AssetImage(difficulty.iconPath()),
+                                width: Theme.of(context).iconTheme.size,
+                                height: Theme.of(context).iconTheme.size),
                             value: difficulty,
                             label: Text(difficulty.localizedString(context))))
                         .toList(),
@@ -212,6 +239,11 @@ class _TaskEditViewState extends State<TaskEditView> {
                 Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: ListTile(
+                      leading: Image(
+                        image: const AssetImage('res/icons/repeat.png'),
+                        width: Theme.of(context).iconTheme.size,
+                        height: Theme.of(context).iconTheme.size,
+                      ),
                       title: Text(AppLocalizations.of(context)!.repeat),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

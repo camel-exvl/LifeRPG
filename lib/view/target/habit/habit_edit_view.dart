@@ -129,6 +129,11 @@ class _HabitEditViewState extends State<HabitEditView> {
                 TextFormField(
                   controller: _titleController,
                   decoration: InputDecoration(
+                      icon: Image(
+                        image: const AssetImage('res/icons/title.png'),
+                        width: Theme.of(context).iconTheme.size,
+                        height: Theme.of(context).iconTheme.size,
+                      ),
                       labelText: AppLocalizations.of(context)!.title),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -140,10 +145,20 @@ class _HabitEditViewState extends State<HabitEditView> {
                 TextFormField(
                     controller: _descriptionController,
                     decoration: InputDecoration(
+                        icon: Image(
+                          image: const AssetImage('res/icons/description.png'),
+                          width: Theme.of(context).iconTheme.size,
+                          height: Theme.of(context).iconTheme.size,
+                        ),
                         labelText: AppLocalizations.of(context)!.description),
                     maxLines: null),
                 DropdownButtonFormField<Category>(
                   decoration: InputDecoration(
+                      icon: Image(
+                        image: const AssetImage('res/icons/category.png'),
+                        width: Theme.of(context).iconTheme.size,
+                        height: Theme.of(context).iconTheme.size,
+                      ),
                       labelText: AppLocalizations.of(context)!.category),
                   items: Category.values
                       .map((category) => DropdownMenuItem(
@@ -158,11 +173,27 @@ class _HabitEditViewState extends State<HabitEditView> {
                   },
                 ),
                 Padding(
-                    padding: const EdgeInsets.only(top: 16.0),
-                    child: Text(AppLocalizations.of(context)!.difficulty)),
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Row(children: [
+                          Image(
+                              image:
+                                  const AssetImage('res/icons/difficulty.png'),
+                              width: Theme.of(context).iconTheme.size,
+                              height: Theme.of(context).iconTheme.size),
+                          Padding(
+                              padding: const EdgeInsets.only(left: 16.0),
+                              child: Text(
+                                  AppLocalizations.of(context)!.difficulty))
+                        ]))),
                 SegmentedButton<Difficulty>(
                     segments: Difficulty.values
                         .map((difficulty) => ButtonSegment(
+                            icon: Image(
+                                image: AssetImage(difficulty.iconPath()),
+                                width: Theme.of(context).iconTheme.size,
+                                height: Theme.of(context).iconTheme.size),
                             value: difficulty,
                             label: Text(difficulty.localizedString(context))))
                         .toList(),
@@ -174,12 +205,27 @@ class _HabitEditViewState extends State<HabitEditView> {
                     },
                     showSelectedIcon: false),
                 Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: Text(AppLocalizations.of(context)!.habitType),
-                ),
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Row(children: [
+                          Image(
+                              image:
+                                  const AssetImage('res/icons/habit_type.png'),
+                              width: Theme.of(context).iconTheme.size,
+                              height: Theme.of(context).iconTheme.size),
+                          Padding(
+                              padding: const EdgeInsets.only(left: 16.0),
+                              child:
+                                  Text(AppLocalizations.of(context)!.habitType))
+                        ]))),
                 SegmentedButton<HabitType>(
                     segments: HabitType.values
                         .map((habitType) => ButtonSegment(
+                            icon: Image(
+                                image: AssetImage(habitType.iconPath()),
+                                width: Theme.of(context).iconTheme.size,
+                                height: Theme.of(context).iconTheme.size),
                             value: habitType,
                             label: Text(habitType.localizedString(context))))
                         .toList(),

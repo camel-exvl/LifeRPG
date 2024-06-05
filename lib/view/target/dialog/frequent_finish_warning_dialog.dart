@@ -8,6 +8,7 @@ class FrequentFinishWarningDialog {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
                   child: Text(AppLocalizations.of(context)!
