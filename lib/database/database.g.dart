@@ -2361,6 +2361,199 @@ class PropertyTableCompanion extends UpdateCompanion<PropertyModel> {
   }
 }
 
+class $SettingTableTable extends SettingTable
+    with TableInfo<$SettingTableTable, SettingModel> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SettingTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _languageTypeMeta =
+      const VerificationMeta('languageType');
+  @override
+  late final GeneratedColumn<int> languageType = GeneratedColumn<int>(
+      'language_type', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _brightnessTypeMeta =
+      const VerificationMeta('brightnessType');
+  @override
+  late final GeneratedColumn<int> brightnessType = GeneratedColumn<int>(
+      'brightness_type', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [languageType, brightnessType];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'setting_table';
+  @override
+  VerificationContext validateIntegrity(Insertable<SettingModel> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('language_type')) {
+      context.handle(
+          _languageTypeMeta,
+          languageType.isAcceptableOrUnknown(
+              data['language_type']!, _languageTypeMeta));
+    } else if (isInserting) {
+      context.missing(_languageTypeMeta);
+    }
+    if (data.containsKey('brightness_type')) {
+      context.handle(
+          _brightnessTypeMeta,
+          brightnessType.isAcceptableOrUnknown(
+              data['brightness_type']!, _brightnessTypeMeta));
+    } else if (isInserting) {
+      context.missing(_brightnessTypeMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => const {};
+  @override
+  SettingModel map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SettingModel(
+      languageType: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}language_type'])!,
+      brightnessType: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}brightness_type'])!,
+    );
+  }
+
+  @override
+  $SettingTableTable createAlias(String alias) {
+    return $SettingTableTable(attachedDatabase, alias);
+  }
+}
+
+class SettingModel extends DataClass implements Insertable<SettingModel> {
+  final int languageType;
+  final int brightnessType;
+  const SettingModel(
+      {required this.languageType, required this.brightnessType});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['language_type'] = Variable<int>(languageType);
+    map['brightness_type'] = Variable<int>(brightnessType);
+    return map;
+  }
+
+  SettingTableCompanion toCompanion(bool nullToAbsent) {
+    return SettingTableCompanion(
+      languageType: Value(languageType),
+      brightnessType: Value(brightnessType),
+    );
+  }
+
+  factory SettingModel.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SettingModel(
+      languageType: serializer.fromJson<int>(json['languageType']),
+      brightnessType: serializer.fromJson<int>(json['brightnessType']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'languageType': serializer.toJson<int>(languageType),
+      'brightnessType': serializer.toJson<int>(brightnessType),
+    };
+  }
+
+  SettingModel copyWith({int? languageType, int? brightnessType}) =>
+      SettingModel(
+        languageType: languageType ?? this.languageType,
+        brightnessType: brightnessType ?? this.brightnessType,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('SettingModel(')
+          ..write('languageType: $languageType, ')
+          ..write('brightnessType: $brightnessType')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(languageType, brightnessType);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SettingModel &&
+          other.languageType == this.languageType &&
+          other.brightnessType == this.brightnessType);
+}
+
+class SettingTableCompanion extends UpdateCompanion<SettingModel> {
+  final Value<int> languageType;
+  final Value<int> brightnessType;
+  final Value<int> rowid;
+  const SettingTableCompanion({
+    this.languageType = const Value.absent(),
+    this.brightnessType = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SettingTableCompanion.insert({
+    required int languageType,
+    required int brightnessType,
+    this.rowid = const Value.absent(),
+  })  : languageType = Value(languageType),
+        brightnessType = Value(brightnessType);
+  static Insertable<SettingModel> custom({
+    Expression<int>? languageType,
+    Expression<int>? brightnessType,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (languageType != null) 'language_type': languageType,
+      if (brightnessType != null) 'brightness_type': brightnessType,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SettingTableCompanion copyWith(
+      {Value<int>? languageType,
+      Value<int>? brightnessType,
+      Value<int>? rowid}) {
+    return SettingTableCompanion(
+      languageType: languageType ?? this.languageType,
+      brightnessType: brightnessType ?? this.brightnessType,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (languageType.present) {
+      map['language_type'] = Variable<int>(languageType.value);
+    }
+    if (brightnessType.present) {
+      map['brightness_type'] = Variable<int>(brightnessType.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SettingTableCompanion(')
+          ..write('languageType: $languageType, ')
+          ..write('brightnessType: $brightnessType, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   _$AppDatabaseManager get managers => _$AppDatabaseManager(this);
@@ -2370,6 +2563,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $StatusTableTable statusTable = $StatusTableTable(this);
   late final $StoreTableTable storeTable = $StoreTableTable(this);
   late final $PropertyTableTable propertyTable = $PropertyTableTable(this);
+  late final $SettingTableTable settingTable = $SettingTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2380,7 +2574,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         taskTable,
         statusTable,
         storeTable,
-        propertyTable
+        propertyTable,
+        settingTable
       ];
 }
 
@@ -3457,6 +3652,101 @@ class $$PropertyTableTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
+typedef $$SettingTableTableInsertCompanionBuilder = SettingTableCompanion
+    Function({
+  required int languageType,
+  required int brightnessType,
+  Value<int> rowid,
+});
+typedef $$SettingTableTableUpdateCompanionBuilder = SettingTableCompanion
+    Function({
+  Value<int> languageType,
+  Value<int> brightnessType,
+  Value<int> rowid,
+});
+
+class $$SettingTableTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $SettingTableTable,
+    SettingModel,
+    $$SettingTableTableFilterComposer,
+    $$SettingTableTableOrderingComposer,
+    $$SettingTableTableProcessedTableManager,
+    $$SettingTableTableInsertCompanionBuilder,
+    $$SettingTableTableUpdateCompanionBuilder> {
+  $$SettingTableTableTableManager(_$AppDatabase db, $SettingTableTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$SettingTableTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$SettingTableTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$SettingTableTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<int> languageType = const Value.absent(),
+            Value<int> brightnessType = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              SettingTableCompanion(
+            languageType: languageType,
+            brightnessType: brightnessType,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            required int languageType,
+            required int brightnessType,
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              SettingTableCompanion.insert(
+            languageType: languageType,
+            brightnessType: brightnessType,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$SettingTableTableProcessedTableManager extends ProcessedTableManager<
+    _$AppDatabase,
+    $SettingTableTable,
+    SettingModel,
+    $$SettingTableTableFilterComposer,
+    $$SettingTableTableOrderingComposer,
+    $$SettingTableTableProcessedTableManager,
+    $$SettingTableTableInsertCompanionBuilder,
+    $$SettingTableTableUpdateCompanionBuilder> {
+  $$SettingTableTableProcessedTableManager(super.$state);
+}
+
+class $$SettingTableTableFilterComposer
+    extends FilterComposer<_$AppDatabase, $SettingTableTable> {
+  $$SettingTableTableFilterComposer(super.$state);
+  ColumnFilters<int> get languageType => $state.composableBuilder(
+      column: $state.table.languageType,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get brightnessType => $state.composableBuilder(
+      column: $state.table.brightnessType,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$SettingTableTableOrderingComposer
+    extends OrderingComposer<_$AppDatabase, $SettingTableTable> {
+  $$SettingTableTableOrderingComposer(super.$state);
+  ColumnOrderings<int> get languageType => $state.composableBuilder(
+      column: $state.table.languageType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get brightnessType => $state.composableBuilder(
+      column: $state.table.brightnessType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
 class _$AppDatabaseManager {
   final _$AppDatabase _db;
   _$AppDatabaseManager(this._db);
@@ -3472,4 +3762,6 @@ class _$AppDatabaseManager {
       $$StoreTableTableTableManager(_db, _db.storeTable);
   $$PropertyTableTableTableManager get propertyTable =>
       $$PropertyTableTableTableManager(_db, _db.propertyTable);
+  $$SettingTableTableTableManager get settingTable =>
+      $$SettingTableTableTableManager(_db, _db.settingTable);
 }

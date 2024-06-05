@@ -93,5 +93,8 @@
   "nextScheduledAt": "Next Scheduled At",
   "setting": "Setting",
   "backpack": "Backpack",
-  "achievement": "Achievement"
+  "achievement": "Achievement",
+  "language": "Language",
+  "dayMode": "Day Mode",
+  "nightMode": "Night Mode"
 }

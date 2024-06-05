@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../viewmodel/status_viewmodel.dart';
-import 'setting_view.dart';
+import '../setting/setting_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/database/database.dart';
 import 'package:provider/provider.dart';
@@ -344,7 +344,8 @@ class OptionsCard extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const SettingView()),
+                    MaterialPageRoute(
+                        builder: (context) => const SettingView()),
                   );
                 },
               ),

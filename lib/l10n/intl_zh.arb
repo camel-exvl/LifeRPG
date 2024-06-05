@@ -93,5 +93,8 @@
   "nextScheduledAt": "下次计划在",
   "setting": "设置",
   "backpack": "背包",
-  "achievement": "成就"
+  "achievement": "成就",
+  "language": "语言",
+  "dayMode": "日间模式",
+  "nightMode": "夜间模式"
 }
