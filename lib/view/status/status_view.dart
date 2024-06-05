@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../viewmodel/status_viewmodel.dart';
+import '../../viewmodel/status_viewmodel.dart';
+import 'setting_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/database/database.dart';
 import 'package:provider/provider.dart';
@@ -265,7 +266,7 @@ class OptionsCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
       child: Card(
-        elevation: 8.0,
+        elevation: 2.0,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10.0), // 圆角半径和卡片相同
           child: Column(
@@ -314,45 +315,6 @@ class OptionsCard extends StatelessWidget {
                 leading: Padding(
                   padding: const EdgeInsets.only(left: 4.0),
                   child: Image.asset(
-                    "res/icons/achievement.png",
-                    width:
-                        (Theme.of(context).textTheme.headlineSmall?.fontSize ??
-                                15) *
-                            1.2,
-                    height:
-                        (Theme.of(context).textTheme.headlineSmall?.fontSize ??
-                                15) *
-                            1.2,
-                  ),
-                ),
-                title: Text(AppLocalizations.of(context)!.achievement),
-                trailing: Padding(
-                  padding: const EdgeInsets.only(right: 4.0),
-                  child: Image.asset(
-                    "res/icons/right_arrow.png",
-                    width:
-                        (Theme.of(context).textTheme.headlineSmall?.fontSize ??
-                                15) *
-                            1.0,
-                    height:
-                        (Theme.of(context).textTheme.headlineSmall?.fontSize ??
-                                15) *
-                            1.0,
-                  ),
-                ),
-                onTap: () {
-                  //在这里添加你的成就列表功能
-                },
-              ),
-              const Divider(
-                height: 0.0,
-                indent: 16,
-                endIndent: 16,
-              ),
-              ListTile(
-                leading: Padding(
-                  padding: const EdgeInsets.only(left: 4.0),
-                  child: Image.asset(
                     "res/icons/setting.png",
                     width:
                         (Theme.of(context).textTheme.headlineSmall?.fontSize ??
@@ -380,7 +342,10 @@ class OptionsCard extends StatelessWidget {
                   ),
                 ),
                 onTap: () {
-                  //在这里添加你的设置功能
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SettingView()),
+                  );
                 },
               ),
             ],
