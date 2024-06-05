@@ -84,3 +84,14 @@ extension AttributeExtension on Attribute {
     }
   }
 }
+
+extension MoneyTypeExtension on MoneyType {
+  String get iconPath {
+    switch (this) {
+      case MoneyType.gold:
+        return 'res/icons/kyrise/coin_04d.png';
+      case MoneyType.diamond:
+        return 'res/icons/kyrise/crystal_01e.png';
+    }
+  }
+}

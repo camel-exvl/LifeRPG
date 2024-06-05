@@ -5,6 +5,7 @@ import 'package:liferpg/view/status_view.dart';
 import 'package:liferpg/view/target/target_view.dart';
 import 'package:liferpg/viewmodel/habit_viewmodel.dart';
 import 'package:liferpg/viewmodel/status_viewmodel.dart';
+import 'package:liferpg/viewmodel/store_viewmodel.dart';
 import 'package:liferpg/viewmodel/task_viewmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -36,10 +37,12 @@ class _HomeViewState extends State<HomeView> {
       final statusViewModel = StatusViewModel();
       final habitViewModel = HabitViewModel();
       final taskViewModel = TaskViewModel();
+      final storeViewModel = StoreViewModel();
 
       if (context.mounted) await habitViewModel.initOnFirstRun(context);
       if (context.mounted) await taskViewModel.initOnFirstRun(context);
       await statusViewModel.initOnFirstRun();
+      await storeViewModel.initOnFirstRun();
     }
   }
 
@@ -53,7 +56,6 @@ class _HomeViewState extends State<HomeView> {
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-
       body: IndexedStack(
         // use IndexedStack can keep the state of the widgets
         index: _selectedIndex,
