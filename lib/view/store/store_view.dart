@@ -1,48 +1,54 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
-// import 'package:liferpg/viewmodel/store_viewmodel.dart';
+import 'package:liferpg/database/database.dart';
+import 'package:liferpg/model/common_model.dart';
+import 'package:liferpg/viewmodel/store_viewmodel.dart';
+import 'package:provider/provider.dart';
 
-enum MoneyType {
-  gold("gold", "res/icons/kyrise/coin_04d.png"),
-  diamond("diamond", "res/icons/kyrise/crystal_01e.png");
+class StoreViewState extends State<StoreView>
+    with AutomaticKeepAliveClientMixin {
+  final viewModel = StoreViewModel();
 
-  const MoneyType(this.name, this.assetName);
-  final String name;
-  final String assetName;
-}
-
-class Price {
-  final int amount;
-  final MoneyType moneyType;
-  const Price(this.amount, this.moneyType);
-}
-
-class StoreViewState extends State<StoreView> {
-  // final viewModel = StoreViewModel();
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Column(
-      children: <Widget>[
-        const MoneyCard(),
-        Expanded(
-            child: GridView.count(
-          primary: false,
-          padding: const EdgeInsets.all(20),
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-          crossAxisCount: 3,
-          children: List.generate(
-              15,
-              (index) => const Equipment(
-                    name: 'sword',
-                    description: 'this is a sword',
-                    price: Price(100, MoneyType.gold),
-                    assetName: 'res/icons/kyrise/sword_01c.png',
-                  )),
-        ))
-      ],
-    ));
+    super.build(context);
+    return ChangeNotifierProvider(
+      create: (context) => viewModel,
+      child: Consumer<StoreViewModel>(
+        builder: (context, viewModel, child) {
+          return Column(
+            children: <Widget>[
+              MoneyContainer(properties: viewModel.properties),
+              Expanded(
+                  child: GridView.count(
+                primary: false,
+                padding: const EdgeInsets.all(20),
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                crossAxisCount: 3,
+                children: viewModel.storeItems
+                    .map((storeItem) => Equipment(
+                          item: storeItem,
+                        ))
+                    .toList(),
+                // List.generate(
+                //     15,
+                //     (index) => const Equipment(
+                //           name: 'sword',
+                //           description: 'this is a sword',
+                //           price: Price(100, MoneyType.gold),
+                //           assetName: 'res/icons/kyrise/sword_01c.png',
+                //         )),
+              ))
+            ],
+          );
+        },
+      ),
+    );
   }
 }
 
@@ -52,29 +58,34 @@ class StoreView extends StatefulWidget {
   StoreViewState createState() => StoreViewState();
 }
 
-class MoneyCard extends StatelessWidget {
-  const MoneyCard({super.key});
-
+class MoneyContainer extends StatelessWidget {
+  final UnmodifiableListView<PropertyModel> properties;
+  const MoneyContainer({super.key, required this.properties});
   @override
   Widget build(BuildContext context) {
     return Container(
         padding: const EdgeInsets.all(10),
-        child: const Row(
+        child: Row(
           children: [
-            Expanded(
+            const Expanded(
                 child: Image(
               image: AssetImage('res/icons/liferpg.png'),
               // width: 50,
               // height: 50,
             )),
-            Spacer(),
+            const Spacer(),
             Expanded(
                 child: Column(
-              children: <Widget>[
-                MoneyDetail(moneyType: MoneyType.gold),
-                SizedBox(height: 10),
-                MoneyDetail(moneyType: MoneyType.diamond),
-              ],
+              children: properties
+                  .map((property) => MoneyDetail(property: property))
+                  .toList(),
+              //     List.generate(properties.length * 2 - 1, (index) {
+              //   if (index.isEven) {
+              //     return MoneyDetail(property: properties[index ~/ 2]);
+              //   } else {
+              //     return const SizedBox(height: 10);
+              //   }
+              // }),
             )),
           ],
         ));
@@ -82,19 +93,18 @@ class MoneyCard extends StatelessWidget {
 }
 
 class MoneyDetailState extends State<MoneyDetail> {
-  final int money = 100;
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Image(
-          image: AssetImage(widget.moneyType.assetName),
+          image: AssetImage(widget.property.moneyType.iconPath),
           width: 40,
           height: 40,
         ),
         const SizedBox(width: 10),
         Text(
-          money.toString(),
+          widget.property.amount.toString(),
           style: Theme.of(context).textTheme.headlineLarge,
         ),
       ],
@@ -103,24 +113,28 @@ class MoneyDetailState extends State<MoneyDetail> {
 }
 
 class MoneyDetail extends StatefulWidget {
-  const MoneyDetail({super.key, required this.moneyType});
-  final MoneyType moneyType;
+  const MoneyDetail({super.key, required this.property});
+  final PropertyModel property;
   @override
   MoneyDetailState createState() => MoneyDetailState();
 }
 
 class Equipment extends StatelessWidget {
   final String name;
-  final String description;
-  final Price price;
   final String assetName;
-  const Equipment({
-    super.key,
-    required this.name,
-    required this.description,
-    required this.price,
-    required this.assetName,
-  });
+  final String description;
+  final MoneyType moneyType;
+  final int price;
+  final int stock;
+
+  Equipment({super.key, required StoreModel item})
+      : name = item.name,
+        assetName = item.assetName,
+        description = item.description,
+        moneyType = item.moneyType,
+        price = item.price,
+        stock = item.stock;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -160,11 +174,11 @@ class Equipment extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Image(
-                    image: AssetImage(price.moneyType.assetName),
+                    image: AssetImage(moneyType.iconPath),
                     width: 20,
                     height: 20,
                   ),
-                  Text(price.amount.toString(),
+                  Text(price.toString(),
                       style: Theme.of(context).textTheme.labelLarge,
                       textAlign: TextAlign.center),
                 ],

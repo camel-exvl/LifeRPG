@@ -1842,23 +1842,30 @@ class $StoreTableTable extends StoreTable
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
       'name', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _assetNameMeta =
+      const VerificationMeta('assetName');
+  @override
+  late final GeneratedColumn<String> assetName = GeneratedColumn<String>(
+      'asset_name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _descriptionMeta =
       const VerificationMeta('description');
   @override
   late final GeneratedColumn<String> description = GeneratedColumn<String>(
       'description', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _moneyTypeMeta =
+      const VerificationMeta('moneyType');
+  @override
+  late final GeneratedColumnWithTypeConverter<MoneyType, int> moneyType =
+      GeneratedColumn<int>('money_type', aliasedName, false,
+              type: DriftSqlType.int, requiredDuringInsert: true)
+          .withConverter<MoneyType>($StoreTableTable.$convertermoneyType);
   static const VerificationMeta _priceMeta = const VerificationMeta('price');
   @override
   late final GeneratedColumn<int> price = GeneratedColumn<int>(
       'price', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _iconPathMeta =
-      const VerificationMeta('iconPath');
-  @override
-  late final GeneratedColumn<String> iconPath = GeneratedColumn<String>(
-      'icon_path', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _stockMeta = const VerificationMeta('stock');
   @override
   late final GeneratedColumn<int> stock = GeneratedColumn<int>(
@@ -1866,7 +1873,7 @@ class $StoreTableTable extends StoreTable
       type: DriftSqlType.int, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
-      [id, name, description, price, iconPath, stock];
+      [id, name, assetName, description, moneyType, price, stock];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1886,6 +1893,12 @@ class $StoreTableTable extends StoreTable
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
+    if (data.containsKey('asset_name')) {
+      context.handle(_assetNameMeta,
+          assetName.isAcceptableOrUnknown(data['asset_name']!, _assetNameMeta));
+    } else if (isInserting) {
+      context.missing(_assetNameMeta);
+    }
     if (data.containsKey('description')) {
       context.handle(
           _descriptionMeta,
@@ -1894,17 +1907,12 @@ class $StoreTableTable extends StoreTable
     } else if (isInserting) {
       context.missing(_descriptionMeta);
     }
+    context.handle(_moneyTypeMeta, const VerificationResult.success());
     if (data.containsKey('price')) {
       context.handle(
           _priceMeta, price.isAcceptableOrUnknown(data['price']!, _priceMeta));
     } else if (isInserting) {
       context.missing(_priceMeta);
-    }
-    if (data.containsKey('icon_path')) {
-      context.handle(_iconPathMeta,
-          iconPath.isAcceptableOrUnknown(data['icon_path']!, _iconPathMeta));
-    } else if (isInserting) {
-      context.missing(_iconPathMeta);
     }
     if (data.containsKey('stock')) {
       context.handle(
@@ -1925,12 +1933,15 @@ class $StoreTableTable extends StoreTable
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       name: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      assetName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}asset_name'])!,
       description: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
+      moneyType: $StoreTableTable.$convertermoneyType.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}money_type'])!),
       price: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}price'])!,
-      iconPath: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}icon_path'])!,
       stock: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}stock'])!,
     );
@@ -1940,30 +1951,39 @@ class $StoreTableTable extends StoreTable
   $StoreTableTable createAlias(String alias) {
     return $StoreTableTable(attachedDatabase, alias);
   }
+
+  static JsonTypeConverter2<MoneyType, int, int> $convertermoneyType =
+      const EnumIndexConverter<MoneyType>(MoneyType.values);
 }
 
 class StoreModel extends DataClass implements Insertable<StoreModel> {
   final int id;
   final String name;
+  final String assetName;
   final String description;
+  final MoneyType moneyType;
   final int price;
-  final String iconPath;
   final int stock;
   const StoreModel(
       {required this.id,
       required this.name,
+      required this.assetName,
       required this.description,
+      required this.moneyType,
       required this.price,
-      required this.iconPath,
       required this.stock});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['name'] = Variable<String>(name);
+    map['asset_name'] = Variable<String>(assetName);
     map['description'] = Variable<String>(description);
+    {
+      map['money_type'] =
+          Variable<int>($StoreTableTable.$convertermoneyType.toSql(moneyType));
+    }
     map['price'] = Variable<int>(price);
-    map['icon_path'] = Variable<String>(iconPath);
     map['stock'] = Variable<int>(stock);
     return map;
   }
@@ -1972,9 +1992,10 @@ class StoreModel extends DataClass implements Insertable<StoreModel> {
     return StoreTableCompanion(
       id: Value(id),
       name: Value(name),
+      assetName: Value(assetName),
       description: Value(description),
+      moneyType: Value(moneyType),
       price: Value(price),
-      iconPath: Value(iconPath),
       stock: Value(stock),
     );
   }
@@ -1985,9 +2006,11 @@ class StoreModel extends DataClass implements Insertable<StoreModel> {
     return StoreModel(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
+      assetName: serializer.fromJson<String>(json['assetName']),
       description: serializer.fromJson<String>(json['description']),
+      moneyType: $StoreTableTable.$convertermoneyType
+          .fromJson(serializer.fromJson<int>(json['moneyType'])),
       price: serializer.fromJson<int>(json['price']),
-      iconPath: serializer.fromJson<String>(json['iconPath']),
       stock: serializer.fromJson<int>(json['stock']),
     );
   }
@@ -1997,9 +2020,11 @@ class StoreModel extends DataClass implements Insertable<StoreModel> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
+      'assetName': serializer.toJson<String>(assetName),
       'description': serializer.toJson<String>(description),
+      'moneyType': serializer
+          .toJson<int>($StoreTableTable.$convertermoneyType.toJson(moneyType)),
       'price': serializer.toJson<int>(price),
-      'iconPath': serializer.toJson<String>(iconPath),
       'stock': serializer.toJson<int>(stock),
     };
   }
@@ -2007,16 +2032,18 @@ class StoreModel extends DataClass implements Insertable<StoreModel> {
   StoreModel copyWith(
           {int? id,
           String? name,
+          String? assetName,
           String? description,
+          MoneyType? moneyType,
           int? price,
-          String? iconPath,
           int? stock}) =>
       StoreModel(
         id: id ?? this.id,
         name: name ?? this.name,
+        assetName: assetName ?? this.assetName,
         description: description ?? this.description,
+        moneyType: moneyType ?? this.moneyType,
         price: price ?? this.price,
-        iconPath: iconPath ?? this.iconPath,
         stock: stock ?? this.stock,
       );
   @override
@@ -2024,9 +2051,10 @@ class StoreModel extends DataClass implements Insertable<StoreModel> {
     return (StringBuffer('StoreModel(')
           ..write('id: $id, ')
           ..write('name: $name, ')
+          ..write('assetName: $assetName, ')
           ..write('description: $description, ')
+          ..write('moneyType: $moneyType, ')
           ..write('price: $price, ')
-          ..write('iconPath: $iconPath, ')
           ..write('stock: $stock')
           ..write(')'))
         .toString();
@@ -2034,60 +2062,67 @@ class StoreModel extends DataClass implements Insertable<StoreModel> {
 
   @override
   int get hashCode =>
-      Object.hash(id, name, description, price, iconPath, stock);
+      Object.hash(id, name, assetName, description, moneyType, price, stock);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is StoreModel &&
           other.id == this.id &&
           other.name == this.name &&
+          other.assetName == this.assetName &&
           other.description == this.description &&
+          other.moneyType == this.moneyType &&
           other.price == this.price &&
-          other.iconPath == this.iconPath &&
           other.stock == this.stock);
 }
 
 class StoreTableCompanion extends UpdateCompanion<StoreModel> {
   final Value<int> id;
   final Value<String> name;
+  final Value<String> assetName;
   final Value<String> description;
+  final Value<MoneyType> moneyType;
   final Value<int> price;
-  final Value<String> iconPath;
   final Value<int> stock;
   const StoreTableCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
+    this.assetName = const Value.absent(),
     this.description = const Value.absent(),
+    this.moneyType = const Value.absent(),
     this.price = const Value.absent(),
-    this.iconPath = const Value.absent(),
     this.stock = const Value.absent(),
   });
   StoreTableCompanion.insert({
     this.id = const Value.absent(),
     required String name,
+    required String assetName,
     required String description,
+    required MoneyType moneyType,
     required int price,
-    required String iconPath,
     required int stock,
   })  : name = Value(name),
+        assetName = Value(assetName),
         description = Value(description),
+        moneyType = Value(moneyType),
         price = Value(price),
-        iconPath = Value(iconPath),
         stock = Value(stock);
   static Insertable<StoreModel> custom({
     Expression<int>? id,
     Expression<String>? name,
+    Expression<String>? assetName,
     Expression<String>? description,
+    Expression<int>? moneyType,
     Expression<int>? price,
-    Expression<String>? iconPath,
     Expression<int>? stock,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
+      if (assetName != null) 'asset_name': assetName,
       if (description != null) 'description': description,
+      if (moneyType != null) 'money_type': moneyType,
       if (price != null) 'price': price,
-      if (iconPath != null) 'icon_path': iconPath,
       if (stock != null) 'stock': stock,
     });
   }
@@ -2095,16 +2130,18 @@ class StoreTableCompanion extends UpdateCompanion<StoreModel> {
   StoreTableCompanion copyWith(
       {Value<int>? id,
       Value<String>? name,
+      Value<String>? assetName,
       Value<String>? description,
+      Value<MoneyType>? moneyType,
       Value<int>? price,
-      Value<String>? iconPath,
       Value<int>? stock}) {
     return StoreTableCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
+      assetName: assetName ?? this.assetName,
       description: description ?? this.description,
+      moneyType: moneyType ?? this.moneyType,
       price: price ?? this.price,
-      iconPath: iconPath ?? this.iconPath,
       stock: stock ?? this.stock,
     );
   }
@@ -2118,14 +2155,18 @@ class StoreTableCompanion extends UpdateCompanion<StoreModel> {
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
+    if (assetName.present) {
+      map['asset_name'] = Variable<String>(assetName.value);
+    }
     if (description.present) {
       map['description'] = Variable<String>(description.value);
     }
+    if (moneyType.present) {
+      map['money_type'] = Variable<int>(
+          $StoreTableTable.$convertermoneyType.toSql(moneyType.value));
+    }
     if (price.present) {
       map['price'] = Variable<int>(price.value);
-    }
-    if (iconPath.present) {
-      map['icon_path'] = Variable<String>(iconPath.value);
     }
     if (stock.present) {
       map['stock'] = Variable<int>(stock.value);
@@ -2138,9 +2179,10 @@ class StoreTableCompanion extends UpdateCompanion<StoreModel> {
     return (StringBuffer('StoreTableCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
+          ..write('assetName: $assetName, ')
           ..write('description: $description, ')
+          ..write('moneyType: $moneyType, ')
           ..write('price: $price, ')
-          ..write('iconPath: $iconPath, ')
           ..write('stock: $stock')
           ..write(')'))
         .toString();
@@ -3202,17 +3244,19 @@ class $$StatusTableTableOrderingComposer
 typedef $$StoreTableTableInsertCompanionBuilder = StoreTableCompanion Function({
   Value<int> id,
   required String name,
+  required String assetName,
   required String description,
+  required MoneyType moneyType,
   required int price,
-  required String iconPath,
   required int stock,
 });
 typedef $$StoreTableTableUpdateCompanionBuilder = StoreTableCompanion Function({
   Value<int> id,
   Value<String> name,
+  Value<String> assetName,
   Value<String> description,
+  Value<MoneyType> moneyType,
   Value<int> price,
-  Value<String> iconPath,
   Value<int> stock,
 });
 
@@ -3238,33 +3282,37 @@ class $$StoreTableTableTableManager extends RootTableManager<
           getUpdateCompanionBuilder: ({
             Value<int> id = const Value.absent(),
             Value<String> name = const Value.absent(),
+            Value<String> assetName = const Value.absent(),
             Value<String> description = const Value.absent(),
+            Value<MoneyType> moneyType = const Value.absent(),
             Value<int> price = const Value.absent(),
-            Value<String> iconPath = const Value.absent(),
             Value<int> stock = const Value.absent(),
           }) =>
               StoreTableCompanion(
             id: id,
             name: name,
+            assetName: assetName,
             description: description,
+            moneyType: moneyType,
             price: price,
-            iconPath: iconPath,
             stock: stock,
           ),
           getInsertCompanionBuilder: ({
             Value<int> id = const Value.absent(),
             required String name,
+            required String assetName,
             required String description,
+            required MoneyType moneyType,
             required int price,
-            required String iconPath,
             required int stock,
           }) =>
               StoreTableCompanion.insert(
             id: id,
             name: name,
+            assetName: assetName,
             description: description,
+            moneyType: moneyType,
             price: price,
-            iconPath: iconPath,
             stock: stock,
           ),
         ));
@@ -3295,18 +3343,25 @@ class $$StoreTableTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
+  ColumnFilters<String> get assetName => $state.composableBuilder(
+      column: $state.table.assetName,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
   ColumnFilters<String> get description => $state.composableBuilder(
       column: $state.table.description,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
+  ColumnWithTypeConverterFilters<MoneyType, MoneyType, int> get moneyType =>
+      $state.composableBuilder(
+          column: $state.table.moneyType,
+          builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
+              column,
+              joinBuilders: joinBuilders));
+
   ColumnFilters<int> get price => $state.composableBuilder(
       column: $state.table.price,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get iconPath => $state.composableBuilder(
-      column: $state.table.iconPath,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -3329,18 +3384,23 @@ class $$StoreTableTableOrderingComposer
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
+  ColumnOrderings<String> get assetName => $state.composableBuilder(
+      column: $state.table.assetName,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
   ColumnOrderings<String> get description => $state.composableBuilder(
       column: $state.table.description,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<int> get price => $state.composableBuilder(
-      column: $state.table.price,
+  ColumnOrderings<int> get moneyType => $state.composableBuilder(
+      column: $state.table.moneyType,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<String> get iconPath => $state.composableBuilder(
-      column: $state.table.iconPath,
+  ColumnOrderings<int> get price => $state.composableBuilder(
+      column: $state.table.price,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
