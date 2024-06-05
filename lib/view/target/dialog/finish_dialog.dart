@@ -19,16 +19,11 @@ class FinishDialog {
               if (rewardResponse.gold != 0)
                 Row(
                   children: [
-                    // TODO: Replace Icon with Image.asset
-                    Icon(
-                      Icons.star,
-                      size: Theme.of(context).iconTheme.size,
+                    Image(
+                      image: const AssetImage('res/icons/kyrise/coin_04d.png'),
+                      width: Theme.of(context).iconTheme.size,
+                      height: Theme.of(context).iconTheme.size,
                     ),
-                    // Image(
-                    //   image: const AssetImage('res/icons/gold.png'),
-                    //   width: Theme.of(context).iconTheme.size,
-                    //   height: Theme.of(context).iconTheme.size,
-                    // ),
                     const Spacer(),
                     Text(AppLocalizations.of(context)!.gold),
                     const Spacer(),

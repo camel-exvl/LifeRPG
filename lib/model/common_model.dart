@@ -26,6 +26,17 @@ extension DifficultyExtension on Difficulty {
         return AppLocalizations.of(context)!.hard;
     }
   }
+
+  String iconPath() {
+    switch (this) {
+      case Difficulty.easy:
+        return 'res/icons/easy.png';
+      case Difficulty.medium:
+        return 'res/icons/medium.png';
+      case Difficulty.hard:
+        return 'res/icons/hard.png';
+    }
+  }
 }
 
 extension CategoryExtension on Category {
