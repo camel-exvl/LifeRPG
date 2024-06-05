@@ -1822,12 +1822,12 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
   }
 }
 
-class $StoreTableTable extends StoreTable
-    with TableInfo<$StoreTableTable, StoreModel> {
+class $EquipmentTableTable extends EquipmentTable
+    with TableInfo<$EquipmentTableTable, EquipmentModel> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $StoreTableTable(this.attachedDatabase, [this._alias]);
+  $EquipmentTableTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -1837,30 +1837,21 @@ class $StoreTableTable extends StoreTable
       requiredDuringInsert: false,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  static const VerificationMeta _equipmentTypeMeta =
+      const VerificationMeta('equipmentType');
   @override
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-      'name', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _assetNameMeta =
-      const VerificationMeta('assetName');
-  @override
-  late final GeneratedColumn<String> assetName = GeneratedColumn<String>(
-      'asset_name', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _descriptionMeta =
-      const VerificationMeta('description');
-  @override
-  late final GeneratedColumn<String> description = GeneratedColumn<String>(
-      'description', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+  late final GeneratedColumnWithTypeConverter<EquipmentType, int>
+      equipmentType = GeneratedColumn<int>('equipment_type', aliasedName, false,
+              type: DriftSqlType.int, requiredDuringInsert: true)
+          .withConverter<EquipmentType>(
+              $EquipmentTableTable.$converterequipmentType);
   static const VerificationMeta _moneyTypeMeta =
       const VerificationMeta('moneyType');
   @override
   late final GeneratedColumnWithTypeConverter<MoneyType, int> moneyType =
       GeneratedColumn<int>('money_type', aliasedName, false,
               type: DriftSqlType.int, requiredDuringInsert: true)
-          .withConverter<MoneyType>($StoreTableTable.$convertermoneyType);
+          .withConverter<MoneyType>($EquipmentTableTable.$convertermoneyType);
   static const VerificationMeta _priceMeta = const VerificationMeta('price');
   @override
   late final GeneratedColumn<int> price = GeneratedColumn<int>(
@@ -1873,40 +1864,21 @@ class $StoreTableTable extends StoreTable
       type: DriftSqlType.int, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
-      [id, name, assetName, description, moneyType, price, stock];
+      [id, equipmentType, moneyType, price, stock];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'store_table';
+  static const String $name = 'equipment_table';
   @override
-  VerificationContext validateIntegrity(Insertable<StoreModel> instance,
+  VerificationContext validateIntegrity(Insertable<EquipmentModel> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
-    if (data.containsKey('name')) {
-      context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
-    } else if (isInserting) {
-      context.missing(_nameMeta);
-    }
-    if (data.containsKey('asset_name')) {
-      context.handle(_assetNameMeta,
-          assetName.isAcceptableOrUnknown(data['asset_name']!, _assetNameMeta));
-    } else if (isInserting) {
-      context.missing(_assetNameMeta);
-    }
-    if (data.containsKey('description')) {
-      context.handle(
-          _descriptionMeta,
-          description.isAcceptableOrUnknown(
-              data['description']!, _descriptionMeta));
-    } else if (isInserting) {
-      context.missing(_descriptionMeta);
-    }
+    context.handle(_equipmentTypeMeta, const VerificationResult.success());
     context.handle(_moneyTypeMeta, const VerificationResult.success());
     if (data.containsKey('price')) {
       context.handle(
@@ -1926,20 +1898,17 @@ class $StoreTableTable extends StoreTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  StoreModel map(Map<String, dynamic> data, {String? tablePrefix}) {
+  EquipmentModel map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return StoreModel(
+    return EquipmentModel(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      name: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
-      assetName: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}asset_name'])!,
-      description: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
-      moneyType: $StoreTableTable.$convertermoneyType.fromSql(attachedDatabase
-          .typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}money_type'])!),
+      equipmentType: $EquipmentTableTable.$converterequipmentType.fromSql(
+          attachedDatabase.typeMapping.read(
+              DriftSqlType.int, data['${effectivePrefix}equipment_type'])!),
+      moneyType: $EquipmentTableTable.$convertermoneyType.fromSql(
+          attachedDatabase.typeMapping
+              .read(DriftSqlType.int, data['${effectivePrefix}money_type'])!),
       price: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}price'])!,
       stock: attachedDatabase.typeMapping
@@ -1948,27 +1917,25 @@ class $StoreTableTable extends StoreTable
   }
 
   @override
-  $StoreTableTable createAlias(String alias) {
-    return $StoreTableTable(attachedDatabase, alias);
+  $EquipmentTableTable createAlias(String alias) {
+    return $EquipmentTableTable(attachedDatabase, alias);
   }
 
+  static JsonTypeConverter2<EquipmentType, int, int> $converterequipmentType =
+      const EnumIndexConverter<EquipmentType>(EquipmentType.values);
   static JsonTypeConverter2<MoneyType, int, int> $convertermoneyType =
       const EnumIndexConverter<MoneyType>(MoneyType.values);
 }
 
-class StoreModel extends DataClass implements Insertable<StoreModel> {
+class EquipmentModel extends DataClass implements Insertable<EquipmentModel> {
   final int id;
-  final String name;
-  final String assetName;
-  final String description;
+  final EquipmentType equipmentType;
   final MoneyType moneyType;
   final int price;
   final int stock;
-  const StoreModel(
+  const EquipmentModel(
       {required this.id,
-      required this.name,
-      required this.assetName,
-      required this.description,
+      required this.equipmentType,
       required this.moneyType,
       required this.price,
       required this.stock});
@@ -1976,39 +1943,37 @@ class StoreModel extends DataClass implements Insertable<StoreModel> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
-    map['name'] = Variable<String>(name);
-    map['asset_name'] = Variable<String>(assetName);
-    map['description'] = Variable<String>(description);
     {
-      map['money_type'] =
-          Variable<int>($StoreTableTable.$convertermoneyType.toSql(moneyType));
+      map['equipment_type'] = Variable<int>(
+          $EquipmentTableTable.$converterequipmentType.toSql(equipmentType));
+    }
+    {
+      map['money_type'] = Variable<int>(
+          $EquipmentTableTable.$convertermoneyType.toSql(moneyType));
     }
     map['price'] = Variable<int>(price);
     map['stock'] = Variable<int>(stock);
     return map;
   }
 
-  StoreTableCompanion toCompanion(bool nullToAbsent) {
-    return StoreTableCompanion(
+  EquipmentTableCompanion toCompanion(bool nullToAbsent) {
+    return EquipmentTableCompanion(
       id: Value(id),
-      name: Value(name),
-      assetName: Value(assetName),
-      description: Value(description),
+      equipmentType: Value(equipmentType),
       moneyType: Value(moneyType),
       price: Value(price),
       stock: Value(stock),
     );
   }
 
-  factory StoreModel.fromJson(Map<String, dynamic> json,
+  factory EquipmentModel.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return StoreModel(
+    return EquipmentModel(
       id: serializer.fromJson<int>(json['id']),
-      name: serializer.fromJson<String>(json['name']),
-      assetName: serializer.fromJson<String>(json['assetName']),
-      description: serializer.fromJson<String>(json['description']),
-      moneyType: $StoreTableTable.$convertermoneyType
+      equipmentType: $EquipmentTableTable.$converterequipmentType
+          .fromJson(serializer.fromJson<int>(json['equipmentType'])),
+      moneyType: $EquipmentTableTable.$convertermoneyType
           .fromJson(serializer.fromJson<int>(json['moneyType'])),
       price: serializer.fromJson<int>(json['price']),
       stock: serializer.fromJson<int>(json['stock']),
@@ -2019,40 +1984,33 @@ class StoreModel extends DataClass implements Insertable<StoreModel> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
-      'name': serializer.toJson<String>(name),
-      'assetName': serializer.toJson<String>(assetName),
-      'description': serializer.toJson<String>(description),
-      'moneyType': serializer
-          .toJson<int>($StoreTableTable.$convertermoneyType.toJson(moneyType)),
+      'equipmentType': serializer.toJson<int>(
+          $EquipmentTableTable.$converterequipmentType.toJson(equipmentType)),
+      'moneyType': serializer.toJson<int>(
+          $EquipmentTableTable.$convertermoneyType.toJson(moneyType)),
       'price': serializer.toJson<int>(price),
       'stock': serializer.toJson<int>(stock),
     };
   }
 
-  StoreModel copyWith(
+  EquipmentModel copyWith(
           {int? id,
-          String? name,
-          String? assetName,
-          String? description,
+          EquipmentType? equipmentType,
           MoneyType? moneyType,
           int? price,
           int? stock}) =>
-      StoreModel(
+      EquipmentModel(
         id: id ?? this.id,
-        name: name ?? this.name,
-        assetName: assetName ?? this.assetName,
-        description: description ?? this.description,
+        equipmentType: equipmentType ?? this.equipmentType,
         moneyType: moneyType ?? this.moneyType,
         price: price ?? this.price,
         stock: stock ?? this.stock,
       );
   @override
   String toString() {
-    return (StringBuffer('StoreModel(')
+    return (StringBuffer('EquipmentModel(')
           ..write('id: $id, ')
-          ..write('name: $name, ')
-          ..write('assetName: $assetName, ')
-          ..write('description: $description, ')
+          ..write('equipmentType: $equipmentType, ')
           ..write('moneyType: $moneyType, ')
           ..write('price: $price, ')
           ..write('stock: $stock')
@@ -2061,85 +2019,66 @@ class StoreModel extends DataClass implements Insertable<StoreModel> {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, name, assetName, description, moneyType, price, stock);
+  int get hashCode => Object.hash(id, equipmentType, moneyType, price, stock);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is StoreModel &&
+      (other is EquipmentModel &&
           other.id == this.id &&
-          other.name == this.name &&
-          other.assetName == this.assetName &&
-          other.description == this.description &&
+          other.equipmentType == this.equipmentType &&
           other.moneyType == this.moneyType &&
           other.price == this.price &&
           other.stock == this.stock);
 }
 
-class StoreTableCompanion extends UpdateCompanion<StoreModel> {
+class EquipmentTableCompanion extends UpdateCompanion<EquipmentModel> {
   final Value<int> id;
-  final Value<String> name;
-  final Value<String> assetName;
-  final Value<String> description;
+  final Value<EquipmentType> equipmentType;
   final Value<MoneyType> moneyType;
   final Value<int> price;
   final Value<int> stock;
-  const StoreTableCompanion({
+  const EquipmentTableCompanion({
     this.id = const Value.absent(),
-    this.name = const Value.absent(),
-    this.assetName = const Value.absent(),
-    this.description = const Value.absent(),
+    this.equipmentType = const Value.absent(),
     this.moneyType = const Value.absent(),
     this.price = const Value.absent(),
     this.stock = const Value.absent(),
   });
-  StoreTableCompanion.insert({
+  EquipmentTableCompanion.insert({
     this.id = const Value.absent(),
-    required String name,
-    required String assetName,
-    required String description,
+    required EquipmentType equipmentType,
     required MoneyType moneyType,
     required int price,
     required int stock,
-  })  : name = Value(name),
-        assetName = Value(assetName),
-        description = Value(description),
+  })  : equipmentType = Value(equipmentType),
         moneyType = Value(moneyType),
         price = Value(price),
         stock = Value(stock);
-  static Insertable<StoreModel> custom({
+  static Insertable<EquipmentModel> custom({
     Expression<int>? id,
-    Expression<String>? name,
-    Expression<String>? assetName,
-    Expression<String>? description,
+    Expression<int>? equipmentType,
     Expression<int>? moneyType,
     Expression<int>? price,
     Expression<int>? stock,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (name != null) 'name': name,
-      if (assetName != null) 'asset_name': assetName,
-      if (description != null) 'description': description,
+      if (equipmentType != null) 'equipment_type': equipmentType,
       if (moneyType != null) 'money_type': moneyType,
       if (price != null) 'price': price,
       if (stock != null) 'stock': stock,
     });
   }
 
-  StoreTableCompanion copyWith(
+  EquipmentTableCompanion copyWith(
       {Value<int>? id,
-      Value<String>? name,
-      Value<String>? assetName,
-      Value<String>? description,
+      Value<EquipmentType>? equipmentType,
       Value<MoneyType>? moneyType,
       Value<int>? price,
       Value<int>? stock}) {
-    return StoreTableCompanion(
+    return EquipmentTableCompanion(
       id: id ?? this.id,
-      name: name ?? this.name,
-      assetName: assetName ?? this.assetName,
-      description: description ?? this.description,
+      equipmentType: equipmentType ?? this.equipmentType,
       moneyType: moneyType ?? this.moneyType,
       price: price ?? this.price,
       stock: stock ?? this.stock,
@@ -2152,18 +2091,14 @@ class StoreTableCompanion extends UpdateCompanion<StoreModel> {
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (name.present) {
-      map['name'] = Variable<String>(name.value);
-    }
-    if (assetName.present) {
-      map['asset_name'] = Variable<String>(assetName.value);
-    }
-    if (description.present) {
-      map['description'] = Variable<String>(description.value);
+    if (equipmentType.present) {
+      map['equipment_type'] = Variable<int>($EquipmentTableTable
+          .$converterequipmentType
+          .toSql(equipmentType.value));
     }
     if (moneyType.present) {
       map['money_type'] = Variable<int>(
-          $StoreTableTable.$convertermoneyType.toSql(moneyType.value));
+          $EquipmentTableTable.$convertermoneyType.toSql(moneyType.value));
     }
     if (price.present) {
       map['price'] = Variable<int>(price.value);
@@ -2176,11 +2111,9 @@ class StoreTableCompanion extends UpdateCompanion<StoreModel> {
 
   @override
   String toString() {
-    return (StringBuffer('StoreTableCompanion(')
+    return (StringBuffer('EquipmentTableCompanion(')
           ..write('id: $id, ')
-          ..write('name: $name, ')
-          ..write('assetName: $assetName, ')
-          ..write('description: $description, ')
+          ..write('equipmentType: $equipmentType, ')
           ..write('moneyType: $moneyType, ')
           ..write('price: $price, ')
           ..write('stock: $stock')
@@ -2410,7 +2343,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $HabitTableTable habitTable = $HabitTableTable(this);
   late final $TaskTableTable taskTable = $TaskTableTable(this);
   late final $StatusTableTable statusTable = $StatusTableTable(this);
-  late final $StoreTableTable storeTable = $StoreTableTable(this);
+  late final $EquipmentTableTable equipmentTable = $EquipmentTableTable(this);
   late final $PropertyTableTable propertyTable = $PropertyTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
@@ -2421,7 +2354,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         habitTable,
         taskTable,
         statusTable,
-        storeTable,
+        equipmentTable,
         propertyTable
       ];
 }
@@ -3241,76 +3174,67 @@ class $$StatusTableTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
-typedef $$StoreTableTableInsertCompanionBuilder = StoreTableCompanion Function({
+typedef $$EquipmentTableTableInsertCompanionBuilder = EquipmentTableCompanion
+    Function({
   Value<int> id,
-  required String name,
-  required String assetName,
-  required String description,
+  required EquipmentType equipmentType,
   required MoneyType moneyType,
   required int price,
   required int stock,
 });
-typedef $$StoreTableTableUpdateCompanionBuilder = StoreTableCompanion Function({
+typedef $$EquipmentTableTableUpdateCompanionBuilder = EquipmentTableCompanion
+    Function({
   Value<int> id,
-  Value<String> name,
-  Value<String> assetName,
-  Value<String> description,
+  Value<EquipmentType> equipmentType,
   Value<MoneyType> moneyType,
   Value<int> price,
   Value<int> stock,
 });
 
-class $$StoreTableTableTableManager extends RootTableManager<
+class $$EquipmentTableTableTableManager extends RootTableManager<
     _$AppDatabase,
-    $StoreTableTable,
-    StoreModel,
-    $$StoreTableTableFilterComposer,
-    $$StoreTableTableOrderingComposer,
-    $$StoreTableTableProcessedTableManager,
-    $$StoreTableTableInsertCompanionBuilder,
-    $$StoreTableTableUpdateCompanionBuilder> {
-  $$StoreTableTableTableManager(_$AppDatabase db, $StoreTableTable table)
+    $EquipmentTableTable,
+    EquipmentModel,
+    $$EquipmentTableTableFilterComposer,
+    $$EquipmentTableTableOrderingComposer,
+    $$EquipmentTableTableProcessedTableManager,
+    $$EquipmentTableTableInsertCompanionBuilder,
+    $$EquipmentTableTableUpdateCompanionBuilder> {
+  $$EquipmentTableTableTableManager(
+      _$AppDatabase db, $EquipmentTableTable table)
       : super(TableManagerState(
           db: db,
           table: table,
           filteringComposer:
-              $$StoreTableTableFilterComposer(ComposerState(db, table)),
+              $$EquipmentTableTableFilterComposer(ComposerState(db, table)),
           orderingComposer:
-              $$StoreTableTableOrderingComposer(ComposerState(db, table)),
+              $$EquipmentTableTableOrderingComposer(ComposerState(db, table)),
           getChildManagerBuilder: (p) =>
-              $$StoreTableTableProcessedTableManager(p),
+              $$EquipmentTableTableProcessedTableManager(p),
           getUpdateCompanionBuilder: ({
             Value<int> id = const Value.absent(),
-            Value<String> name = const Value.absent(),
-            Value<String> assetName = const Value.absent(),
-            Value<String> description = const Value.absent(),
+            Value<EquipmentType> equipmentType = const Value.absent(),
             Value<MoneyType> moneyType = const Value.absent(),
             Value<int> price = const Value.absent(),
             Value<int> stock = const Value.absent(),
           }) =>
-              StoreTableCompanion(
+              EquipmentTableCompanion(
             id: id,
-            name: name,
-            assetName: assetName,
-            description: description,
+            equipmentType: equipmentType,
             moneyType: moneyType,
             price: price,
             stock: stock,
           ),
           getInsertCompanionBuilder: ({
             Value<int> id = const Value.absent(),
-            required String name,
-            required String assetName,
-            required String description,
+            required EquipmentType equipmentType,
             required MoneyType moneyType,
             required int price,
             required int stock,
           }) =>
-              StoreTableCompanion.insert(
+              EquipmentTableCompanion.insert(
             id: id,
-            name: name,
-            assetName: assetName,
-            description: description,
+            equipmentType: equipmentType,
             moneyType: moneyType,
             price: price,
             stock: stock,
@@ -3318,40 +3242,32 @@ class $$StoreTableTableTableManager extends RootTableManager<
         ));
 }
 
-class $$StoreTableTableProcessedTableManager extends ProcessedTableManager<
+class $$EquipmentTableTableProcessedTableManager extends ProcessedTableManager<
     _$AppDatabase,
-    $StoreTableTable,
-    StoreModel,
-    $$StoreTableTableFilterComposer,
-    $$StoreTableTableOrderingComposer,
-    $$StoreTableTableProcessedTableManager,
-    $$StoreTableTableInsertCompanionBuilder,
-    $$StoreTableTableUpdateCompanionBuilder> {
-  $$StoreTableTableProcessedTableManager(super.$state);
+    $EquipmentTableTable,
+    EquipmentModel,
+    $$EquipmentTableTableFilterComposer,
+    $$EquipmentTableTableOrderingComposer,
+    $$EquipmentTableTableProcessedTableManager,
+    $$EquipmentTableTableInsertCompanionBuilder,
+    $$EquipmentTableTableUpdateCompanionBuilder> {
+  $$EquipmentTableTableProcessedTableManager(super.$state);
 }
 
-class $$StoreTableTableFilterComposer
-    extends FilterComposer<_$AppDatabase, $StoreTableTable> {
-  $$StoreTableTableFilterComposer(super.$state);
+class $$EquipmentTableTableFilterComposer
+    extends FilterComposer<_$AppDatabase, $EquipmentTableTable> {
+  $$EquipmentTableTableFilterComposer(super.$state);
   ColumnFilters<int> get id => $state.composableBuilder(
       column: $state.table.id,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<String> get name => $state.composableBuilder(
-      column: $state.table.name,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get assetName => $state.composableBuilder(
-      column: $state.table.assetName,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get description => $state.composableBuilder(
-      column: $state.table.description,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+  ColumnWithTypeConverterFilters<EquipmentType, EquipmentType, int>
+      get equipmentType => $state.composableBuilder(
+          column: $state.table.equipmentType,
+          builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
+              column,
+              joinBuilders: joinBuilders));
 
   ColumnWithTypeConverterFilters<MoneyType, MoneyType, int> get moneyType =>
       $state.composableBuilder(
@@ -3371,26 +3287,16 @@ class $$StoreTableTableFilterComposer
           ColumnFilters(column, joinBuilders: joinBuilders));
 }
 
-class $$StoreTableTableOrderingComposer
-    extends OrderingComposer<_$AppDatabase, $StoreTableTable> {
-  $$StoreTableTableOrderingComposer(super.$state);
+class $$EquipmentTableTableOrderingComposer
+    extends OrderingComposer<_$AppDatabase, $EquipmentTableTable> {
+  $$EquipmentTableTableOrderingComposer(super.$state);
   ColumnOrderings<int> get id => $state.composableBuilder(
       column: $state.table.id,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<String> get name => $state.composableBuilder(
-      column: $state.table.name,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get assetName => $state.composableBuilder(
-      column: $state.table.assetName,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get description => $state.composableBuilder(
-      column: $state.table.description,
+  ColumnOrderings<int> get equipmentType => $state.composableBuilder(
+      column: $state.table.equipmentType,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
@@ -3528,8 +3434,8 @@ class _$AppDatabaseManager {
       $$TaskTableTableTableManager(_db, _db.taskTable);
   $$StatusTableTableTableManager get statusTable =>
       $$StatusTableTableTableManager(_db, _db.statusTable);
-  $$StoreTableTableTableManager get storeTable =>
-      $$StoreTableTableTableManager(_db, _db.storeTable);
+  $$EquipmentTableTableTableManager get equipmentTable =>
+      $$EquipmentTableTableTableManager(_db, _db.equipmentTable);
   $$PropertyTableTableTableManager get propertyTable =>
       $$PropertyTableTableTableManager(_db, _db.propertyTable);
 }

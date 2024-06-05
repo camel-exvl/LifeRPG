@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:liferpg/database/database.dart';
 import 'package:liferpg/model/common_model.dart';
+import 'package:liferpg/model/store/equipment_model.dart';
 import 'package:liferpg/viewmodel/store_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -30,19 +31,11 @@ class StoreViewState extends State<StoreView>
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
                 crossAxisCount: 3,
-                children: viewModel.storeItems
-                    .map((storeItem) => Equipment(
-                          item: storeItem,
+                children: viewModel.equipments
+                    .map((equipment) => Equipment(
+                          item: equipment,
                         ))
                     .toList(),
-                // List.generate(
-                //     15,
-                //     (index) => const Equipment(
-                //           name: 'sword',
-                //           description: 'this is a sword',
-                //           price: Price(100, MoneyType.gold),
-                //           assetName: 'res/icons/kyrise/sword_01c.png',
-                //         )),
               ))
             ],
           );
@@ -120,17 +113,13 @@ class MoneyDetail extends StatefulWidget {
 }
 
 class Equipment extends StatelessWidget {
-  final String name;
-  final String assetName;
-  final String description;
+  final EquipmentType equipmentType;
   final MoneyType moneyType;
   final int price;
   final int stock;
 
-  Equipment({super.key, required StoreModel item})
-      : name = item.name,
-        assetName = item.assetName,
-        description = item.description,
+  Equipment({super.key, required EquipmentModel item})
+      : equipmentType = item.equipmentType,
         moneyType = item.moneyType,
         price = item.price,
         stock = item.stock;
@@ -142,8 +131,8 @@ class Equipment extends StatelessWidget {
         showDialog(
             context: context,
             builder: (BuildContext context) => AlertDialog(
-                  title: Text(name),
-                  content: Text(description),
+                  title: Text(equipmentType.name(context)),
+                  content: Text(equipmentType.description(context)),
                   actions: <Widget>[
                     TextButton(
                       onPressed: () {
@@ -163,11 +152,11 @@ class Equipment extends StatelessWidget {
           child: Column(
             children: <Widget>[
               Image(
-                image: AssetImage(assetName),
+                image: AssetImage(equipmentType.iconPath),
                 width: 30,
                 height: 30,
               ),
-              Text(name,
+              Text(equipmentType.name(context),
                   style: Theme.of(context).textTheme.bodyLarge,
                   textAlign: TextAlign.center),
               Row(
