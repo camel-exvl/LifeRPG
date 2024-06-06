@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:liferpg/view/store/store_view.dart';
+import 'package:liferpg/view/challenge/challenge_view.dart';
 import 'package:liferpg/view/status/status_view.dart';
+import 'package:liferpg/view/store/store_view.dart';
 import 'package:liferpg/view/target/target_view.dart';
 import 'package:liferpg/viewmodel/habit_viewmodel.dart';
 import 'package:liferpg/viewmodel/status_viewmodel.dart';
@@ -21,7 +22,7 @@ class _HomeViewState extends State<HomeView> {
 
   final List<Widget> _views = const <Widget>[
     TargetView(),
-    Placeholder(),
+    ChallengeView(),
     StoreView(),
     StatusView()
   ];
