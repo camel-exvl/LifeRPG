@@ -15,7 +15,6 @@ import '../model/status/attribute_model.dart';
 import '../model/status/status_model.dart';
 import '../model/target/habit_model.dart';
 import '../model/target/task_model.dart';
-import '../model/setting/setting_model.dart';
 
 part 'database.g.dart';
 
@@ -24,7 +23,6 @@ part 'database.g.dart';
   HabitTable,
   TaskTable,
   StatusTable,
-  SettingTable,
   EquipmentTable,
   PropertyTable
 ])
@@ -148,20 +146,6 @@ class AppDatabase extends _$AppDatabase {
 
   Future<void> deleteProperty(PropertyModel property) =>
       delete(propertyTable).delete(property);
-
-  // Setting
-  Future<SettingModel> getSetting() async {
-    return (select(settingTable)..limit(1)).getSingle();
-  }
-
-  Future<void> insertSetting(SettingTableCompanion setting) =>
-      into(settingTable).insert(setting);
-
-  Future<void> updateSetting(SettingModel setting) =>
-      update(settingTable).replace(setting);
-
-  Future<void> deleteSetting(SettingModel setting) =>
-      delete(settingTable).delete(setting);
 }
 
 LazyDatabase _openConnection() {

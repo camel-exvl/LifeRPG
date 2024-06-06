@@ -201,8 +201,6 @@ class StatusViewModel extends ChangeNotifier {
     int bonusGold = 0;
     int badCoefficient;
 
-    request.finishedCount++; // 接受请求时还没有加1
-
     if (request.habitType == null || request.habitType == HabitType.good) {
       badCoefficient = 1;
     } else {
@@ -221,26 +219,20 @@ class StatusViewModel extends ChangeNotifier {
       case Difficulty.easy:
         totalExp = easyExp;
         totalGold = easyGold;
-        bonusExp =
-            (math.log(request.finishedCount) * bonusRepeatEasyExp).round();
-        bonusGold =
-            (math.log(request.finishedCount) * bonusRepeatEasyGold).round();
+        bonusExp  = (math.log(request.finishedCount) * bonusRepeatEasyExp).round();
+        bonusGold = (math.log(request.finishedCount) * bonusRepeatEasyGold).round();
         break;
       case Difficulty.medium:
         totalExp = mediumExp;
         totalGold = mediumGold;
-        bonusExp =
-            (math.log(request.finishedCount) * bonusRepeatMediumExp).round();
-        bonusGold =
-            (math.log(request.finishedCount) * bonusRepeatMediumGold).round();
+        bonusExp  = (math.log(request.finishedCount) * bonusRepeatMediumExp).round();
+        bonusGold = (math.log(request.finishedCount) * bonusRepeatMediumGold).round();
         break;
       case Difficulty.hard:
         totalExp = hardExp;
         totalGold = hardGold;
-        bonusExp =
-            (math.log(request.finishedCount) * bonusRepeatHardExp).round();
-        bonusGold =
-            (math.log(request.finishedCount) * bonusRepeatHardGold).round();
+        bonusExp  = (math.log(request.finishedCount) * bonusRepeatHardExp).round();
+        bonusGold = (math.log(request.finishedCount) * bonusRepeatHardGold).round();
         break;
     }
     totalExp += bonusExp;
@@ -248,8 +240,8 @@ class StatusViewModel extends ChangeNotifier {
 
     switch (request.category) {
       case Category.general:
-        response.expMap.forEach((key, value) => response.expMap[key] =
-            (badCoefficient * totalExp * rewardCoefficient / 6).round());
+        response.expMap.forEach((key, value) =>
+            response.expMap[key] = (badCoefficient * totalExp * rewardCoefficient / 6).round());
         break;
       case Category.art:
         response.expMap[Attribute.talent] =
@@ -314,7 +306,7 @@ class StatusViewModel extends ChangeNotifier {
         int newAttributeLevel = _attributes
             .firstWhere((element) => element.name == entry.key.name)
             .level;
-        if (newAttributeExp < 0) {
+        if(newAttributeExp < 0) {
           newLifeExp -= newAttributeExp;
           newAttributeExp = 0;
         } else {
@@ -326,14 +318,14 @@ class StatusViewModel extends ChangeNotifier {
         final newAttribute = _attributes
             .firstWhere((element) => element.name == entry.key.name)
             .copyWith(
-              level: newAttributeLevel,
-              exp: newAttributeExp,
-            );
+          level: newAttributeLevel,
+          exp: newAttributeExp,
+        );
         updateAttribute(newAttribute);
       }
     }
 
-    while (newLifeExp < 0) {
+    while(newLifeExp < 0) {
       newLifeLevel--;
       newLifeExp += getLifeLevelMaxExp(newLifeLevel);
     }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/view/store/store_view.dart';
-import 'package:liferpg/view/status/status_view.dart';
+import 'package:liferpg/view/status_view.dart';
 import 'package:liferpg/view/target/target_view.dart';
 import 'package:liferpg/viewmodel/habit_viewmodel.dart';
 import 'package:liferpg/viewmodel/status_viewmodel.dart';
@@ -47,13 +47,9 @@ class _HomeViewState extends State<HomeView> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    initOnFirstRun(context);
-  }
-
-  @override
   Widget build(BuildContext context) {
+    initOnFirstRun(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.appName),
