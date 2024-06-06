@@ -15,6 +15,10 @@ enum Attribute {
 
 enum MoneyType { gold, diamond }
 
+enum LanguageType { system, en, zh }
+
+enum BrightnessType { system, light, dark }
+
 extension DifficultyExtension on Difficulty {
   String localizedString(context) {
     switch (this) {
