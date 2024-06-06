@@ -91,20 +91,6 @@
   "frequentFinishWarningMessage": "此应用程序旨在帮助您养成良好的习惯并实现长期目标。如果您完成得太频繁，可能对您没有帮助。",
   "gold": "金币",
   "nextScheduledAt": "下次计划在",
-<<<<<<< HEAD
-  "setting": "设置",
-  "backpack": "背包",
-  "achievement": "成就",
-  "language": "语言",
-  "brightness": "亮度",
-  "dayMode": "日间模式",
-  "nightMode": "夜间模式",
-  "followingSystem": "跟随系统",
-  "restartApp": "重启应用",
-  "restartAppMessage": "设置重启后生效，您确定要重启应用吗？",
-  "zh": "简体中文",
-  "en": "English"
-=======
   "armor": "护甲",
   "armorDescription": "这件坚固的护甲可以有效保护穿戴者免受伤害，大大增加了你的防御力。",
   "arrow": "箭",
@@ -127,5 +113,4 @@
   "potionDescription": "一瓶神奇的药水，饮用后能迅速恢复你的生命值和能量。",
   "sword": "剑",
   "swordDescription": "一把锋利的剑，适合近身作战，能大大提高你的攻击力。"
->>>>>>> main
 }

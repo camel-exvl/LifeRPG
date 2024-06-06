@@ -91,20 +91,6 @@
   "frequentFinishWarningMessage": "This app aims to help you build good habits and achieve long-term goals. If you finish too frequent, it may not be helpful for you. ",
   "gold": "Gold",
   "nextScheduledAt": "Next Scheduled At",
-<<<<<<< HEAD
-  "setting": "Setting",
-  "backpack": "Backpack",
-  "achievement": "Achievement",
-  "language": "Language",
-  "brightness": "Brightness",
-  "dayMode": "Day Mode",
-  "nightMode": "Night Mode",
-  "followingSystem": "Following System",
-  "restartApp": "Restart App",
-  "restartAppMessage": "Restart app to apply changes?",
-  "zh": "简体中文",
-  "en": "English"
-=======
   "armor": "Armor",
   "armorDescription": "This sturdy armor effectively protects the wearer from harm, greatly increasing your defense.",
   "arrow": "Arrow",
@@ -127,5 +113,4 @@
   "potionDescription": "A bottle of magical potion that, when consumed, quickly restores your health and energy.",
   "sword": "Sword",
   "swordDescription": "A sharp sword suitable for close combat, greatly increasing your attack power."
->>>>>>> main
 }
