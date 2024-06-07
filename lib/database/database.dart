@@ -125,8 +125,20 @@ class AppDatabase extends _$AppDatabase {
         .get();
   }
 
+  Future<EquipmentModel> getEquipmentById(int equipmentId) async {
+    return (select(equipmentTable)..where((t) => t.id.equals(equipmentId)))
+        .getSingle();
+  }
+
   Future<void> insertEquipment(EquipmentTableCompanion equipment) =>
       into(equipmentTable).insert(equipment);
+
+  Future<void> insertEquipments(List<EquipmentTableCompanion> equipments) =>
+      batch((batch) {
+        for (var equipment in equipments) {
+          batch.insertAll(equipmentTable, [equipment]);
+        }
+      });
 
   Future<void> updateEquipment(EquipmentModel equipment) =>
       update(equipmentTable).replace(equipment);
@@ -142,6 +154,13 @@ class AppDatabase extends _$AppDatabase {
 
   Future<void> insertProperty(PropertyTableCompanion property) =>
       into(propertyTable).insert(property);
+
+  Future<void> insertProperties(List<PropertyTableCompanion> properties) =>
+      batch((batch) {
+        for (var property in properties) {
+          batch.insertAll(propertyTable, [property]);
+        }
+      });
 
   Future<void> updateProperty(PropertyModel property) =>
       update(propertyTable).replace(property);

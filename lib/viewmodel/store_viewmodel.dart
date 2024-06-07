@@ -22,11 +22,19 @@ class StoreViewModel extends ChangeNotifier {
   final database = AppDatabase();
 
   Future<void> initOnFirstRun() async {
-    _properties = const [
-      PropertyModel(id: 1, moneyType: MoneyType.gold, amount: 0),
-      PropertyModel(id: 2, moneyType: MoneyType.diamond, amount: 0),
-    ];
-    _equipments = const [
+    late List<PropertyModel> initialProperties;
+    if (kDebugMode) {
+      initialProperties = const [
+        PropertyModel(id: 1, moneyType: MoneyType.gold, amount: 1000),
+        PropertyModel(id: 2, moneyType: MoneyType.diamond, amount: 100),
+      ];
+    } else {
+      initialProperties = const [
+        PropertyModel(id: 1, moneyType: MoneyType.gold, amount: 0),
+        PropertyModel(id: 2, moneyType: MoneyType.diamond, amount: 0),
+      ];
+    }
+    const initalEquipments = [
       EquipmentModel(
           id: 1,
           equipmentType: EquipmentType.armor,
@@ -80,7 +88,7 @@ class StoreViewModel extends ChangeNotifier {
           equipmentType: EquipmentType.necklace,
           moneyType: MoneyType.gold,
           price: 150,
-          stock: 10),
+          stock: 1),
       EquipmentModel(
           id: 10,
           equipmentType: EquipmentType.potion,
@@ -94,37 +102,69 @@ class StoreViewModel extends ChangeNotifier {
           price: 200,
           stock: 10),
     ];
-    // _equipments = const [];
+    await _insertProperties(initialProperties);
+    await _insertEquipments(initalEquipments);
+    _properties = await database.getAllProperties();
+    _equipments = await database.getAllEquipments();
     notifyListeners();
-    for (final property in _properties) {
-      await _insertProperty(property);
-    }
-    for (final equipment in _equipments) {
-      await _insertEquipment(equipment);
-    }
   }
 
-  Future<void> _insertProperty(PropertyModel property) async {
-    await database.insertProperty(PropertyTableCompanion(
-      id: Value(property.id),
-      moneyType: Value(property.moneyType),
-      amount: Value(property.amount),
-    ));
+  Future<void> _insertProperties(List<PropertyModel> properties) async {
+    await database.insertProperties(properties
+        .map((e) => PropertyTableCompanion(
+              id: Value(e.id),
+              moneyType: Value(e.moneyType),
+              amount: Value(e.amount),
+            ))
+        .toList());
   }
 
   Future<void> updateProperty(PropertyModel property) async {
     await database.updateProperty(property);
-    final properties = await database.getAllProperties();
-    _properties = properties;
+    await loadProperties();
+  }
+
+  Future<void> buy(EquipmentModel equipment) async {
+    final property = _properties
+        .firstWhere((property) => property.moneyType == equipment.moneyType);
+    if (property.amount >= equipment.price) {
+      await updateProperty(PropertyModel(
+          id: property.id,
+          moneyType: property.moneyType,
+          amount: property.amount - equipment.price));
+      await updateEquipment(EquipmentModel(
+          id: equipment.id,
+          equipmentType: equipment.equipmentType,
+          moneyType: equipment.moneyType,
+          price: equipment.price,
+          stock: equipment.stock - 1));
+    }
+  }
+
+  Future<void> loadProperties() async {
+    _properties = await database.getAllProperties();
     notifyListeners();
   }
 
-  Future<void> _insertEquipment(EquipmentModel equipment) async {
-    await database.insertEquipment(EquipmentTableCompanion(
-        id: Value(equipment.id),
-        equipmentType: Value(equipment.equipmentType),
-        moneyType: Value(equipment.moneyType),
-        price: Value(equipment.price),
-        stock: Value(equipment.stock)));
+  Future<void> _insertEquipments(List<EquipmentModel> equipments) async {
+    await database.insertEquipments(equipments
+        .map((e) => EquipmentTableCompanion(
+              id: Value(e.id),
+              equipmentType: Value(e.equipmentType),
+              moneyType: Value(e.moneyType),
+              price: Value(e.price),
+              stock: Value(e.stock),
+            ))
+        .toList());
+  }
+
+  Future<void> updateEquipment(EquipmentModel equipment) async {
+    await database.updateEquipment(equipment);
+    await loadEquipments();
+  }
+
+  Future<void> loadEquipments() async {
+    _equipments = await database.getAllEquipments();
+    notifyListeners();
   }
 }
