@@ -36,10 +36,11 @@ class StoreViewState extends State<StoreView>
               MoneyContainer(properties: viewModel.properties),
               Expanded(
                   child: GridView.count(
+                childAspectRatio: 1, // 宽高比
                 primary: false,
                 padding: const EdgeInsets.all(20),
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
+                // crossAxisSpacing: 10,
+                // mainAxisSpacing: 10,
                 crossAxisCount: 3,
                 children: viewModel.equipments
                     .map((equipment) => Equipment(
@@ -243,7 +244,7 @@ class Equipment extends StatelessWidget {
                 ));
       },
       child: Container(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(0),
           // decoration: BoxDecoration(
           //   color: Theme.of(context).colorScheme.secondary,
           //   borderRadius: BorderRadius.circular(10),
