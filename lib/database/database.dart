@@ -125,6 +125,11 @@ class AppDatabase extends _$AppDatabase {
         .get();
   }
 
+  Future<EquipmentModel> getEquipmentById(int equipmentId) async {
+    return (select(equipmentTable)..where((t) => t.id.equals(equipmentId)))
+        .getSingle();
+  }
+
   Future<void> insertEquipment(EquipmentTableCompanion equipment) =>
       into(equipmentTable).insert(equipment);
 
