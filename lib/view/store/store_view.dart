@@ -57,38 +57,14 @@ class StoreViewState extends State<StoreView>
                           .toList()),
                   CustomExpansionTile(
                       title: AppLocalizations.of(context)!.items,
-                      children: viewModel.equipments
-                          .map((equipment) => Equipment(
-                                item: equipment,
-                                affordable: equipment.price <=
-                                        viewModel.properties
-                                            .firstWhere((property) =>
-                                                property.moneyType ==
-                                                equipment.moneyType)
-                                            .amount &&
-                                    equipment.stock > 0,
-                                buy: () async {
-                                  await viewModel.buy(equipment);
-                                },
-                              ))
-                          .toList()),
+                      children: const [
+                        Placeholder(),
+                      ]),
                   CustomExpansionTile(
                       title: AppLocalizations.of(context)!.instanceDungeon,
-                      children: viewModel.equipments
-                          .map((equipment) => Equipment(
-                                item: equipment,
-                                affordable: equipment.price <=
-                                        viewModel.properties
-                                            .firstWhere((property) =>
-                                                property.moneyType ==
-                                                equipment.moneyType)
-                                            .amount &&
-                                    equipment.stock > 0,
-                                buy: () async {
-                                  await viewModel.buy(equipment);
-                                },
-                              ))
-                          .toList()),
+                      children: const [
+                        Placeholder(),
+                      ]),
                 ]),
               ));
         },
