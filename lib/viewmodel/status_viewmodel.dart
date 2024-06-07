@@ -42,8 +42,16 @@ class StatusViewModel extends ChangeNotifier {
   static const int attributeMaxExp = 100;
 
   final database = AppDatabase();
-  StatusModel _status =
-      const StatusModel(id: 1, level: 1, exp: 0, gold: 0, hp: 100, itemIds: "");
+  StatusModel _status = const StatusModel(
+      id: 1,
+      level: 1,
+      exp: 0,
+      gold: 0,
+      hp: 100,
+      weaponIds: "1,2",
+      armorIds: "3,4",
+      weaponIndex: 1,
+      armorIndex: 0);
   List<AttributeModel> _attributes = [];
 
   StatusModel get status => _status;
@@ -340,15 +348,50 @@ class StatusViewModel extends ChangeNotifier {
     updateStatus(newStatus);
   }
 
-  void addItem(int newItemId) {
-    final itemIds = _status.itemIds.split(",");
-    itemIds.add(newItemId.toString());
-    _status = _status.copyWith(itemIds: itemIds.join(","));
+  void addWeapon(int newWeaponId) {
+    var weaponIds = _status.weaponIds.split(",");
+    weaponIds.add(newWeaponId.toString());
+    _status = _status.copyWith(weaponIds: weaponIds.join(","));
     updateStatus(_status);
   }
 
-  List<int> getItemIds() {
-    return _status.itemIds.split(",").map((e) => int.parse(e)).toList();
+  List<int> getWeaponIds() {
+    return _status.weaponIds.split(",").map(int.parse).toList();
+  }
+
+  void equipWeapon(int weaponIndex) {
+    _status = _status.copyWith(weaponIndex: Value<int?>(weaponIndex));
+    notifyListeners();
+    updateStatus(_status);
+  }
+
+  void removeWeapon() {
+    _status = _status.copyWith(weaponIndex: const Value<int?>(null));
+    notifyListeners();
+    updateStatus(_status);
+  }
+
+  void addArmor(int newArmorId) {
+    var armorIds = _status.armorIds.split(",");
+    armorIds.add(newArmorId.toString());
+    _status = _status.copyWith(armorIds: armorIds.join(","));
+    updateStatus(_status);
+  }
+
+  List<int> getArmorIds() {
+    return _status.armorIds.split(",").map(int.parse).toList();
+  }
+
+  void equipArmor(int armorIndex) {
+    _status = _status.copyWith(armorIndex: Value<int?>(armorIndex));
+    notifyListeners();
+    updateStatus(_status);
+  }
+
+  void removeArmor() {
+    _status = _status.copyWith(armorIndex: const Value<int?>(null));
+    notifyListeners();
+    updateStatus(_status);
   }
 
   void updateHP(int hp_) {

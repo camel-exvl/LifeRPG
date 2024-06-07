@@ -1615,16 +1615,37 @@ class $StatusTableTable extends StatusTable
   late final GeneratedColumn<int> hp = GeneratedColumn<int>(
       'hp', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _itemIdsMeta =
-      const VerificationMeta('itemIds');
+  static const VerificationMeta _weaponIdsMeta =
+      const VerificationMeta('weaponIds');
   @override
-  late final GeneratedColumn<String> itemIds = GeneratedColumn<String>(
-      'item_ids', aliasedName, false,
+  late final GeneratedColumn<String> weaponIds = GeneratedColumn<String>(
+      'weapon_ids', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: false,
       defaultValue: const Constant(''));
+  static const VerificationMeta _armorIdsMeta =
+      const VerificationMeta('armorIds');
   @override
-  List<GeneratedColumn> get $columns => [id, level, exp, gold, hp, itemIds];
+  late final GeneratedColumn<String> armorIds = GeneratedColumn<String>(
+      'armor_ids', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(''));
+  static const VerificationMeta _weaponIndexMeta =
+      const VerificationMeta('weaponIndex');
+  @override
+  late final GeneratedColumn<int> weaponIndex = GeneratedColumn<int>(
+      'weapon_index', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _armorIndexMeta =
+      const VerificationMeta('armorIndex');
+  @override
+  late final GeneratedColumn<int> armorIndex = GeneratedColumn<int>(
+      'armor_index', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, level, exp, gold, hp, weaponIds, armorIds, weaponIndex, armorIndex];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1661,9 +1682,25 @@ class $StatusTableTable extends StatusTable
     } else if (isInserting) {
       context.missing(_hpMeta);
     }
-    if (data.containsKey('item_ids')) {
-      context.handle(_itemIdsMeta,
-          itemIds.isAcceptableOrUnknown(data['item_ids']!, _itemIdsMeta));
+    if (data.containsKey('weapon_ids')) {
+      context.handle(_weaponIdsMeta,
+          weaponIds.isAcceptableOrUnknown(data['weapon_ids']!, _weaponIdsMeta));
+    }
+    if (data.containsKey('armor_ids')) {
+      context.handle(_armorIdsMeta,
+          armorIds.isAcceptableOrUnknown(data['armor_ids']!, _armorIdsMeta));
+    }
+    if (data.containsKey('weapon_index')) {
+      context.handle(
+          _weaponIndexMeta,
+          weaponIndex.isAcceptableOrUnknown(
+              data['weapon_index']!, _weaponIndexMeta));
+    }
+    if (data.containsKey('armor_index')) {
+      context.handle(
+          _armorIndexMeta,
+          armorIndex.isAcceptableOrUnknown(
+              data['armor_index']!, _armorIndexMeta));
     }
     return context;
   }
@@ -1684,8 +1721,14 @@ class $StatusTableTable extends StatusTable
           .read(DriftSqlType.int, data['${effectivePrefix}gold'])!,
       hp: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}hp'])!,
-      itemIds: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}item_ids'])!,
+      weaponIds: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}weapon_ids'])!,
+      armorIds: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}armor_ids'])!,
+      weaponIndex: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}weapon_index']),
+      armorIndex: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}armor_index']),
     );
   }
 
@@ -1701,14 +1744,20 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
   final int exp;
   final int gold;
   final int hp;
-  final String itemIds;
+  final String weaponIds;
+  final String armorIds;
+  final int? weaponIndex;
+  final int? armorIndex;
   const StatusModel(
       {required this.id,
       required this.level,
       required this.exp,
       required this.gold,
       required this.hp,
-      required this.itemIds});
+      required this.weaponIds,
+      required this.armorIds,
+      this.weaponIndex,
+      this.armorIndex});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -1717,7 +1766,14 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
     map['exp'] = Variable<int>(exp);
     map['gold'] = Variable<int>(gold);
     map['hp'] = Variable<int>(hp);
-    map['item_ids'] = Variable<String>(itemIds);
+    map['weapon_ids'] = Variable<String>(weaponIds);
+    map['armor_ids'] = Variable<String>(armorIds);
+    if (!nullToAbsent || weaponIndex != null) {
+      map['weapon_index'] = Variable<int>(weaponIndex);
+    }
+    if (!nullToAbsent || armorIndex != null) {
+      map['armor_index'] = Variable<int>(armorIndex);
+    }
     return map;
   }
 
@@ -1728,7 +1784,14 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
       exp: Value(exp),
       gold: Value(gold),
       hp: Value(hp),
-      itemIds: Value(itemIds),
+      weaponIds: Value(weaponIds),
+      armorIds: Value(armorIds),
+      weaponIndex: weaponIndex == null && nullToAbsent
+          ? const Value.absent()
+          : Value(weaponIndex),
+      armorIndex: armorIndex == null && nullToAbsent
+          ? const Value.absent()
+          : Value(armorIndex),
     );
   }
 
@@ -1741,7 +1804,10 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
       exp: serializer.fromJson<int>(json['exp']),
       gold: serializer.fromJson<int>(json['gold']),
       hp: serializer.fromJson<int>(json['hp']),
-      itemIds: serializer.fromJson<String>(json['itemIds']),
+      weaponIds: serializer.fromJson<String>(json['weaponIds']),
+      armorIds: serializer.fromJson<String>(json['armorIds']),
+      weaponIndex: serializer.fromJson<int?>(json['weaponIndex']),
+      armorIndex: serializer.fromJson<int?>(json['armorIndex']),
     );
   }
   @override
@@ -1753,7 +1819,10 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
       'exp': serializer.toJson<int>(exp),
       'gold': serializer.toJson<int>(gold),
       'hp': serializer.toJson<int>(hp),
-      'itemIds': serializer.toJson<String>(itemIds),
+      'weaponIds': serializer.toJson<String>(weaponIds),
+      'armorIds': serializer.toJson<String>(armorIds),
+      'weaponIndex': serializer.toJson<int?>(weaponIndex),
+      'armorIndex': serializer.toJson<int?>(armorIndex),
     };
   }
 
@@ -1763,14 +1832,20 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
           int? exp,
           int? gold,
           int? hp,
-          String? itemIds}) =>
+          String? weaponIds,
+          String? armorIds,
+          Value<int?> weaponIndex = const Value.absent(),
+          Value<int?> armorIndex = const Value.absent()}) =>
       StatusModel(
         id: id ?? this.id,
         level: level ?? this.level,
         exp: exp ?? this.exp,
         gold: gold ?? this.gold,
         hp: hp ?? this.hp,
-        itemIds: itemIds ?? this.itemIds,
+        weaponIds: weaponIds ?? this.weaponIds,
+        armorIds: armorIds ?? this.armorIds,
+        weaponIndex: weaponIndex.present ? weaponIndex.value : this.weaponIndex,
+        armorIndex: armorIndex.present ? armorIndex.value : this.armorIndex,
       );
   @override
   String toString() {
@@ -1780,13 +1855,17 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
           ..write('exp: $exp, ')
           ..write('gold: $gold, ')
           ..write('hp: $hp, ')
-          ..write('itemIds: $itemIds')
+          ..write('weaponIds: $weaponIds, ')
+          ..write('armorIds: $armorIds, ')
+          ..write('weaponIndex: $weaponIndex, ')
+          ..write('armorIndex: $armorIndex')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, level, exp, gold, hp, itemIds);
+  int get hashCode => Object.hash(
+      id, level, exp, gold, hp, weaponIds, armorIds, weaponIndex, armorIndex);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1796,7 +1875,10 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
           other.exp == this.exp &&
           other.gold == this.gold &&
           other.hp == this.hp &&
-          other.itemIds == this.itemIds);
+          other.weaponIds == this.weaponIds &&
+          other.armorIds == this.armorIds &&
+          other.weaponIndex == this.weaponIndex &&
+          other.armorIndex == this.armorIndex);
 }
 
 class StatusTableCompanion extends UpdateCompanion<StatusModel> {
@@ -1805,14 +1887,20 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
   final Value<int> exp;
   final Value<int> gold;
   final Value<int> hp;
-  final Value<String> itemIds;
+  final Value<String> weaponIds;
+  final Value<String> armorIds;
+  final Value<int?> weaponIndex;
+  final Value<int?> armorIndex;
   const StatusTableCompanion({
     this.id = const Value.absent(),
     this.level = const Value.absent(),
     this.exp = const Value.absent(),
     this.gold = const Value.absent(),
     this.hp = const Value.absent(),
-    this.itemIds = const Value.absent(),
+    this.weaponIds = const Value.absent(),
+    this.armorIds = const Value.absent(),
+    this.weaponIndex = const Value.absent(),
+    this.armorIndex = const Value.absent(),
   });
   StatusTableCompanion.insert({
     this.id = const Value.absent(),
@@ -1820,7 +1908,10 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
     required int exp,
     required int gold,
     required int hp,
-    this.itemIds = const Value.absent(),
+    this.weaponIds = const Value.absent(),
+    this.armorIds = const Value.absent(),
+    this.weaponIndex = const Value.absent(),
+    this.armorIndex = const Value.absent(),
   })  : level = Value(level),
         exp = Value(exp),
         gold = Value(gold),
@@ -1831,7 +1922,10 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
     Expression<int>? exp,
     Expression<int>? gold,
     Expression<int>? hp,
-    Expression<String>? itemIds,
+    Expression<String>? weaponIds,
+    Expression<String>? armorIds,
+    Expression<int>? weaponIndex,
+    Expression<int>? armorIndex,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1839,7 +1933,10 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
       if (exp != null) 'exp': exp,
       if (gold != null) 'gold': gold,
       if (hp != null) 'hp': hp,
-      if (itemIds != null) 'item_ids': itemIds,
+      if (weaponIds != null) 'weapon_ids': weaponIds,
+      if (armorIds != null) 'armor_ids': armorIds,
+      if (weaponIndex != null) 'weapon_index': weaponIndex,
+      if (armorIndex != null) 'armor_index': armorIndex,
     });
   }
 
@@ -1849,14 +1946,20 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
       Value<int>? exp,
       Value<int>? gold,
       Value<int>? hp,
-      Value<String>? itemIds}) {
+      Value<String>? weaponIds,
+      Value<String>? armorIds,
+      Value<int?>? weaponIndex,
+      Value<int?>? armorIndex}) {
     return StatusTableCompanion(
       id: id ?? this.id,
       level: level ?? this.level,
       exp: exp ?? this.exp,
       gold: gold ?? this.gold,
       hp: hp ?? this.hp,
-      itemIds: itemIds ?? this.itemIds,
+      weaponIds: weaponIds ?? this.weaponIds,
+      armorIds: armorIds ?? this.armorIds,
+      weaponIndex: weaponIndex ?? this.weaponIndex,
+      armorIndex: armorIndex ?? this.armorIndex,
     );
   }
 
@@ -1878,8 +1981,17 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
     if (hp.present) {
       map['hp'] = Variable<int>(hp.value);
     }
-    if (itemIds.present) {
-      map['item_ids'] = Variable<String>(itemIds.value);
+    if (weaponIds.present) {
+      map['weapon_ids'] = Variable<String>(weaponIds.value);
+    }
+    if (armorIds.present) {
+      map['armor_ids'] = Variable<String>(armorIds.value);
+    }
+    if (weaponIndex.present) {
+      map['weapon_index'] = Variable<int>(weaponIndex.value);
+    }
+    if (armorIndex.present) {
+      map['armor_index'] = Variable<int>(armorIndex.value);
     }
     return map;
   }
@@ -1892,7 +2004,10 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
           ..write('exp: $exp, ')
           ..write('gold: $gold, ')
           ..write('hp: $hp, ')
-          ..write('itemIds: $itemIds')
+          ..write('weaponIds: $weaponIds, ')
+          ..write('armorIds: $armorIds, ')
+          ..write('weaponIndex: $weaponIndex, ')
+          ..write('armorIndex: $armorIndex')
           ..write(')'))
         .toString();
   }
@@ -3353,7 +3468,10 @@ typedef $$StatusTableTableInsertCompanionBuilder = StatusTableCompanion
   required int exp,
   required int gold,
   required int hp,
-  Value<String> itemIds,
+  Value<String> weaponIds,
+  Value<String> armorIds,
+  Value<int?> weaponIndex,
+  Value<int?> armorIndex,
 });
 typedef $$StatusTableTableUpdateCompanionBuilder = StatusTableCompanion
     Function({
@@ -3362,7 +3480,10 @@ typedef $$StatusTableTableUpdateCompanionBuilder = StatusTableCompanion
   Value<int> exp,
   Value<int> gold,
   Value<int> hp,
-  Value<String> itemIds,
+  Value<String> weaponIds,
+  Value<String> armorIds,
+  Value<int?> weaponIndex,
+  Value<int?> armorIndex,
 });
 
 class $$StatusTableTableTableManager extends RootTableManager<
@@ -3390,7 +3511,10 @@ class $$StatusTableTableTableManager extends RootTableManager<
             Value<int> exp = const Value.absent(),
             Value<int> gold = const Value.absent(),
             Value<int> hp = const Value.absent(),
-            Value<String> itemIds = const Value.absent(),
+            Value<String> weaponIds = const Value.absent(),
+            Value<String> armorIds = const Value.absent(),
+            Value<int?> weaponIndex = const Value.absent(),
+            Value<int?> armorIndex = const Value.absent(),
           }) =>
               StatusTableCompanion(
             id: id,
@@ -3398,7 +3522,10 @@ class $$StatusTableTableTableManager extends RootTableManager<
             exp: exp,
             gold: gold,
             hp: hp,
-            itemIds: itemIds,
+            weaponIds: weaponIds,
+            armorIds: armorIds,
+            weaponIndex: weaponIndex,
+            armorIndex: armorIndex,
           ),
           getInsertCompanionBuilder: ({
             Value<int> id = const Value.absent(),
@@ -3406,7 +3533,10 @@ class $$StatusTableTableTableManager extends RootTableManager<
             required int exp,
             required int gold,
             required int hp,
-            Value<String> itemIds = const Value.absent(),
+            Value<String> weaponIds = const Value.absent(),
+            Value<String> armorIds = const Value.absent(),
+            Value<int?> weaponIndex = const Value.absent(),
+            Value<int?> armorIndex = const Value.absent(),
           }) =>
               StatusTableCompanion.insert(
             id: id,
@@ -3414,7 +3544,10 @@ class $$StatusTableTableTableManager extends RootTableManager<
             exp: exp,
             gold: gold,
             hp: hp,
-            itemIds: itemIds,
+            weaponIds: weaponIds,
+            armorIds: armorIds,
+            weaponIndex: weaponIndex,
+            armorIndex: armorIndex,
           ),
         ));
 }
@@ -3459,8 +3592,23 @@ class $$StatusTableTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<String> get itemIds => $state.composableBuilder(
-      column: $state.table.itemIds,
+  ColumnFilters<String> get weaponIds => $state.composableBuilder(
+      column: $state.table.weaponIds,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get armorIds => $state.composableBuilder(
+      column: $state.table.armorIds,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get weaponIndex => $state.composableBuilder(
+      column: $state.table.weaponIndex,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get armorIndex => $state.composableBuilder(
+      column: $state.table.armorIndex,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 }
@@ -3493,8 +3641,23 @@ class $$StatusTableTableOrderingComposer
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<String> get itemIds => $state.composableBuilder(
-      column: $state.table.itemIds,
+  ColumnOrderings<String> get weaponIds => $state.composableBuilder(
+      column: $state.table.weaponIds,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get armorIds => $state.composableBuilder(
+      column: $state.table.armorIds,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get weaponIndex => $state.composableBuilder(
+      column: $state.table.weaponIndex,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get armorIndex => $state.composableBuilder(
+      column: $state.table.armorIndex,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
