@@ -6,6 +6,7 @@ import 'package:liferpg/model/common_model.dart';
 import 'package:liferpg/model/store/equipment_model.dart';
 import 'package:liferpg/viewmodel/store_viewmodel.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class StoreViewState extends State<StoreView>
     with AutomaticKeepAliveClientMixin {
@@ -43,6 +44,16 @@ class StoreViewState extends State<StoreView>
                 children: viewModel.equipments
                     .map((equipment) => Equipment(
                           item: equipment,
+                          affordable: equipment.price <=
+                                  viewModel.properties
+                                      .firstWhere((property) =>
+                                          property.moneyType ==
+                                          equipment.moneyType)
+                                      .amount &&
+                              equipment.stock > 0,
+                          buy: () async {
+                            await viewModel.buy(equipment);
+                          },
                         ))
                     .toList(),
               ))
@@ -126,8 +137,14 @@ class Equipment extends StatelessWidget {
   final MoneyType moneyType;
   final int price;
   final int stock;
+  final bool affordable;
+  final Function? buy;
 
-  Equipment({super.key, required EquipmentModel item})
+  Equipment(
+      {super.key,
+      required EquipmentModel item,
+      this.affordable = false,
+      this.buy})
       : equipmentType = item.equipmentType,
         moneyType = item.moneyType,
         price = item.price,
@@ -140,15 +157,71 @@ class Equipment extends StatelessWidget {
         showDialog(
             context: context,
             builder: (BuildContext context) => AlertDialog(
-                  title: Text(equipmentType.name(context)),
-                  content: Text(equipmentType.description(context)),
+                  title: Text(
+                    equipmentType.name(context),
+                    textAlign: TextAlign.center,
+                  ),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Image(
+                        image: AssetImage(equipmentType.iconPath),
+                        width: 60,
+                        height: 60,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          IconWithText(
+                              iconPath: moneyType.iconPath,
+                              text: price.toString())
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        equipmentType.description(context),
+                        textAlign: TextAlign.left,
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IconWithText(
+                              iconPath: equipmentType.attackPowerIconPath,
+                              text: " +${equipmentType.attackPower}"),
+                          const SizedBox(width: 30),
+                          IconWithText(
+                              iconPath: equipmentType.defensePowerIconPath,
+                              text: " +${equipmentType.defensePower}"),
+                        ],
+                      )
+                    ],
+                  ),
                   actions: <Widget>[
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('Cancel'),
-                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(
+                          onPressed: affordable
+                              ? () {
+                                  buy?.call();
+                                  Navigator.of(context).pop();
+                                }
+                              : null,
+                          child: Text(AppLocalizations.of(context)!.buy),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            // Implement the purchase logic here
+                            // For example, you can deduct money from the user's account and update the stock
+                            // Then close the dialog
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(AppLocalizations.of(context)!.cancel),
+                        ),
+                      ],
+                    )
                   ],
                 ));
       },
@@ -168,21 +241,33 @@ class Equipment extends StatelessWidget {
               Text(equipmentType.name(context),
                   style: Theme.of(context).textTheme.bodyLarge,
                   textAlign: TextAlign.center),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Image(
-                    image: AssetImage(moneyType.iconPath),
-                    width: 20,
-                    height: 20,
-                  ),
-                  Text(price.toString(),
-                      style: Theme.of(context).textTheme.labelLarge,
-                      textAlign: TextAlign.center),
-                ],
-              ),
+              IconWithText(iconPath: moneyType.iconPath, text: price.toString())
             ],
           )),
+    );
+  }
+}
+
+class IconWithText extends StatelessWidget {
+  final String iconPath;
+  final String text;
+  const IconWithText({super.key, required this.iconPath, required this.text});
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image(
+          image: AssetImage(iconPath),
+          width: 20,
+          height: 20,
+        ),
+        const SizedBox(width: 4),
+        Text(
+          text,
+          style: Theme.of(context).textTheme.labelLarge,
+        ),
+      ],
     );
   }
 }

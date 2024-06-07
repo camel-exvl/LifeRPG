@@ -111,4 +111,62 @@ extension EquipmentTypeExtension on EquipmentType {
         return AppLocalizations.of(context)!.swordDescription;
     }
   }
+
+  int get attackPower {
+    switch (this) {
+      case EquipmentType.armor:
+        return 10;
+      case EquipmentType.arrow:
+        return 5;
+      case EquipmentType.boots:
+        return 2;
+      case EquipmentType.fruit:
+        return 0;
+      case EquipmentType.secretGift:
+        return 0;
+      case EquipmentType.magicHat:
+        return 3;
+      case EquipmentType.key:
+        return 0;
+      case EquipmentType.magicBook:
+        return 7;
+      case EquipmentType.necklace:
+        return 1;
+      case EquipmentType.potion:
+        return 0;
+      case EquipmentType.sword:
+        return 15;
+    }
+  }
+
+  int get defensePower {
+    switch (this) {
+      case EquipmentType.armor:
+        return 20;
+      case EquipmentType.arrow:
+        return 0;
+      case EquipmentType.boots:
+        return 5;
+      case EquipmentType.fruit:
+        return 0;
+      case EquipmentType.secretGift:
+        return 0;
+      case EquipmentType.magicHat:
+        return 8;
+      case EquipmentType.key:
+        return 0;
+      case EquipmentType.magicBook:
+        return 10;
+      case EquipmentType.necklace:
+        return 3;
+      case EquipmentType.potion:
+        return 0;
+      case EquipmentType.sword:
+        return 5;
+    }
+  }
+
+  String get attackPowerIconPath => 'res/icons/kyrise/sword_02c.png';
+
+  String get defensePowerIconPath => 'res/icons/kyrise/shield_03b.png';
 }

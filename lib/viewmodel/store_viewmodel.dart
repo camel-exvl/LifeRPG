@@ -22,10 +22,18 @@ class StoreViewModel extends ChangeNotifier {
   final database = AppDatabase();
 
   Future<void> initOnFirstRun() async {
-    const initialProperties = [
-      PropertyModel(id: 1, moneyType: MoneyType.gold, amount: 0),
-      PropertyModel(id: 2, moneyType: MoneyType.diamond, amount: 0),
-    ];
+    late List<PropertyModel> initialProperties;
+    if (kDebugMode) {
+      initialProperties = const [
+        PropertyModel(id: 1, moneyType: MoneyType.gold, amount: 1000),
+        PropertyModel(id: 2, moneyType: MoneyType.diamond, amount: 100),
+      ];
+    } else {
+      initialProperties = const [
+        PropertyModel(id: 1, moneyType: MoneyType.gold, amount: 0),
+        PropertyModel(id: 2, moneyType: MoneyType.diamond, amount: 0),
+      ];
+    }
     const initalEquipments = [
       EquipmentModel(
           id: 1,
@@ -80,7 +88,7 @@ class StoreViewModel extends ChangeNotifier {
           equipmentType: EquipmentType.necklace,
           moneyType: MoneyType.gold,
           price: 150,
-          stock: 10),
+          stock: 1),
       EquipmentModel(
           id: 10,
           equipmentType: EquipmentType.potion,
@@ -114,6 +122,23 @@ class StoreViewModel extends ChangeNotifier {
   Future<void> updateProperty(PropertyModel property) async {
     await database.updateProperty(property);
     await loadProperties();
+  }
+
+  Future<void> buy(EquipmentModel equipment) async {
+    final property = _properties
+        .firstWhere((property) => property.moneyType == equipment.moneyType);
+    if (property.amount >= equipment.price) {
+      await updateProperty(PropertyModel(
+          id: property.id,
+          moneyType: property.moneyType,
+          amount: property.amount - equipment.price));
+      await updateEquipment(EquipmentModel(
+          id: equipment.id,
+          equipmentType: equipment.equipmentType,
+          moneyType: equipment.moneyType,
+          price: equipment.price,
+          stock: equipment.stock - 1));
+    }
   }
 
   Future<void> loadProperties() async {
