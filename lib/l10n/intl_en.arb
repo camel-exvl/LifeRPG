@@ -126,5 +126,7 @@
   "sword": "Sword",
   "swordDescription": "A sharp sword suitable for close combat, greatly increasing your attack power.",
   "buy": "Buy",
-  "purchaseSuccess": "purchased"
+  "purchaseSuccess": "purchased",
+  "store": "Store",
+  "myProperty": "My Property"
 }

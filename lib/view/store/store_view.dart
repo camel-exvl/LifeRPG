@@ -31,35 +31,44 @@ class StoreViewState extends State<StoreView>
       create: (context) => viewModel,
       child: Consumer<StoreViewModel>(
         builder: (context, viewModel, child) {
-          return Column(
-            children: <Widget>[
-              MoneyContainer(properties: viewModel.properties),
-              Expanded(
-                  child: GridView.count(
-                childAspectRatio: 1, // 宽高比
-                primary: false,
-                padding: const EdgeInsets.all(20),
-                // crossAxisSpacing: 10,
-                // mainAxisSpacing: 10,
-                crossAxisCount: 3,
-                children: viewModel.equipments
-                    .map((equipment) => Equipment(
-                          item: equipment,
-                          affordable: equipment.price <=
-                                  viewModel.properties
-                                      .firstWhere((property) =>
-                                          property.moneyType ==
-                                          equipment.moneyType)
-                                      .amount &&
-                              equipment.stock > 0,
-                          buy: () async {
-                            await viewModel.buy(equipment);
-                          },
-                        ))
-                    .toList(),
-              ))
-            ],
-          );
+          return Scaffold(
+              appBar: AppBar(
+                title: Text(AppLocalizations.of(context)!.store),
+              ),
+              body: Column(
+                children: <Widget>[
+                  MoneyContainer(properties: viewModel.properties),
+                  const Divider(
+                    height: 0.0,
+                    indent: 16,
+                    endIndent: 16,
+                  ),
+                  Expanded(
+                      child: GridView.count(
+                    childAspectRatio: 1, // 宽高比
+                    primary: false,
+                    padding: const EdgeInsets.all(20),
+                    // crossAxisSpacing: 10,
+                    // mainAxisSpacing: 10,
+                    crossAxisCount: 3,
+                    children: viewModel.equipments
+                        .map((equipment) => Equipment(
+                              item: equipment,
+                              affordable: equipment.price <=
+                                      viewModel.properties
+                                          .firstWhere((property) =>
+                                              property.moneyType ==
+                                              equipment.moneyType)
+                                          .amount &&
+                                  equipment.stock > 0,
+                              buy: () async {
+                                await viewModel.buy(equipment);
+                              },
+                            ))
+                        .toList(),
+                  ))
+                ],
+              ));
         },
       ),
     );
@@ -80,27 +89,11 @@ class MoneyContainer extends StatelessWidget {
     return Container(
         padding: const EdgeInsets.all(10),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            const Expanded(
-                child: Image(
-              image: AssetImage('res/icons/liferpg.png'),
-              // width: 50,
-              // height: 50,
-            )),
-            const Spacer(),
-            Expanded(
-                child: Column(
-              children: properties
-                  .map((property) => MoneyDetail(property: property))
-                  .toList(),
-              //     List.generate(properties.length * 2 - 1, (index) {
-              //   if (index.isEven) {
-              //     return MoneyDetail(property: properties[index ~/ 2]);
-              //   } else {
-              //     return const SizedBox(height: 10);
-              //   }
-              // }),
-            )),
+            Text(AppLocalizations.of(context)!.myProperty,
+                style: Theme.of(context).textTheme.titleLarge),
+            ...properties.map((property) => MoneyDetail(property: property))
           ],
         ));
   }
@@ -113,13 +106,13 @@ class MoneyDetailState extends State<MoneyDetail> {
       children: [
         Image(
           image: AssetImage(widget.property.moneyType.iconPath),
-          width: 40,
-          height: 40,
+          width: 30,
+          height: 30,
         ),
         const SizedBox(width: 10),
         Text(
           widget.property.amount.toString(),
-          style: Theme.of(context).textTheme.headlineLarge,
+          style: Theme.of(context).textTheme.titleLarge,
         ),
       ],
     );

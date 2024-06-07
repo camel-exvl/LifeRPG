@@ -126,5 +126,7 @@
   "sword": "剑",
   "swordDescription": "一把锋利的剑，适合近身作战，能大大提高你的攻击力。",
   "buy": "购买",
-  "purchaseSuccess": "购买成功"
+  "purchaseSuccess": "购买成功",
+  "store": "商店",
+  "myProperty": "我的财富"
 }
