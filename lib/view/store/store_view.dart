@@ -203,15 +203,6 @@ class Equipment extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         TextButton(
-                          onPressed: affordable
-                              ? () {
-                                  buy?.call();
-                                  Navigator.of(context).pop();
-                                }
-                              : null,
-                          child: Text(AppLocalizations.of(context)!.buy),
-                        ),
-                        TextButton(
                           onPressed: () {
                             // Implement the purchase logic here
                             // For example, you can deduct money from the user's account and update the stock
@@ -219,6 +210,15 @@ class Equipment extends StatelessWidget {
                             Navigator.of(context).pop();
                           },
                           child: Text(AppLocalizations.of(context)!.cancel),
+                        ),
+                        TextButton(
+                          onPressed: affordable
+                              ? () {
+                                  buy?.call();
+                                  Navigator.of(context).pop();
+                                }
+                              : null,
+                          child: Text(AppLocalizations.of(context)!.buy),
                         ),
                       ],
                     )
