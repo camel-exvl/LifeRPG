@@ -128,5 +128,8 @@
   "buy": "Buy",
   "purchaseSuccess": "purchased",
   "store": "Store",
-  "myProperty": "My Property"
+  "myProperty": "My Property",
+  "equipments": "Equipments",
+  "items": "Items",
+  "instanceDungeon": "Instance Dungeon"
 }
