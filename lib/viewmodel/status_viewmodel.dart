@@ -18,6 +18,11 @@ class StatusViewModel extends ChangeNotifier {
 
   StatusViewModel._internal();
 
+  static const int baseAttack = 50;
+  static const int expAttackCoefficient = 5;
+  static const int baseDefense = 50;
+  static const int expDefenseCoefficient = 5;
+  static const int maxHP = 100;
   static const int easyExp = 12;
   static const int mediumExp = 24;
   static const int hardExp = 36;
@@ -37,12 +42,8 @@ class StatusViewModel extends ChangeNotifier {
   static const int attributeMaxExp = 100;
 
   final database = AppDatabase();
-  StatusModel _status = const StatusModel(
-    id: 1,
-    level: 1,
-    exp: 0,
-    gold: 0,
-  );
+  StatusModel _status =
+      const StatusModel(id: 1, level: 1, exp: 0, gold: 0, hp: 100, itemIds: "");
   List<AttributeModel> _attributes = [];
 
   StatusModel get status => _status;
@@ -121,11 +122,7 @@ class StatusViewModel extends ChangeNotifier {
   }
 
   Future<void> insertStatus(StatusModel status) async {
-    database.insertStatus(StatusTableCompanion(
-      level: Value(status.level),
-      exp: Value(status.exp),
-      gold: Value(status.gold),
-    ));
+    database.insertStatus(status.toCompanion(false));
   }
 
   Future<void> updateStatus(StatusModel status) async {
@@ -139,13 +136,7 @@ class StatusViewModel extends ChangeNotifier {
   }
 
   Future<void> insertAttribute(AttributeModel attribute) async {
-    database.insertAttribute(AttributeTableCompanion(
-      statusId: Value(attribute.statusId),
-      iconPath: Value(attribute.iconPath),
-      name: Value(attribute.name),
-      level: Value(attribute.level),
-      exp: Value(attribute.exp),
-    ));
+    database.insertAttribute(attribute.toCompanion(false));
   }
 
   Future<void> updateAttribute(AttributeModel attribute) async {
@@ -347,5 +338,37 @@ class StatusViewModel extends ChangeNotifier {
       gold: newGold,
     );
     updateStatus(newStatus);
+  }
+
+  void addItem(int newItemId) {
+    final itemIds = _status.itemIds.split(",");
+    itemIds.add(newItemId.toString());
+    _status = _status.copyWith(itemIds: itemIds.join(","));
+    updateStatus(_status);
+  }
+
+  List<int> getItemIds() {
+    return _status.itemIds.split(",").map((e) => int.parse(e)).toList();
+  }
+
+  void updateHP(int hp_) {
+    var newHP = _status.hp + hp_;
+    if (newHP <= 0) {
+      return;
+    } else if (newHP >= maxHP) {
+      newHP = maxHP;
+    }
+    _status = _status.copyWith(hp: newHP);
+    updateStatus(_status);
+  }
+
+  int getAttack() {
+    int expAttack = _status.level * expAttackCoefficient;
+    return baseAttack + expAttack;
+  }
+
+  int getDefense() {
+    int expDefense = _status.level * expDefenseCoefficient;
+    return baseDefense + expDefense;
   }
 }

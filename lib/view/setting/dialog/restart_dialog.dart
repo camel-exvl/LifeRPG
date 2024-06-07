@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/database/database.dart';
 import 'package:liferpg/viewmodel/setting_viewmodel.dart';
-import 'package:restart_app/restart_app.dart';
 
 class RestartDialog {
   SettingViewModel viewModel = SettingViewModel();
@@ -28,7 +27,7 @@ class RestartDialog {
               child: Text(AppLocalizations.of(context)!.confirm),
               onPressed: () async {
                 await viewModel.updateSetting(setting);
-                Restart.restartApp();
+                // Restart.restartApp();
               },
             ),
           ],

@@ -10,4 +10,8 @@ class StatusTable extends Table {
   IntColumn get exp => integer()();
 
   IntColumn get gold => integer()();
+
+  IntColumn get hp => integer()();
+
+  TextColumn get itemIds => text().withDefault(const Constant(''))();
 }
