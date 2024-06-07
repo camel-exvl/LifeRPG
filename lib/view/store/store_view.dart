@@ -187,13 +187,19 @@ class Equipment extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          IconWithText(
+                          if (equipmentType.attackPower != 0)
+                            IconWithText(
                               iconPath: equipmentType.attackPowerIconPath,
-                              text: " +${equipmentType.attackPower}"),
-                          const SizedBox(width: 30),
-                          IconWithText(
+                              text: " +${equipmentType.attackPower}",
+                            ),
+                          if (equipmentType.attackPower != 0 &&
+                              equipmentType.defensePower != 0)
+                            const SizedBox(width: 30), // 添加间距仅在attackPower非零时
+                          if (equipmentType.defensePower != 0)
+                            IconWithText(
                               iconPath: equipmentType.defensePowerIconPath,
-                              text: " +${equipmentType.defensePower}"),
+                              text: " +${equipmentType.defensePower}",
+                            ),
                         ],
                       )
                     ],
