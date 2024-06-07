@@ -221,6 +221,17 @@ class Equipment extends StatelessWidget {
                           onPressed: affordable
                               ? () {
                                   buy?.call();
+                                  // show snack bar
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                          AppLocalizations.of(context)!
+                                              .purchaseSuccess),
+                                      duration: const Duration(seconds: 1),
+                                      backgroundColor:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                  );
                                   Navigator.of(context).pop();
                                 }
                               : null,

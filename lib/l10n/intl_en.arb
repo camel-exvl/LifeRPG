@@ -125,5 +125,6 @@
   "potionDescription": "A bottle of magical potion that, when consumed, quickly restores your health and energy.",
   "sword": "Sword",
   "swordDescription": "A sharp sword suitable for close combat, greatly increasing your attack power.",
-  "buy": "Buy"
+  "buy": "Buy",
+  "purchaseSuccess": "purchased"
 }
