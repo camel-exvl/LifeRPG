@@ -33,41 +33,63 @@ class StoreViewState extends State<StoreView>
         builder: (context, viewModel, child) {
           return Scaffold(
               appBar: AppBar(
-                title: Text(AppLocalizations.of(context)!.store),
+                title: MoneyContainer(properties: viewModel.properties),
               ),
-              body: Column(
-                children: <Widget>[
-                  MoneyContainer(properties: viewModel.properties),
-                  const Divider(
-                    height: 0.0,
-                    indent: 16,
-                    endIndent: 16,
-                  ),
-                  Expanded(
-                      child: GridView.count(
-                    childAspectRatio: 1, // 宽高比
-                    primary: false,
-                    padding: const EdgeInsets.all(20),
-                    // crossAxisSpacing: 10,
-                    // mainAxisSpacing: 10,
-                    crossAxisCount: 3,
-                    children: viewModel.equipments
-                        .map((equipment) => Equipment(
-                              item: equipment,
-                              affordable: equipment.price <=
-                                      viewModel.properties
-                                          .firstWhere((property) =>
-                                              property.moneyType ==
-                                              equipment.moneyType)
-                                          .amount &&
-                                  equipment.stock > 0,
-                              buy: () async {
-                                await viewModel.buy(equipment);
-                              },
-                            ))
-                        .toList(),
-                  ))
-                ],
+              body: SingleChildScrollView(
+                child: Column(children: <Widget>[
+                  CustomExpansionTile(
+                      title: AppLocalizations.of(context)!.equipments,
+                      initiallyExpanded: true,
+                      children: viewModel.equipments
+                          .map((equipment) => Equipment(
+                                item: equipment,
+                                affordable: equipment.price <=
+                                        viewModel.properties
+                                            .firstWhere((property) =>
+                                                property.moneyType ==
+                                                equipment.moneyType)
+                                            .amount &&
+                                    equipment.stock > 0,
+                                buy: () async {
+                                  await viewModel.buy(equipment);
+                                },
+                              ))
+                          .toList()),
+                  CustomExpansionTile(
+                      title: AppLocalizations.of(context)!.items,
+                      children: viewModel.equipments
+                          .map((equipment) => Equipment(
+                                item: equipment,
+                                affordable: equipment.price <=
+                                        viewModel.properties
+                                            .firstWhere((property) =>
+                                                property.moneyType ==
+                                                equipment.moneyType)
+                                            .amount &&
+                                    equipment.stock > 0,
+                                buy: () async {
+                                  await viewModel.buy(equipment);
+                                },
+                              ))
+                          .toList()),
+                  CustomExpansionTile(
+                      title: AppLocalizations.of(context)!.instanceDungeon,
+                      children: viewModel.equipments
+                          .map((equipment) => Equipment(
+                                item: equipment,
+                                affordable: equipment.price <=
+                                        viewModel.properties
+                                            .firstWhere((property) =>
+                                                property.moneyType ==
+                                                equipment.moneyType)
+                                            .amount &&
+                                    equipment.stock > 0,
+                                buy: () async {
+                                  await viewModel.buy(equipment);
+                                },
+                              ))
+                          .toList()),
+                ]),
               ));
         },
       ),
@@ -280,5 +302,32 @@ class IconWithText extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class CustomExpansionTile extends StatelessWidget {
+  final String title;
+  final List<Widget> children;
+  final bool initiallyExpanded;
+  const CustomExpansionTile(
+      {super.key,
+      required this.title,
+      required this.children,
+      this.initiallyExpanded = false});
+  @override
+  Widget build(BuildContext context) {
+    return ExpansionTile(
+        title: Text(title),
+        initiallyExpanded: initiallyExpanded,
+        children: <Widget>[
+          GridView.count(
+              shrinkWrap: true,
+              physics: const ClampingScrollPhysics(),
+              crossAxisCount: 3,
+              padding: const EdgeInsets.all(20.0),
+              crossAxisSpacing: 10.0,
+              childAspectRatio: 1,
+              children: children)
+        ]);
   }
 }
