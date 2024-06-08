@@ -299,10 +299,10 @@ class CustomExpansionTile extends StatelessWidget {
           GridView.count(
               shrinkWrap: true,
               physics: const ClampingScrollPhysics(),
-              crossAxisCount: 3,
+              crossAxisCount: 4,
               padding: const EdgeInsets.all(20.0),
               crossAxisSpacing: 10.0,
-              childAspectRatio: 1,
+              childAspectRatio: 0.8,
               children: children)
         ]);
   }
