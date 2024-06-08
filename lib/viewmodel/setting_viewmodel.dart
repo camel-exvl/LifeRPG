@@ -37,6 +37,7 @@ class SettingViewModel extends ChangeNotifier {
 
   Future<void> updateSetting(SettingModel setting) async {
     _setting = setting;
+    notifyListeners();
     await database.updateSetting(setting);
   }
 

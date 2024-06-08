@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../viewmodel/status_viewmodel.dart';
 import '../setting/setting_view.dart';
+import 'backpack_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/database/database.dart';
 import 'package:provider/provider.dart';
@@ -43,6 +44,7 @@ class _StatusViewState extends State<StatusView>
               child: ListView(// 使用 ListView 来替换 Column
                   children: [
                 StatusCard(viewModel: viewModel),
+                // AchievementCard(viewModel: viewModel),
                 AttributesCard(viewModel: viewModel),
                 OptionsCard(viewModel: viewModel),
               ]));
@@ -127,6 +129,64 @@ class StatusCard extends StatelessWidget {
     );
   }
 }
+
+// class AchievementCard extends StatelessWidget {
+//   final StatusViewModel viewModel;
+//
+//   const AchievementCard({super.key, required this.viewModel});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Card(
+//       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+//       child: ClipRRect(
+//         borderRadius: BorderRadius.circular(10.0),
+//         child: Container(
+//           color: Theme.of(context).colorScheme.tertiaryContainer,
+//           child: Column(mainAxisSize: MainAxisSize.min, children: [
+//             ListTile(
+//               title: Text(
+//                 AppLocalizations.of(context)!.achievement,
+//                 style: TextStyle(
+//                   fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
+//                   fontWeight: FontWeight.bold,
+//                   color: Theme.of(context).colorScheme.onTertiaryContainer,
+//                 ),
+//               ),
+//             ),
+//             Column(
+//               // children: viewModel.achievements.map((achievement) {
+//               //   return ListTile(
+//               //     title: Text(
+//               //       achievement.name,
+//               //       style: TextStyle(
+//               //         color: Theme.of(context).colorScheme.onTertiaryContainer,
+//               //       ),
+//               //     ),
+//               //     subtitle: Text(
+//               //       achievement.description,
+//               //       style: TextStyle(
+//               //         color: Theme.of(context).colorScheme.onTertiaryContainer,
+//               //       ),
+//               //     ),
+//               //     leading: Image.asset(
+//               //       achievement.iconPath,
+//               //       width: (Theme.of(context).textTheme.headlineSmall?.fontSize ??
+//               //               15) *
+//               //           1.2,
+//               //       height: (Theme.of(context).textTheme.headlineSmall?.fontSize ??
+//               //               15) *
+//               //           1.2,
+//               //     ),
+//               //   );
+//               // }).toList(),
+//             )
+//           ]),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class AttributesCard extends StatelessWidget {
   final StatusViewModel viewModel;
@@ -303,7 +363,11 @@ class OptionsCard extends StatelessWidget {
                   ),
                 ),
                 onTap: () {
-                  //在这里添加你的背包功能
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const BackpackView()),
+                  );
                 },
               ),
               const Divider(

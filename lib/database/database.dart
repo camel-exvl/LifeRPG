@@ -25,8 +25,8 @@ part 'database.g.dart';
   TaskTable,
   StatusTable,
   SettingTable,
-  EquipmentTable,
-  PropertyTable
+  EquipmentTable
+  // PropertyTable
 ])
 class AppDatabase extends _$AppDatabase {
   static final AppDatabase instance = AppDatabase._internal();
@@ -146,27 +146,27 @@ class AppDatabase extends _$AppDatabase {
   Future<void> deleteEquipment(EquipmentModel equipment) =>
       delete(equipmentTable).delete(equipment);
 
-  Future<List<PropertyModel>> getAllProperties() async {
-    return (select(propertyTable)
-          ..orderBy([(t) => OrderingTerm(expression: t.id)]))
-        .get();
-  }
-
-  Future<void> insertProperty(PropertyTableCompanion property) =>
-      into(propertyTable).insert(property);
-
-  Future<void> insertProperties(List<PropertyTableCompanion> properties) =>
-      batch((batch) {
-        for (var property in properties) {
-          batch.insertAll(propertyTable, [property]);
-        }
-      });
-
-  Future<void> updateProperty(PropertyModel property) =>
-      update(propertyTable).replace(property);
-
-  Future<void> deleteProperty(PropertyModel property) =>
-      delete(propertyTable).delete(property);
+  // Future<List<PropertyModel>> getAllProperties() async {
+  //   return (select(propertyTable)
+  //         ..orderBy([(t) => OrderingTerm(expression: t.id)]))
+  //       .get();
+  // }
+  //
+  // Future<void> insertProperty(PropertyTableCompanion property) =>
+  //     into(propertyTable).insert(property);
+  //
+  // Future<void> insertProperties(List<PropertyTableCompanion> properties) =>
+  //     batch((batch) {
+  //       for (var property in properties) {
+  //         batch.insertAll(propertyTable, [property]);
+  //       }
+  //     });
+  //
+  // Future<void> updateProperty(PropertyModel property) =>
+  //     update(propertyTable).replace(property);
+  //
+  // Future<void> deleteProperty(PropertyModel property) =>
+  //     delete(propertyTable).delete(property);
 
   // Setting
   Future<SettingModel> getSetting() async {

@@ -4,12 +4,15 @@ import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/database/database.dart';
+import 'package:liferpg/viewmodel/store_viewmodel.dart';
 import 'dart:math' as math;
 
 import '../model/common_model.dart';
 import '../model/reward/reward_request_model.dart';
 import '../model/reward/reward_response_model.dart';
+import '../model/store/property_model.dart';
 import '../model/target/habit_model.dart';
+import '../model/store/equipment_model.dart';
 
 class StatusViewModel extends ChangeNotifier {
   static final StatusViewModel _instance = StatusViewModel._internal();
@@ -18,6 +21,11 @@ class StatusViewModel extends ChangeNotifier {
 
   StatusViewModel._internal();
 
+  static const int baseAttack = 50;
+  static const int expAttackCoefficient = 5;
+  static const int baseDefense = 50;
+  static const int expDefenseCoefficient = 5;
+  static const int maxHP = 100;
   static const int easyExp = 12;
   static const int mediumExp = 24;
   static const int hardExp = 36;
@@ -38,17 +46,30 @@ class StatusViewModel extends ChangeNotifier {
 
   final database = AppDatabase();
   StatusModel _status = const StatusModel(
-    id: 1,
-    level: 1,
-    exp: 0,
-    gold: 0,
-  );
+      id: 1,
+      level: 1,
+      exp: 0,
+      gold: 0,
+      diamond: 0,
+      hp: 100,
+      weaponIds: "",
+      armorIds: "",
+      weaponIndex: null,
+      armorIndex: null);
   List<AttributeModel> _attributes = [];
+  List<EquipmentModel> _weapons = [];
+  List<EquipmentModel> _armors = [];
 
   StatusModel get status => _status;
 
   UnmodifiableListView<AttributeModel> get attributes =>
       UnmodifiableListView(_attributes);
+
+  UnmodifiableListView<EquipmentModel> get weapons =>
+      UnmodifiableListView(_weapons);
+
+  UnmodifiableListView<EquipmentModel> get armors =>
+      UnmodifiableListView(_armors);
 
   Future<void> initOnFirstRun() async {
     await insertStatus(_status);
@@ -121,11 +142,7 @@ class StatusViewModel extends ChangeNotifier {
   }
 
   Future<void> insertStatus(StatusModel status) async {
-    database.insertStatus(StatusTableCompanion(
-      level: Value(status.level),
-      exp: Value(status.exp),
-      gold: Value(status.gold),
-    ));
+    database.insertStatus(status.toCompanion(false));
   }
 
   Future<void> updateStatus(StatusModel status) async {
@@ -139,13 +156,7 @@ class StatusViewModel extends ChangeNotifier {
   }
 
   Future<void> insertAttribute(AttributeModel attribute) async {
-    database.insertAttribute(AttributeTableCompanion(
-      statusId: Value(attribute.statusId),
-      iconPath: Value(attribute.iconPath),
-      name: Value(attribute.name),
-      level: Value(attribute.level),
-      exp: Value(attribute.exp),
-    ));
+    database.insertAttribute(attribute.toCompanion(false));
   }
 
   Future<void> updateAttribute(AttributeModel attribute) async {
@@ -347,5 +358,168 @@ class StatusViewModel extends ChangeNotifier {
       gold: newGold,
     );
     updateStatus(newStatus);
+
+    StoreViewModel storeViewModel = StoreViewModel();
+    storeViewModel.loadProperties();
+    notifyListeners();
+  }
+
+  void addWeapon(int newWeaponId) {
+    if (_status.weaponIds.isEmpty) {
+      _status = _status.copyWith(weaponIds: newWeaponId.toString());
+      updateStatus(_status);
+    } else {
+      var weaponIds = _status.weaponIds.split(",");
+      weaponIds.add(newWeaponId.toString());
+      _status = _status.copyWith(weaponIds: weaponIds.join(","));
+      updateStatus(_status);
+    }
+  }
+
+  List<int> getWeaponIds() {
+    if (_status.weaponIds.isEmpty) {
+      return [];
+    }
+    return _status.weaponIds
+        .split(",")
+        .where((item) => item.isNotEmpty)
+        .map(int.parse)
+        .toList();
+  }
+
+  Future<void> loadWeaponList() async {
+    if (_status.weaponIds.isEmpty) {
+      _weapons = [];
+    } else {
+      final weaponList = <EquipmentModel>[];
+      for (var weaponId in _status.weaponIds
+          .split(",")
+          .where((item) => item.isNotEmpty)
+          .map(int.parse)
+          .toList()) {
+        weaponList.add(await database.getEquipmentById(weaponId));
+      }
+      _weapons = weaponList;
+      notifyListeners();
+    }
+  }
+
+  void equipWeapon(int weaponIndex) {
+    _status = _status.copyWith(weaponIndex: Value<int?>(weaponIndex));
+    notifyListeners();
+    updateStatus(_status);
+  }
+
+  void removeWeapon() {
+    _status = _status.copyWith(weaponIndex: const Value<int?>(null));
+    notifyListeners();
+    updateStatus(_status);
+  }
+
+  void addArmor(int newArmorId) {
+    if (_status.armorIds.isEmpty) {
+      _status = _status.copyWith(armorIds: newArmorId.toString());
+      updateStatus(_status);
+    } else {
+      var armorIds = _status.armorIds.split(",");
+      armorIds.add(newArmorId.toString());
+      _status = _status.copyWith(armorIds: armorIds.join(","));
+      updateStatus(_status);
+    }
+  }
+
+  List<int> getArmorIds() {
+    if (_status.weaponIds.isEmpty) {
+      return [];
+    }
+    return _status.armorIds
+        .split(",")
+        .where((item) => item.isNotEmpty)
+        .map(int.parse)
+        .toList();
+  }
+
+  Future<void> loadArmorList() async {
+    if (_status.armorIds.isEmpty) {
+      _armors = [];
+    } else {
+      final armorList = <EquipmentModel>[];
+      for (var armorId in _status.armorIds
+          .split(",")
+          .where((item) => item.isNotEmpty)
+          .map(int.parse)
+          .toList()) {
+        armorList.add(await database.getEquipmentById(armorId));
+      }
+      _armors = armorList;
+      notifyListeners();
+    }
+  }
+
+  void equipArmor(int armorIndex) {
+    _status = _status.copyWith(armorIndex: Value<int?>(armorIndex));
+    notifyListeners();
+    updateStatus(_status);
+  }
+
+  void removeArmor() {
+    _status = _status.copyWith(armorIndex: const Value<int?>(null));
+    notifyListeners();
+    updateStatus(_status);
+  }
+
+  void updateHP(int hp_) {
+    var newHP = _status.hp + hp_;
+    if (newHP <= 0) {
+      return;
+    } else if (newHP >= maxHP) {
+      newHP = maxHP;
+    }
+    _status = _status.copyWith(hp: newHP);
+    updateStatus(_status);
+  }
+
+  Future<int> getAttack() async {
+    int expAttack = _status.level * expAttackCoefficient;
+    int weaponAttack = _status.weaponIndex == null
+        ? 0
+        : await database
+            .getEquipmentById(getWeaponIds()[_status.weaponIndex!])
+            .then((value) => value.equipmentType.attackPower);
+    return baseAttack + expAttack + weaponAttack;
+  }
+
+  Future<int> getDefense() async {
+    int expDefense = _status.level * expDefenseCoefficient;
+    int armorDefense = _status.armorIndex == null
+        ? 0
+        : await database
+            .getEquipmentById(getArmorIds()[_status.armorIndex!])
+            .then((value) => value.equipmentType.defensePower);
+    return baseDefense + expDefense + armorDefense;
+  }
+
+  List<PropertyModel> getProperties() {
+    return [
+      PropertyModel(
+        id: 1,
+        moneyType: MoneyType.gold,
+        amount: _status.gold,
+      ),
+      // PropertyModel(
+      //   id: 2,
+      //   moneyType: MoneyType.diamond,
+      //   amount: _status.diamond,
+      // ),
+    ];
+  }
+
+  Future<void> updateProperty(PropertyModel property) async {
+    if (property.moneyType == MoneyType.gold) {
+      _status = _status.copyWith(gold: property.amount);
+    } else if (property.moneyType == MoneyType.diamond) {
+      _status = _status.copyWith(diamond: property.amount);
+    }
+    updateStatus(_status);
   }
 }

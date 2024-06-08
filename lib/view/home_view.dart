@@ -46,10 +46,21 @@ class _HomeViewState extends State<HomeView> {
     }
   }
 
+  Future<void> loading(BuildContext context) async {
+    await initOnFirstRun(context);
+
+    final statusViewModel = StatusViewModel();
+    await statusViewModel.loadStatus();
+
+    final storeViewModel = StoreViewModel();
+    await storeViewModel.loadProperties();
+    await storeViewModel.loadEquipments();
+  }
+
   @override
   void initState() {
     super.initState();
-    initOnFirstRun(context);
+    loading(context);
   }
 
   @override

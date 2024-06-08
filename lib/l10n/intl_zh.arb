@@ -125,11 +125,15 @@
   "potionDescription": "一瓶神奇的药水，饮用后能迅速恢复你的生命值和能量。",
   "sword": "剑",
   "swordDescription": "一把锋利的剑，适合近身作战，能大大提高你的攻击力。",
+  "weapon": "武器",
+  "armor": "防具",
   "buy": "购买",
   "purchaseSuccess": "购买成功",
   "store": "商店",
   "myProperty": "我的财富",
   "equipments": "装备",
   "items": "道具",
-  "instanceDungeon": "副本"
+  "instanceDungeon": "副本",
+  "equip": "装备",
+  "takeOff": "卸下"
 }
