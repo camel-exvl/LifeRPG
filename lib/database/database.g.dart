@@ -2337,6 +2337,381 @@ class EquipmentTableCompanion extends UpdateCompanion<EquipmentModel> {
   }
 }
 
+class $ItemTableTable extends ItemTable
+    with TableInfo<$ItemTableTable, ItemModel> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ItemTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _itemsTypeMeta =
+      const VerificationMeta('itemsType');
+  @override
+  late final GeneratedColumnWithTypeConverter<ItemType, int> itemsType =
+      GeneratedColumn<int>('items_type', aliasedName, false,
+              type: DriftSqlType.int, requiredDuringInsert: true)
+          .withConverter<ItemType>($ItemTableTable.$converteritemsType);
+  @override
+  List<GeneratedColumn> get $columns => [id, itemsType];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'item_table';
+  @override
+  VerificationContext validateIntegrity(Insertable<ItemModel> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    context.handle(_itemsTypeMeta, const VerificationResult.success());
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ItemModel map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ItemModel(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      itemsType: $ItemTableTable.$converteritemsType.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}items_type'])!),
+    );
+  }
+
+  @override
+  $ItemTableTable createAlias(String alias) {
+    return $ItemTableTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<ItemType, int, int> $converteritemsType =
+      const EnumIndexConverter<ItemType>(ItemType.values);
+}
+
+class ItemModel extends DataClass implements Insertable<ItemModel> {
+  final int id;
+  final ItemType itemsType;
+  const ItemModel({required this.id, required this.itemsType});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    {
+      map['items_type'] =
+          Variable<int>($ItemTableTable.$converteritemsType.toSql(itemsType));
+    }
+    return map;
+  }
+
+  ItemTableCompanion toCompanion(bool nullToAbsent) {
+    return ItemTableCompanion(
+      id: Value(id),
+      itemsType: Value(itemsType),
+    );
+  }
+
+  factory ItemModel.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ItemModel(
+      id: serializer.fromJson<int>(json['id']),
+      itemsType: $ItemTableTable.$converteritemsType
+          .fromJson(serializer.fromJson<int>(json['itemsType'])),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'itemsType': serializer
+          .toJson<int>($ItemTableTable.$converteritemsType.toJson(itemsType)),
+    };
+  }
+
+  ItemModel copyWith({int? id, ItemType? itemsType}) => ItemModel(
+        id: id ?? this.id,
+        itemsType: itemsType ?? this.itemsType,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('ItemModel(')
+          ..write('id: $id, ')
+          ..write('itemsType: $itemsType')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, itemsType);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ItemModel &&
+          other.id == this.id &&
+          other.itemsType == this.itemsType);
+}
+
+class ItemTableCompanion extends UpdateCompanion<ItemModel> {
+  final Value<int> id;
+  final Value<ItemType> itemsType;
+  const ItemTableCompanion({
+    this.id = const Value.absent(),
+    this.itemsType = const Value.absent(),
+  });
+  ItemTableCompanion.insert({
+    this.id = const Value.absent(),
+    required ItemType itemsType,
+  }) : itemsType = Value(itemsType);
+  static Insertable<ItemModel> custom({
+    Expression<int>? id,
+    Expression<int>? itemsType,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (itemsType != null) 'items_type': itemsType,
+    });
+  }
+
+  ItemTableCompanion copyWith({Value<int>? id, Value<ItemType>? itemsType}) {
+    return ItemTableCompanion(
+      id: id ?? this.id,
+      itemsType: itemsType ?? this.itemsType,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (itemsType.present) {
+      map['items_type'] = Variable<int>(
+          $ItemTableTable.$converteritemsType.toSql(itemsType.value));
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ItemTableCompanion(')
+          ..write('id: $id, ')
+          ..write('itemsType: $itemsType')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $InstanceDungeonTableTable extends InstanceDungeonTable
+    with TableInfo<$InstanceDungeonTableTable, InstanceDungeonModel> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $InstanceDungeonTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _instanceDungeonTypeMeta =
+      const VerificationMeta('instanceDungeonType');
+  @override
+  late final GeneratedColumnWithTypeConverter<InstanceDungeonType, int>
+      instanceDungeonType = GeneratedColumn<int>(
+              'instance_dungeon_type', aliasedName, false,
+              type: DriftSqlType.int, requiredDuringInsert: true)
+          .withConverter<InstanceDungeonType>(
+              $InstanceDungeonTableTable.$converterinstanceDungeonType);
+  @override
+  List<GeneratedColumn> get $columns => [id, instanceDungeonType];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'instance_dungeon_table';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<InstanceDungeonModel> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    context.handle(
+        _instanceDungeonTypeMeta, const VerificationResult.success());
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  InstanceDungeonModel map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return InstanceDungeonModel(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      instanceDungeonType: $InstanceDungeonTableTable
+          .$converterinstanceDungeonType
+          .fromSql(attachedDatabase.typeMapping.read(DriftSqlType.int,
+              data['${effectivePrefix}instance_dungeon_type'])!),
+    );
+  }
+
+  @override
+  $InstanceDungeonTableTable createAlias(String alias) {
+    return $InstanceDungeonTableTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<InstanceDungeonType, int, int>
+      $converterinstanceDungeonType =
+      const EnumIndexConverter<InstanceDungeonType>(InstanceDungeonType.values);
+}
+
+class InstanceDungeonModel extends DataClass
+    implements Insertable<InstanceDungeonModel> {
+  final int id;
+  final InstanceDungeonType instanceDungeonType;
+  const InstanceDungeonModel(
+      {required this.id, required this.instanceDungeonType});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    {
+      map['instance_dungeon_type'] = Variable<int>($InstanceDungeonTableTable
+          .$converterinstanceDungeonType
+          .toSql(instanceDungeonType));
+    }
+    return map;
+  }
+
+  InstanceDungeonTableCompanion toCompanion(bool nullToAbsent) {
+    return InstanceDungeonTableCompanion(
+      id: Value(id),
+      instanceDungeonType: Value(instanceDungeonType),
+    );
+  }
+
+  factory InstanceDungeonModel.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return InstanceDungeonModel(
+      id: serializer.fromJson<int>(json['id']),
+      instanceDungeonType: $InstanceDungeonTableTable
+          .$converterinstanceDungeonType
+          .fromJson(serializer.fromJson<int>(json['instanceDungeonType'])),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'instanceDungeonType': serializer.toJson<int>($InstanceDungeonTableTable
+          .$converterinstanceDungeonType
+          .toJson(instanceDungeonType)),
+    };
+  }
+
+  InstanceDungeonModel copyWith(
+          {int? id, InstanceDungeonType? instanceDungeonType}) =>
+      InstanceDungeonModel(
+        id: id ?? this.id,
+        instanceDungeonType: instanceDungeonType ?? this.instanceDungeonType,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('InstanceDungeonModel(')
+          ..write('id: $id, ')
+          ..write('instanceDungeonType: $instanceDungeonType')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, instanceDungeonType);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is InstanceDungeonModel &&
+          other.id == this.id &&
+          other.instanceDungeonType == this.instanceDungeonType);
+}
+
+class InstanceDungeonTableCompanion
+    extends UpdateCompanion<InstanceDungeonModel> {
+  final Value<int> id;
+  final Value<InstanceDungeonType> instanceDungeonType;
+  const InstanceDungeonTableCompanion({
+    this.id = const Value.absent(),
+    this.instanceDungeonType = const Value.absent(),
+  });
+  InstanceDungeonTableCompanion.insert({
+    this.id = const Value.absent(),
+    required InstanceDungeonType instanceDungeonType,
+  }) : instanceDungeonType = Value(instanceDungeonType);
+  static Insertable<InstanceDungeonModel> custom({
+    Expression<int>? id,
+    Expression<int>? instanceDungeonType,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (instanceDungeonType != null)
+        'instance_dungeon_type': instanceDungeonType,
+    });
+  }
+
+  InstanceDungeonTableCompanion copyWith(
+      {Value<int>? id, Value<InstanceDungeonType>? instanceDungeonType}) {
+    return InstanceDungeonTableCompanion(
+      id: id ?? this.id,
+      instanceDungeonType: instanceDungeonType ?? this.instanceDungeonType,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (instanceDungeonType.present) {
+      map['instance_dungeon_type'] = Variable<int>($InstanceDungeonTableTable
+          .$converterinstanceDungeonType
+          .toSql(instanceDungeonType.value));
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InstanceDungeonTableCompanion(')
+          ..write('id: $id, ')
+          ..write('instanceDungeonType: $instanceDungeonType')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $PropertyTableTable extends PropertyTable
     with TableInfo<$PropertyTableTable, PropertyModel> {
   @override
@@ -2551,6 +2926,257 @@ class PropertyTableCompanion extends UpdateCompanion<PropertyModel> {
   }
 }
 
+class $BackpackTableTable extends BackpackTable
+    with TableInfo<$BackpackTableTable, BackpackModel> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $BackpackTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumnWithTypeConverter<BackpackItemType, int> type =
+      GeneratedColumn<int>('type', aliasedName, false,
+              type: DriftSqlType.int, requiredDuringInsert: true)
+          .withConverter<BackpackItemType>($BackpackTableTable.$convertertype);
+  static const VerificationMeta _itemIdMeta = const VerificationMeta('itemId');
+  @override
+  late final GeneratedColumn<int> itemId = GeneratedColumn<int>(
+      'item_id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<int> amount = GeneratedColumn<int>(
+      'amount', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(1));
+  @override
+  List<GeneratedColumn> get $columns => [id, type, itemId, amount];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'backpack_table';
+  @override
+  VerificationContext validateIntegrity(Insertable<BackpackModel> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    context.handle(_typeMeta, const VerificationResult.success());
+    if (data.containsKey('item_id')) {
+      context.handle(_itemIdMeta,
+          itemId.isAcceptableOrUnknown(data['item_id']!, _itemIdMeta));
+    } else if (isInserting) {
+      context.missing(_itemIdMeta);
+    }
+    if (data.containsKey('amount')) {
+      context.handle(_amountMeta,
+          amount.isAcceptableOrUnknown(data['amount']!, _amountMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  BackpackModel map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return BackpackModel(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      type: $BackpackTableTable.$convertertype.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}type'])!),
+      itemId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}item_id'])!,
+      amount: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}amount'])!,
+    );
+  }
+
+  @override
+  $BackpackTableTable createAlias(String alias) {
+    return $BackpackTableTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<BackpackItemType, int, int> $convertertype =
+      const EnumIndexConverter<BackpackItemType>(BackpackItemType.values);
+}
+
+class BackpackModel extends DataClass implements Insertable<BackpackModel> {
+  final int id;
+  final BackpackItemType type;
+  final int itemId;
+  final int amount;
+  const BackpackModel(
+      {required this.id,
+      required this.type,
+      required this.itemId,
+      required this.amount});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    {
+      map['type'] =
+          Variable<int>($BackpackTableTable.$convertertype.toSql(type));
+    }
+    map['item_id'] = Variable<int>(itemId);
+    map['amount'] = Variable<int>(amount);
+    return map;
+  }
+
+  BackpackTableCompanion toCompanion(bool nullToAbsent) {
+    return BackpackTableCompanion(
+      id: Value(id),
+      type: Value(type),
+      itemId: Value(itemId),
+      amount: Value(amount),
+    );
+  }
+
+  factory BackpackModel.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return BackpackModel(
+      id: serializer.fromJson<int>(json['id']),
+      type: $BackpackTableTable.$convertertype
+          .fromJson(serializer.fromJson<int>(json['type'])),
+      itemId: serializer.fromJson<int>(json['itemId']),
+      amount: serializer.fromJson<int>(json['amount']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'type': serializer
+          .toJson<int>($BackpackTableTable.$convertertype.toJson(type)),
+      'itemId': serializer.toJson<int>(itemId),
+      'amount': serializer.toJson<int>(amount),
+    };
+  }
+
+  BackpackModel copyWith(
+          {int? id, BackpackItemType? type, int? itemId, int? amount}) =>
+      BackpackModel(
+        id: id ?? this.id,
+        type: type ?? this.type,
+        itemId: itemId ?? this.itemId,
+        amount: amount ?? this.amount,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('BackpackModel(')
+          ..write('id: $id, ')
+          ..write('type: $type, ')
+          ..write('itemId: $itemId, ')
+          ..write('amount: $amount')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, type, itemId, amount);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is BackpackModel &&
+          other.id == this.id &&
+          other.type == this.type &&
+          other.itemId == this.itemId &&
+          other.amount == this.amount);
+}
+
+class BackpackTableCompanion extends UpdateCompanion<BackpackModel> {
+  final Value<int> id;
+  final Value<BackpackItemType> type;
+  final Value<int> itemId;
+  final Value<int> amount;
+  const BackpackTableCompanion({
+    this.id = const Value.absent(),
+    this.type = const Value.absent(),
+    this.itemId = const Value.absent(),
+    this.amount = const Value.absent(),
+  });
+  BackpackTableCompanion.insert({
+    this.id = const Value.absent(),
+    required BackpackItemType type,
+    required int itemId,
+    this.amount = const Value.absent(),
+  })  : type = Value(type),
+        itemId = Value(itemId);
+  static Insertable<BackpackModel> custom({
+    Expression<int>? id,
+    Expression<int>? type,
+    Expression<int>? itemId,
+    Expression<int>? amount,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (type != null) 'type': type,
+      if (itemId != null) 'item_id': itemId,
+      if (amount != null) 'amount': amount,
+    });
+  }
+
+  BackpackTableCompanion copyWith(
+      {Value<int>? id,
+      Value<BackpackItemType>? type,
+      Value<int>? itemId,
+      Value<int>? amount}) {
+    return BackpackTableCompanion(
+      id: id ?? this.id,
+      type: type ?? this.type,
+      itemId: itemId ?? this.itemId,
+      amount: amount ?? this.amount,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (type.present) {
+      map['type'] =
+          Variable<int>($BackpackTableTable.$convertertype.toSql(type.value));
+    }
+    if (itemId.present) {
+      map['item_id'] = Variable<int>(itemId.value);
+    }
+    if (amount.present) {
+      map['amount'] = Variable<int>(amount.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BackpackTableCompanion(')
+          ..write('id: $id, ')
+          ..write('type: $type, ')
+          ..write('itemId: $itemId, ')
+          ..write('amount: $amount')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   _$AppDatabaseManager get managers => _$AppDatabaseManager(this);
@@ -2560,7 +3186,11 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $StatusTableTable statusTable = $StatusTableTable(this);
   late final $SettingTableTable settingTable = $SettingTableTable(this);
   late final $EquipmentTableTable equipmentTable = $EquipmentTableTable(this);
+  late final $ItemTableTable itemTable = $ItemTableTable(this);
+  late final $InstanceDungeonTableTable instanceDungeonTable =
+      $InstanceDungeonTableTable(this);
   late final $PropertyTableTable propertyTable = $PropertyTableTable(this);
+  late final $BackpackTableTable backpackTable = $BackpackTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2572,7 +3202,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         statusTable,
         settingTable,
         equipmentTable,
-        propertyTable
+        itemTable,
+        instanceDungeonTable,
+        propertyTable,
+        backpackTable
       ];
 }
 
@@ -3638,6 +4271,189 @@ class $$EquipmentTableTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
+typedef $$ItemTableTableInsertCompanionBuilder = ItemTableCompanion Function({
+  Value<int> id,
+  required ItemType itemsType,
+});
+typedef $$ItemTableTableUpdateCompanionBuilder = ItemTableCompanion Function({
+  Value<int> id,
+  Value<ItemType> itemsType,
+});
+
+class $$ItemTableTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $ItemTableTable,
+    ItemModel,
+    $$ItemTableTableFilterComposer,
+    $$ItemTableTableOrderingComposer,
+    $$ItemTableTableProcessedTableManager,
+    $$ItemTableTableInsertCompanionBuilder,
+    $$ItemTableTableUpdateCompanionBuilder> {
+  $$ItemTableTableTableManager(_$AppDatabase db, $ItemTableTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$ItemTableTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$ItemTableTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$ItemTableTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<int> id = const Value.absent(),
+            Value<ItemType> itemsType = const Value.absent(),
+          }) =>
+              ItemTableCompanion(
+            id: id,
+            itemsType: itemsType,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<int> id = const Value.absent(),
+            required ItemType itemsType,
+          }) =>
+              ItemTableCompanion.insert(
+            id: id,
+            itemsType: itemsType,
+          ),
+        ));
+}
+
+class $$ItemTableTableProcessedTableManager extends ProcessedTableManager<
+    _$AppDatabase,
+    $ItemTableTable,
+    ItemModel,
+    $$ItemTableTableFilterComposer,
+    $$ItemTableTableOrderingComposer,
+    $$ItemTableTableProcessedTableManager,
+    $$ItemTableTableInsertCompanionBuilder,
+    $$ItemTableTableUpdateCompanionBuilder> {
+  $$ItemTableTableProcessedTableManager(super.$state);
+}
+
+class $$ItemTableTableFilterComposer
+    extends FilterComposer<_$AppDatabase, $ItemTableTable> {
+  $$ItemTableTableFilterComposer(super.$state);
+  ColumnFilters<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnWithTypeConverterFilters<ItemType, ItemType, int> get itemsType =>
+      $state.composableBuilder(
+          column: $state.table.itemsType,
+          builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
+              column,
+              joinBuilders: joinBuilders));
+}
+
+class $$ItemTableTableOrderingComposer
+    extends OrderingComposer<_$AppDatabase, $ItemTableTable> {
+  $$ItemTableTableOrderingComposer(super.$state);
+  ColumnOrderings<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get itemsType => $state.composableBuilder(
+      column: $state.table.itemsType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$InstanceDungeonTableTableInsertCompanionBuilder
+    = InstanceDungeonTableCompanion Function({
+  Value<int> id,
+  required InstanceDungeonType instanceDungeonType,
+});
+typedef $$InstanceDungeonTableTableUpdateCompanionBuilder
+    = InstanceDungeonTableCompanion Function({
+  Value<int> id,
+  Value<InstanceDungeonType> instanceDungeonType,
+});
+
+class $$InstanceDungeonTableTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $InstanceDungeonTableTable,
+    InstanceDungeonModel,
+    $$InstanceDungeonTableTableFilterComposer,
+    $$InstanceDungeonTableTableOrderingComposer,
+    $$InstanceDungeonTableTableProcessedTableManager,
+    $$InstanceDungeonTableTableInsertCompanionBuilder,
+    $$InstanceDungeonTableTableUpdateCompanionBuilder> {
+  $$InstanceDungeonTableTableTableManager(
+      _$AppDatabase db, $InstanceDungeonTableTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer: $$InstanceDungeonTableTableFilterComposer(
+              ComposerState(db, table)),
+          orderingComposer: $$InstanceDungeonTableTableOrderingComposer(
+              ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$InstanceDungeonTableTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<int> id = const Value.absent(),
+            Value<InstanceDungeonType> instanceDungeonType =
+                const Value.absent(),
+          }) =>
+              InstanceDungeonTableCompanion(
+            id: id,
+            instanceDungeonType: instanceDungeonType,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<int> id = const Value.absent(),
+            required InstanceDungeonType instanceDungeonType,
+          }) =>
+              InstanceDungeonTableCompanion.insert(
+            id: id,
+            instanceDungeonType: instanceDungeonType,
+          ),
+        ));
+}
+
+class $$InstanceDungeonTableTableProcessedTableManager
+    extends ProcessedTableManager<
+        _$AppDatabase,
+        $InstanceDungeonTableTable,
+        InstanceDungeonModel,
+        $$InstanceDungeonTableTableFilterComposer,
+        $$InstanceDungeonTableTableOrderingComposer,
+        $$InstanceDungeonTableTableProcessedTableManager,
+        $$InstanceDungeonTableTableInsertCompanionBuilder,
+        $$InstanceDungeonTableTableUpdateCompanionBuilder> {
+  $$InstanceDungeonTableTableProcessedTableManager(super.$state);
+}
+
+class $$InstanceDungeonTableTableFilterComposer
+    extends FilterComposer<_$AppDatabase, $InstanceDungeonTableTable> {
+  $$InstanceDungeonTableTableFilterComposer(super.$state);
+  ColumnFilters<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnWithTypeConverterFilters<InstanceDungeonType, InstanceDungeonType, int>
+      get instanceDungeonType => $state.composableBuilder(
+          column: $state.table.instanceDungeonType,
+          builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
+              column,
+              joinBuilders: joinBuilders));
+}
+
+class $$InstanceDungeonTableTableOrderingComposer
+    extends OrderingComposer<_$AppDatabase, $InstanceDungeonTableTable> {
+  $$InstanceDungeonTableTableOrderingComposer(super.$state);
+  ColumnOrderings<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get instanceDungeonType => $state.composableBuilder(
+      column: $state.table.instanceDungeonType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
 typedef $$PropertyTableTableInsertCompanionBuilder = PropertyTableCompanion
     Function({
   Value<int> id,
@@ -3745,6 +4561,129 @@ class $$PropertyTableTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
+typedef $$BackpackTableTableInsertCompanionBuilder = BackpackTableCompanion
+    Function({
+  Value<int> id,
+  required BackpackItemType type,
+  required int itemId,
+  Value<int> amount,
+});
+typedef $$BackpackTableTableUpdateCompanionBuilder = BackpackTableCompanion
+    Function({
+  Value<int> id,
+  Value<BackpackItemType> type,
+  Value<int> itemId,
+  Value<int> amount,
+});
+
+class $$BackpackTableTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $BackpackTableTable,
+    BackpackModel,
+    $$BackpackTableTableFilterComposer,
+    $$BackpackTableTableOrderingComposer,
+    $$BackpackTableTableProcessedTableManager,
+    $$BackpackTableTableInsertCompanionBuilder,
+    $$BackpackTableTableUpdateCompanionBuilder> {
+  $$BackpackTableTableTableManager(_$AppDatabase db, $BackpackTableTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$BackpackTableTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$BackpackTableTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$BackpackTableTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<int> id = const Value.absent(),
+            Value<BackpackItemType> type = const Value.absent(),
+            Value<int> itemId = const Value.absent(),
+            Value<int> amount = const Value.absent(),
+          }) =>
+              BackpackTableCompanion(
+            id: id,
+            type: type,
+            itemId: itemId,
+            amount: amount,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<int> id = const Value.absent(),
+            required BackpackItemType type,
+            required int itemId,
+            Value<int> amount = const Value.absent(),
+          }) =>
+              BackpackTableCompanion.insert(
+            id: id,
+            type: type,
+            itemId: itemId,
+            amount: amount,
+          ),
+        ));
+}
+
+class $$BackpackTableTableProcessedTableManager extends ProcessedTableManager<
+    _$AppDatabase,
+    $BackpackTableTable,
+    BackpackModel,
+    $$BackpackTableTableFilterComposer,
+    $$BackpackTableTableOrderingComposer,
+    $$BackpackTableTableProcessedTableManager,
+    $$BackpackTableTableInsertCompanionBuilder,
+    $$BackpackTableTableUpdateCompanionBuilder> {
+  $$BackpackTableTableProcessedTableManager(super.$state);
+}
+
+class $$BackpackTableTableFilterComposer
+    extends FilterComposer<_$AppDatabase, $BackpackTableTable> {
+  $$BackpackTableTableFilterComposer(super.$state);
+  ColumnFilters<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnWithTypeConverterFilters<BackpackItemType, BackpackItemType, int>
+      get type => $state.composableBuilder(
+          column: $state.table.type,
+          builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
+              column,
+              joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get itemId => $state.composableBuilder(
+      column: $state.table.itemId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get amount => $state.composableBuilder(
+      column: $state.table.amount,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$BackpackTableTableOrderingComposer
+    extends OrderingComposer<_$AppDatabase, $BackpackTableTable> {
+  $$BackpackTableTableOrderingComposer(super.$state);
+  ColumnOrderings<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get type => $state.composableBuilder(
+      column: $state.table.type,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get itemId => $state.composableBuilder(
+      column: $state.table.itemId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get amount => $state.composableBuilder(
+      column: $state.table.amount,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
 class _$AppDatabaseManager {
   final _$AppDatabase _db;
   _$AppDatabaseManager(this._db);
@@ -3760,6 +4699,12 @@ class _$AppDatabaseManager {
       $$SettingTableTableTableManager(_db, _db.settingTable);
   $$EquipmentTableTableTableManager get equipmentTable =>
       $$EquipmentTableTableTableManager(_db, _db.equipmentTable);
+  $$ItemTableTableTableManager get itemTable =>
+      $$ItemTableTableTableManager(_db, _db.itemTable);
+  $$InstanceDungeonTableTableTableManager get instanceDungeonTable =>
+      $$InstanceDungeonTableTableTableManager(_db, _db.instanceDungeonTable);
   $$PropertyTableTableTableManager get propertyTable =>
       $$PropertyTableTableTableManager(_db, _db.propertyTable);
+  $$BackpackTableTableTableManager get backpackTable =>
+      $$BackpackTableTableTableManager(_db, _db.backpackTable);
 }

@@ -3,6 +3,9 @@ import 'dart:math';
 
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
+import 'package:liferpg/model/backpack/backpack_model.dart';
+import 'package:liferpg/model/store/instance_dungeon_model.dart';
+import 'package:liferpg/model/store/item_model.dart';
 import 'package:liferpg/model/store/property_model.dart';
 import 'package:liferpg/model/store/equipment_model.dart';
 import 'package:path/path.dart' as p;
@@ -26,7 +29,10 @@ part 'database.g.dart';
   StatusTable,
   SettingTable,
   EquipmentTable,
-  PropertyTable
+  ItemTable,
+  InstanceDungeonTable,
+  PropertyTable,
+  BackpackTable,
 ])
 class AppDatabase extends _$AppDatabase {
   static final AppDatabase instance = AppDatabase._internal();
@@ -181,6 +187,73 @@ class AppDatabase extends _$AppDatabase {
 
   Future<void> deleteSetting(SettingModel setting) =>
       delete(settingTable).delete(setting);
+
+  // Backpack
+  Future<List<BackpackModel>> getAllBackpackModel() async {
+    return (select(backpackTable)
+          ..orderBy([(t) => OrderingTerm(expression: t.type)]))
+        .get();
+  }
+
+  Future<int> insertBackpack(Enum item) async {
+    int itemId = item.index;
+    BackpackItemType type = BackpackItemTypeExtension.type(item);
+
+    return into(backpackTable).insert(BackpackTableCompanion(
+      type: Value(type),
+      itemId: Value(itemId),
+      amount: const Value(1),
+    ));
+  }
+
+  Future<void> updateBackpack(Enum item, {int deltaAmount = 1}) async {
+    int itemId = item.index;
+    BackpackItemType type = BackpackItemTypeExtension.type(item);
+
+    final query = select(backpackTable)
+      ..where((t) => t.itemId.equals(itemId) & t.type.equals(type.index));
+    final result = await query.getSingle();
+    await update(backpackTable)
+        .replace(result.copyWith(amount: result.amount + deltaAmount));
+  }
+
+  Future<void> deleteBackpack(Enum item) async {
+    int itemId = item.index;
+    BackpackItemType type = BackpackItemTypeExtension.type(item);
+
+    final query = select(backpackTable)
+      ..where((t) => t.itemId.equals(itemId) & t.type.equals(type.index));
+    final result = await query.getSingle();
+    await delete(backpackTable).delete(result);
+  }
+
+  Future<bool> isInBackpack(Enum item) async {
+    int itemId = item.index;
+    BackpackItemType type = BackpackItemTypeExtension.type(item);
+
+    final query = select(backpackTable)
+      ..where((t) => t.itemId.equals(itemId) & t.type.equals(type.index));
+    final result = await query.get();
+    return result.isNotEmpty;
+  }
+
+  Future<List<Enum>> getAllBackpackType() async {
+    final backpackModels = await getAllBackpackModel();
+    return backpackModels
+        .map((backpackModel) =>
+            BackpackItemTypeExtension.getEnumFromBackpackModel(backpackModel))
+        .toList();
+  }
+
+  Future<int> getBackpackItemAmount(Enum item) async {
+    int itemId = item.index;
+    BackpackItemType type = BackpackItemTypeExtension.type(item);
+
+    final query = select(backpackTable)
+      ..where((t) => t.itemId.equals(itemId) & t.type.equals(type.index));
+    final result = await query.getSingle();
+    return result.amount;
+  }
 }
 
 LazyDatabase _openConnection() {

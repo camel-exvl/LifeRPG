@@ -138,6 +138,15 @@ class StoreViewModel extends ChangeNotifier {
           moneyType: equipment.moneyType,
           price: equipment.price,
           stock: equipment.stock - 1));
+      await addToBackpack(equipment.equipmentType);
+    }
+  }
+
+  Future<void> addToBackpack(Enum item) async {
+    if (await database.isInBackpack(item)) {
+      await database.updateBackpack(item);
+    } else {
+      await database.insertBackpack(item);
     }
   }
 
