@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:liferpg/view/backpack/backpack_view.dart';
 import '../../viewmodel/status_viewmodel.dart';
 import '../setting/setting_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -303,7 +304,11 @@ class OptionsCard extends StatelessWidget {
                   ),
                 ),
                 onTap: () {
-                  //在这里添加你的背包功能
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const BackpackView()),
+                  );
                 },
               ),
               const Divider(
