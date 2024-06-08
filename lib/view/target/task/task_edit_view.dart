@@ -94,7 +94,7 @@ class _TaskEditViewState extends State<TaskEditView> {
             finishedCount: 0,
             rewardCoefficient: 1.0,
             lastFinishedAt: DateTime(0),
-            nextScheduledAt: DateTime.now(),
+            nextScheduledAt: DateTime(0),
             createdAt: DateTime.now());
   }
 

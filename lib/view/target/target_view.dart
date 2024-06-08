@@ -26,14 +26,11 @@ class _TargetViewState extends State<TargetView> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.targetsTab),
-          bottom: TabBar(
-            tabs: <Widget>[
-              Tab(text: AppLocalizations.of(context)!.tasksTab),
-              Tab(text: AppLocalizations.of(context)!.habitsTab),
-            ],
-          ),
+        appBar: TabBar(
+          tabs: <Widget>[
+            Tab(text: AppLocalizations.of(context)!.tasksTab),
+            Tab(text: AppLocalizations.of(context)!.habitsTab),
+          ],
         ),
         body: TabBarView(
           children: _views.map((Widget view) {
