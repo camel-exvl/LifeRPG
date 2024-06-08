@@ -5,6 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:liferpg/view/status/dialog/weapon_dialog.dart';
 import 'package:liferpg/view/status/dialog/armor_dialog.dart';
 
+import '../../database/database.dart';
+import '../../model/store/equipment_model.dart';
+
 class BackpackView extends StatefulWidget {
   const BackpackView({super.key});
 
@@ -15,8 +18,15 @@ class BackpackView extends StatefulWidget {
 class _BackpackView extends State<BackpackView> {
   final viewModel = StatusViewModel();
 
+  @override void initState() {
+    super.initState();
+    viewModel.loadWeaponList();
+    viewModel.loadArmorList();
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return ChangeNotifierProvider.value(
         value: viewModel,
         child: Consumer<StatusViewModel>(builder: (context, viewModel, child) {
@@ -53,22 +63,32 @@ class _BackpackView extends State<BackpackView> {
                             ),
                           ),
                         ),
-                        SizedBox(
-                          height: 250, // or any other height
-                          child: GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 4,
-                            ),
-                            itemCount: viewModel.getWeaponIds().length,
-                            itemBuilder: (context, index) {
-                              return WeaponCard(
-                                  itemId: viewModel.getWeaponIds()[index],
-                                  itemIndex: index,
-                                  isEquipped:
-                                      viewModel.status.weaponIndex == index);
-                            },
-                          ),
+                        LayoutBuilder(
+                          builder: (BuildContext context, BoxConstraints constraints) {
+                            // 获取每行的高度
+                            double rowHeight = 100;
+                            // 计算行数
+                            int rowCount = (viewModel.getWeaponIds().length / 4).ceil();
+                            // 如果行数大于2，限制为2行的高度，否则为实际行数的高度
+                            double gridViewHeight = rowCount > 2 ? rowHeight * 2 : rowHeight * rowCount;
+
+                            return SizedBox(
+                              height: gridViewHeight,
+                              child: GridView.builder(
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 4,
+                                ),
+                                itemCount: viewModel.weapons.length,
+                                itemBuilder: (context, index) {
+                                  return WeaponCard(
+                                    equipment: viewModel.weapons[index],
+                                    itemIndex: index,
+                                    isEquipped: viewModel.status.weaponIndex == index,
+                                  );
+                                },
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),
@@ -91,22 +111,32 @@ class _BackpackView extends State<BackpackView> {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 250, // or any other height
-                        child: GridView.builder(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 4,
-                          ),
-                          itemCount: viewModel.getArmorIds().length,
-                          itemBuilder: (context, index) {
-                            return ArmorCard(
-                                itemId: viewModel.getArmorIds()[index],
-                                itemIndex: index,
-                                isEquipped:
-                                    viewModel.status.armorIndex == index);
-                          },
-                        ),
+                      LayoutBuilder(
+                        builder: (BuildContext context, BoxConstraints constraints) {
+                          // 获取每行的高度
+                          double rowHeight = 100;
+                          // 计算行数
+                          int rowCount = (viewModel.getArmorIds().length / 4).ceil();
+                          // 如果行数大于2，限制为2行的高度，否则为实际行数的高度
+                          double gridViewHeight = rowCount > 2 ? rowHeight * 2 : rowHeight * rowCount;
+
+                          return SizedBox(
+                            height: gridViewHeight,
+                            child: GridView.builder(
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 4,
+                              ),
+                              itemCount: viewModel.armors.length,
+                              itemBuilder: (context, index) {
+                                return ArmorCard(
+                                  equipment: viewModel.armors[index],
+                                  itemIndex: index,
+                                  isEquipped: viewModel.status.armorIndex == index,
+                                );
+                              },
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -119,13 +149,13 @@ class _BackpackView extends State<BackpackView> {
 }
 
 class WeaponCard extends StatelessWidget {
-  final int itemId;
+  final EquipmentModel equipment;
   final int itemIndex;
   final bool isEquipped;
 
   const WeaponCard(
       {super.key,
-      required this.itemId,
+      required this.equipment,
       required this.itemIndex,
       required this.isEquipped});
 
@@ -133,7 +163,7 @@ class WeaponCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        WeaponDialog(weaponIndex: itemIndex, isEquipped: isEquipped)
+        WeaponDialog(equipment: equipment, weaponIndex: itemIndex, isEquipped: isEquipped)
             .show(context);
       },
       child: Card(
@@ -145,12 +175,16 @@ class WeaponCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Expanded(
-                flex: 3,
-                child: Image.asset('res/icons/liferpg.png'),
+                flex: 1,
+                child: Container()
               ),
               Expanded(
-                flex: 1,
-                child: Text('Index $itemIndex'),
+                flex: 6,
+                child: Image.asset(equipment.equipmentType.iconPath),
+              ),
+              Expanded(
+                flex: 4,
+                child: Text(equipment.equipmentType.name(context)),
               ),
             ],
           ),
@@ -161,13 +195,13 @@ class WeaponCard extends StatelessWidget {
 }
 
 class ArmorCard extends StatelessWidget {
-  final int itemId;
+  final EquipmentModel equipment;
   final int itemIndex;
   final bool isEquipped;
 
   const ArmorCard(
       {super.key,
-      required this.itemId,
+      required this.equipment,
       required this.itemIndex,
       required this.isEquipped});
 
@@ -175,7 +209,7 @@ class ArmorCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        ArmorDialog(armorIndex: itemIndex, isEquipped: isEquipped)
+        ArmorDialog(equipment: equipment, armorIndex: itemIndex, isEquipped: isEquipped)
             .show(context);
       },
       child: Card(
@@ -188,11 +222,11 @@ class ArmorCard extends StatelessWidget {
             children: <Widget>[
               Expanded(
                 flex: 3,
-                child: Image.asset('res/icons/liferpg.png'),
+                child: Image.asset(equipment.equipmentType.iconPath),
               ),
               Expanded(
                 flex: 1,
-                child: Text('Index $itemIndex'),
+                child: Text(equipment.equipmentType.name(context)),
               ),
             ],
           ),

@@ -31,7 +31,7 @@ class _LifeRPG extends State<LifeRPG> {
     }
   }
 
-  Future<void> loadSetting() async {
+  Future<void> loading() async {
     await initOnFirstRun();
     await viewModel.loadSetting();
   }
@@ -39,7 +39,7 @@ class _LifeRPG extends State<LifeRPG> {
   @override
   void initState() {
     super.initState();
-    loadSetting();
+    loading();
   }
 
   // This widget is the root of your application.

@@ -130,6 +130,11 @@ class _TaskRepeatEditViewState extends State<TaskRepeatEditView> {
             ),
             if (_repeatTypeValue == RepeatType.none)
               ListTile(
+                  leading: Image(
+                    image: const AssetImage('res/icons/deadline.png'),
+                    width: Theme.of(context).iconTheme.size,
+                    height: Theme.of(context).iconTheme.size,
+                  ),
                   title: Text(AppLocalizations.of(context)!.deadline),
                   subtitle: Text(_deadline == null
                       ? AppLocalizations.of(context)!.noDeadline

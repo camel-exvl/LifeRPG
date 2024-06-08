@@ -1610,6 +1610,12 @@ class $StatusTableTable extends StatusTable
   late final GeneratedColumn<int> gold = GeneratedColumn<int>(
       'gold', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _diamondMeta =
+      const VerificationMeta('diamond');
+  @override
+  late final GeneratedColumn<int> diamond = GeneratedColumn<int>(
+      'diamond', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _hpMeta = const VerificationMeta('hp');
   @override
   late final GeneratedColumn<int> hp = GeneratedColumn<int>(
@@ -1644,8 +1650,18 @@ class $StatusTableTable extends StatusTable
       'armor_index', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, level, exp, gold, hp, weaponIds, armorIds, weaponIndex, armorIndex];
+  List<GeneratedColumn> get $columns => [
+        id,
+        level,
+        exp,
+        gold,
+        diamond,
+        hp,
+        weaponIds,
+        armorIds,
+        weaponIndex,
+        armorIndex
+      ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1676,6 +1692,12 @@ class $StatusTableTable extends StatusTable
           _goldMeta, gold.isAcceptableOrUnknown(data['gold']!, _goldMeta));
     } else if (isInserting) {
       context.missing(_goldMeta);
+    }
+    if (data.containsKey('diamond')) {
+      context.handle(_diamondMeta,
+          diamond.isAcceptableOrUnknown(data['diamond']!, _diamondMeta));
+    } else if (isInserting) {
+      context.missing(_diamondMeta);
     }
     if (data.containsKey('hp')) {
       context.handle(_hpMeta, hp.isAcceptableOrUnknown(data['hp']!, _hpMeta));
@@ -1719,6 +1741,8 @@ class $StatusTableTable extends StatusTable
           .read(DriftSqlType.int, data['${effectivePrefix}exp'])!,
       gold: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}gold'])!,
+      diamond: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}diamond'])!,
       hp: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}hp'])!,
       weaponIds: attachedDatabase.typeMapping
@@ -1743,6 +1767,7 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
   final int level;
   final int exp;
   final int gold;
+  final int diamond;
   final int hp;
   final String weaponIds;
   final String armorIds;
@@ -1753,6 +1778,7 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
       required this.level,
       required this.exp,
       required this.gold,
+      required this.diamond,
       required this.hp,
       required this.weaponIds,
       required this.armorIds,
@@ -1765,6 +1791,7 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
     map['level'] = Variable<int>(level);
     map['exp'] = Variable<int>(exp);
     map['gold'] = Variable<int>(gold);
+    map['diamond'] = Variable<int>(diamond);
     map['hp'] = Variable<int>(hp);
     map['weapon_ids'] = Variable<String>(weaponIds);
     map['armor_ids'] = Variable<String>(armorIds);
@@ -1783,6 +1810,7 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
       level: Value(level),
       exp: Value(exp),
       gold: Value(gold),
+      diamond: Value(diamond),
       hp: Value(hp),
       weaponIds: Value(weaponIds),
       armorIds: Value(armorIds),
@@ -1803,6 +1831,7 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
       level: serializer.fromJson<int>(json['level']),
       exp: serializer.fromJson<int>(json['exp']),
       gold: serializer.fromJson<int>(json['gold']),
+      diamond: serializer.fromJson<int>(json['diamond']),
       hp: serializer.fromJson<int>(json['hp']),
       weaponIds: serializer.fromJson<String>(json['weaponIds']),
       armorIds: serializer.fromJson<String>(json['armorIds']),
@@ -1818,6 +1847,7 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
       'level': serializer.toJson<int>(level),
       'exp': serializer.toJson<int>(exp),
       'gold': serializer.toJson<int>(gold),
+      'diamond': serializer.toJson<int>(diamond),
       'hp': serializer.toJson<int>(hp),
       'weaponIds': serializer.toJson<String>(weaponIds),
       'armorIds': serializer.toJson<String>(armorIds),
@@ -1831,6 +1861,7 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
           int? level,
           int? exp,
           int? gold,
+          int? diamond,
           int? hp,
           String? weaponIds,
           String? armorIds,
@@ -1841,6 +1872,7 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
         level: level ?? this.level,
         exp: exp ?? this.exp,
         gold: gold ?? this.gold,
+        diamond: diamond ?? this.diamond,
         hp: hp ?? this.hp,
         weaponIds: weaponIds ?? this.weaponIds,
         armorIds: armorIds ?? this.armorIds,
@@ -1854,6 +1886,7 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
           ..write('level: $level, ')
           ..write('exp: $exp, ')
           ..write('gold: $gold, ')
+          ..write('diamond: $diamond, ')
           ..write('hp: $hp, ')
           ..write('weaponIds: $weaponIds, ')
           ..write('armorIds: $armorIds, ')
@@ -1864,8 +1897,8 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
   }
 
   @override
-  int get hashCode => Object.hash(
-      id, level, exp, gold, hp, weaponIds, armorIds, weaponIndex, armorIndex);
+  int get hashCode => Object.hash(id, level, exp, gold, diamond, hp, weaponIds,
+      armorIds, weaponIndex, armorIndex);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1874,6 +1907,7 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
           other.level == this.level &&
           other.exp == this.exp &&
           other.gold == this.gold &&
+          other.diamond == this.diamond &&
           other.hp == this.hp &&
           other.weaponIds == this.weaponIds &&
           other.armorIds == this.armorIds &&
@@ -1886,6 +1920,7 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
   final Value<int> level;
   final Value<int> exp;
   final Value<int> gold;
+  final Value<int> diamond;
   final Value<int> hp;
   final Value<String> weaponIds;
   final Value<String> armorIds;
@@ -1896,6 +1931,7 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
     this.level = const Value.absent(),
     this.exp = const Value.absent(),
     this.gold = const Value.absent(),
+    this.diamond = const Value.absent(),
     this.hp = const Value.absent(),
     this.weaponIds = const Value.absent(),
     this.armorIds = const Value.absent(),
@@ -1907,6 +1943,7 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
     required int level,
     required int exp,
     required int gold,
+    required int diamond,
     required int hp,
     this.weaponIds = const Value.absent(),
     this.armorIds = const Value.absent(),
@@ -1915,12 +1952,14 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
   })  : level = Value(level),
         exp = Value(exp),
         gold = Value(gold),
+        diamond = Value(diamond),
         hp = Value(hp);
   static Insertable<StatusModel> custom({
     Expression<int>? id,
     Expression<int>? level,
     Expression<int>? exp,
     Expression<int>? gold,
+    Expression<int>? diamond,
     Expression<int>? hp,
     Expression<String>? weaponIds,
     Expression<String>? armorIds,
@@ -1932,6 +1971,7 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
       if (level != null) 'level': level,
       if (exp != null) 'exp': exp,
       if (gold != null) 'gold': gold,
+      if (diamond != null) 'diamond': diamond,
       if (hp != null) 'hp': hp,
       if (weaponIds != null) 'weapon_ids': weaponIds,
       if (armorIds != null) 'armor_ids': armorIds,
@@ -1945,6 +1985,7 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
       Value<int>? level,
       Value<int>? exp,
       Value<int>? gold,
+      Value<int>? diamond,
       Value<int>? hp,
       Value<String>? weaponIds,
       Value<String>? armorIds,
@@ -1955,6 +1996,7 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
       level: level ?? this.level,
       exp: exp ?? this.exp,
       gold: gold ?? this.gold,
+      diamond: diamond ?? this.diamond,
       hp: hp ?? this.hp,
       weaponIds: weaponIds ?? this.weaponIds,
       armorIds: armorIds ?? this.armorIds,
@@ -1977,6 +2019,9 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
     }
     if (gold.present) {
       map['gold'] = Variable<int>(gold.value);
+    }
+    if (diamond.present) {
+      map['diamond'] = Variable<int>(diamond.value);
     }
     if (hp.present) {
       map['hp'] = Variable<int>(hp.value);
@@ -2003,6 +2048,7 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
           ..write('level: $level, ')
           ..write('exp: $exp, ')
           ..write('gold: $gold, ')
+          ..write('diamond: $diamond, ')
           ..write('hp: $hp, ')
           ..write('weaponIds: $weaponIds, ')
           ..write('armorIds: $armorIds, ')
@@ -2528,220 +2574,6 @@ class EquipmentTableCompanion extends UpdateCompanion<EquipmentModel> {
   }
 }
 
-class $PropertyTableTable extends PropertyTable
-    with TableInfo<$PropertyTableTable, PropertyModel> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $PropertyTableTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
-      hasAutoIncrement: true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _moneyTypeMeta =
-      const VerificationMeta('moneyType');
-  @override
-  late final GeneratedColumnWithTypeConverter<MoneyType, int> moneyType =
-      GeneratedColumn<int>('money_type', aliasedName, false,
-              type: DriftSqlType.int, requiredDuringInsert: true)
-          .withConverter<MoneyType>($PropertyTableTable.$convertermoneyType);
-  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
-  @override
-  late final GeneratedColumn<int> amount = GeneratedColumn<int>(
-      'amount', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  @override
-  List<GeneratedColumn> get $columns => [id, moneyType, amount];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'property_table';
-  @override
-  VerificationContext validateIntegrity(Insertable<PropertyModel> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    context.handle(_moneyTypeMeta, const VerificationResult.success());
-    if (data.containsKey('amount')) {
-      context.handle(_amountMeta,
-          amount.isAcceptableOrUnknown(data['amount']!, _amountMeta));
-    } else if (isInserting) {
-      context.missing(_amountMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  PropertyModel map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return PropertyModel(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      moneyType: $PropertyTableTable.$convertermoneyType.fromSql(
-          attachedDatabase.typeMapping
-              .read(DriftSqlType.int, data['${effectivePrefix}money_type'])!),
-      amount: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}amount'])!,
-    );
-  }
-
-  @override
-  $PropertyTableTable createAlias(String alias) {
-    return $PropertyTableTable(attachedDatabase, alias);
-  }
-
-  static JsonTypeConverter2<MoneyType, int, int> $convertermoneyType =
-      const EnumIndexConverter<MoneyType>(MoneyType.values);
-}
-
-class PropertyModel extends DataClass implements Insertable<PropertyModel> {
-  final int id;
-  final MoneyType moneyType;
-  final int amount;
-  const PropertyModel(
-      {required this.id, required this.moneyType, required this.amount});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    {
-      map['money_type'] = Variable<int>(
-          $PropertyTableTable.$convertermoneyType.toSql(moneyType));
-    }
-    map['amount'] = Variable<int>(amount);
-    return map;
-  }
-
-  PropertyTableCompanion toCompanion(bool nullToAbsent) {
-    return PropertyTableCompanion(
-      id: Value(id),
-      moneyType: Value(moneyType),
-      amount: Value(amount),
-    );
-  }
-
-  factory PropertyModel.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return PropertyModel(
-      id: serializer.fromJson<int>(json['id']),
-      moneyType: $PropertyTableTable.$convertermoneyType
-          .fromJson(serializer.fromJson<int>(json['moneyType'])),
-      amount: serializer.fromJson<int>(json['amount']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'moneyType': serializer.toJson<int>(
-          $PropertyTableTable.$convertermoneyType.toJson(moneyType)),
-      'amount': serializer.toJson<int>(amount),
-    };
-  }
-
-  PropertyModel copyWith({int? id, MoneyType? moneyType, int? amount}) =>
-      PropertyModel(
-        id: id ?? this.id,
-        moneyType: moneyType ?? this.moneyType,
-        amount: amount ?? this.amount,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('PropertyModel(')
-          ..write('id: $id, ')
-          ..write('moneyType: $moneyType, ')
-          ..write('amount: $amount')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(id, moneyType, amount);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is PropertyModel &&
-          other.id == this.id &&
-          other.moneyType == this.moneyType &&
-          other.amount == this.amount);
-}
-
-class PropertyTableCompanion extends UpdateCompanion<PropertyModel> {
-  final Value<int> id;
-  final Value<MoneyType> moneyType;
-  final Value<int> amount;
-  const PropertyTableCompanion({
-    this.id = const Value.absent(),
-    this.moneyType = const Value.absent(),
-    this.amount = const Value.absent(),
-  });
-  PropertyTableCompanion.insert({
-    this.id = const Value.absent(),
-    required MoneyType moneyType,
-    required int amount,
-  })  : moneyType = Value(moneyType),
-        amount = Value(amount);
-  static Insertable<PropertyModel> custom({
-    Expression<int>? id,
-    Expression<int>? moneyType,
-    Expression<int>? amount,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (moneyType != null) 'money_type': moneyType,
-      if (amount != null) 'amount': amount,
-    });
-  }
-
-  PropertyTableCompanion copyWith(
-      {Value<int>? id, Value<MoneyType>? moneyType, Value<int>? amount}) {
-    return PropertyTableCompanion(
-      id: id ?? this.id,
-      moneyType: moneyType ?? this.moneyType,
-      amount: amount ?? this.amount,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (moneyType.present) {
-      map['money_type'] = Variable<int>(
-          $PropertyTableTable.$convertermoneyType.toSql(moneyType.value));
-    }
-    if (amount.present) {
-      map['amount'] = Variable<int>(amount.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('PropertyTableCompanion(')
-          ..write('id: $id, ')
-          ..write('moneyType: $moneyType, ')
-          ..write('amount: $amount')
-          ..write(')'))
-        .toString();
-  }
-}
-
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   _$AppDatabaseManager get managers => _$AppDatabaseManager(this);
@@ -2751,7 +2583,6 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $StatusTableTable statusTable = $StatusTableTable(this);
   late final $SettingTableTable settingTable = $SettingTableTable(this);
   late final $EquipmentTableTable equipmentTable = $EquipmentTableTable(this);
-  late final $PropertyTableTable propertyTable = $PropertyTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2762,8 +2593,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         taskTable,
         statusTable,
         settingTable,
-        equipmentTable,
-        propertyTable
+        equipmentTable
       ];
 }
 
@@ -3467,6 +3297,7 @@ typedef $$StatusTableTableInsertCompanionBuilder = StatusTableCompanion
   required int level,
   required int exp,
   required int gold,
+  required int diamond,
   required int hp,
   Value<String> weaponIds,
   Value<String> armorIds,
@@ -3479,6 +3310,7 @@ typedef $$StatusTableTableUpdateCompanionBuilder = StatusTableCompanion
   Value<int> level,
   Value<int> exp,
   Value<int> gold,
+  Value<int> diamond,
   Value<int> hp,
   Value<String> weaponIds,
   Value<String> armorIds,
@@ -3510,6 +3342,7 @@ class $$StatusTableTableTableManager extends RootTableManager<
             Value<int> level = const Value.absent(),
             Value<int> exp = const Value.absent(),
             Value<int> gold = const Value.absent(),
+            Value<int> diamond = const Value.absent(),
             Value<int> hp = const Value.absent(),
             Value<String> weaponIds = const Value.absent(),
             Value<String> armorIds = const Value.absent(),
@@ -3521,6 +3354,7 @@ class $$StatusTableTableTableManager extends RootTableManager<
             level: level,
             exp: exp,
             gold: gold,
+            diamond: diamond,
             hp: hp,
             weaponIds: weaponIds,
             armorIds: armorIds,
@@ -3532,6 +3366,7 @@ class $$StatusTableTableTableManager extends RootTableManager<
             required int level,
             required int exp,
             required int gold,
+            required int diamond,
             required int hp,
             Value<String> weaponIds = const Value.absent(),
             Value<String> armorIds = const Value.absent(),
@@ -3543,6 +3378,7 @@ class $$StatusTableTableTableManager extends RootTableManager<
             level: level,
             exp: exp,
             gold: gold,
+            diamond: diamond,
             hp: hp,
             weaponIds: weaponIds,
             armorIds: armorIds,
@@ -3584,6 +3420,11 @@ class $$StatusTableTableFilterComposer
 
   ColumnFilters<int> get gold => $state.composableBuilder(
       column: $state.table.gold,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get diamond => $state.composableBuilder(
+      column: $state.table.diamond,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -3633,6 +3474,11 @@ class $$StatusTableTableOrderingComposer
 
   ColumnOrderings<int> get gold => $state.composableBuilder(
       column: $state.table.gold,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get diamond => $state.composableBuilder(
+      column: $state.table.diamond,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
@@ -3909,113 +3755,6 @@ class $$EquipmentTableTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
-typedef $$PropertyTableTableInsertCompanionBuilder = PropertyTableCompanion
-    Function({
-  Value<int> id,
-  required MoneyType moneyType,
-  required int amount,
-});
-typedef $$PropertyTableTableUpdateCompanionBuilder = PropertyTableCompanion
-    Function({
-  Value<int> id,
-  Value<MoneyType> moneyType,
-  Value<int> amount,
-});
-
-class $$PropertyTableTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $PropertyTableTable,
-    PropertyModel,
-    $$PropertyTableTableFilterComposer,
-    $$PropertyTableTableOrderingComposer,
-    $$PropertyTableTableProcessedTableManager,
-    $$PropertyTableTableInsertCompanionBuilder,
-    $$PropertyTableTableUpdateCompanionBuilder> {
-  $$PropertyTableTableTableManager(_$AppDatabase db, $PropertyTableTable table)
-      : super(TableManagerState(
-          db: db,
-          table: table,
-          filteringComposer:
-              $$PropertyTableTableFilterComposer(ComposerState(db, table)),
-          orderingComposer:
-              $$PropertyTableTableOrderingComposer(ComposerState(db, table)),
-          getChildManagerBuilder: (p) =>
-              $$PropertyTableTableProcessedTableManager(p),
-          getUpdateCompanionBuilder: ({
-            Value<int> id = const Value.absent(),
-            Value<MoneyType> moneyType = const Value.absent(),
-            Value<int> amount = const Value.absent(),
-          }) =>
-              PropertyTableCompanion(
-            id: id,
-            moneyType: moneyType,
-            amount: amount,
-          ),
-          getInsertCompanionBuilder: ({
-            Value<int> id = const Value.absent(),
-            required MoneyType moneyType,
-            required int amount,
-          }) =>
-              PropertyTableCompanion.insert(
-            id: id,
-            moneyType: moneyType,
-            amount: amount,
-          ),
-        ));
-}
-
-class $$PropertyTableTableProcessedTableManager extends ProcessedTableManager<
-    _$AppDatabase,
-    $PropertyTableTable,
-    PropertyModel,
-    $$PropertyTableTableFilterComposer,
-    $$PropertyTableTableOrderingComposer,
-    $$PropertyTableTableProcessedTableManager,
-    $$PropertyTableTableInsertCompanionBuilder,
-    $$PropertyTableTableUpdateCompanionBuilder> {
-  $$PropertyTableTableProcessedTableManager(super.$state);
-}
-
-class $$PropertyTableTableFilterComposer
-    extends FilterComposer<_$AppDatabase, $PropertyTableTable> {
-  $$PropertyTableTableFilterComposer(super.$state);
-  ColumnFilters<int> get id => $state.composableBuilder(
-      column: $state.table.id,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnWithTypeConverterFilters<MoneyType, MoneyType, int> get moneyType =>
-      $state.composableBuilder(
-          column: $state.table.moneyType,
-          builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
-              column,
-              joinBuilders: joinBuilders));
-
-  ColumnFilters<int> get amount => $state.composableBuilder(
-      column: $state.table.amount,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-}
-
-class $$PropertyTableTableOrderingComposer
-    extends OrderingComposer<_$AppDatabase, $PropertyTableTable> {
-  $$PropertyTableTableOrderingComposer(super.$state);
-  ColumnOrderings<int> get id => $state.composableBuilder(
-      column: $state.table.id,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<int> get moneyType => $state.composableBuilder(
-      column: $state.table.moneyType,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<int> get amount => $state.composableBuilder(
-      column: $state.table.amount,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-}
-
 class _$AppDatabaseManager {
   final _$AppDatabase _db;
   _$AppDatabaseManager(this._db);
@@ -4031,6 +3770,4 @@ class _$AppDatabaseManager {
       $$SettingTableTableTableManager(_db, _db.settingTable);
   $$EquipmentTableTableTableManager get equipmentTable =>
       $$EquipmentTableTableTableManager(_db, _db.equipmentTable);
-  $$PropertyTableTableTableManager get propertyTable =>
-      $$PropertyTableTableTableManager(_db, _db.propertyTable);
 }

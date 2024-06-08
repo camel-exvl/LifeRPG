@@ -4,12 +4,15 @@ import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/database/database.dart';
+import 'package:liferpg/viewmodel/store_viewmodel.dart';
 import 'dart:math' as math;
 
 import '../model/common_model.dart';
 import '../model/reward/reward_request_model.dart';
 import '../model/reward/reward_response_model.dart';
+import '../model/store/property_model.dart';
 import '../model/target/habit_model.dart';
+import '../model/store/equipment_model.dart';
 
 class StatusViewModel extends ChangeNotifier {
   static final StatusViewModel _instance = StatusViewModel._internal();
@@ -47,17 +50,26 @@ class StatusViewModel extends ChangeNotifier {
       level: 1,
       exp: 0,
       gold: 0,
+      diamond: 0,
       hp: 100,
-      weaponIds: "1,2",
-      armorIds: "3,4",
-      weaponIndex: 1,
-      armorIndex: 0);
+      weaponIds: "",
+      armorIds: "",
+      weaponIndex: null,
+      armorIndex: null);
   List<AttributeModel> _attributes = [];
+  List<EquipmentModel> _weapons = [];
+  List<EquipmentModel> _armors = [];
 
   StatusModel get status => _status;
 
   UnmodifiableListView<AttributeModel> get attributes =>
       UnmodifiableListView(_attributes);
+
+  UnmodifiableListView<EquipmentModel> get weapons =>
+      UnmodifiableListView(_weapons);
+
+  UnmodifiableListView<EquipmentModel> get armors =>
+      UnmodifiableListView(_armors);
 
   Future<void> initOnFirstRun() async {
     await insertStatus(_status);
@@ -346,17 +358,50 @@ class StatusViewModel extends ChangeNotifier {
       gold: newGold,
     );
     updateStatus(newStatus);
+
+    StoreViewModel storeViewModel = StoreViewModel();
+    storeViewModel.loadProperties();
+    notifyListeners();
   }
 
   void addWeapon(int newWeaponId) {
-    var weaponIds = _status.weaponIds.split(",");
-    weaponIds.add(newWeaponId.toString());
-    _status = _status.copyWith(weaponIds: weaponIds.join(","));
-    updateStatus(_status);
+    if (_status.weaponIds.isEmpty) {
+      _status = _status.copyWith(weaponIds: newWeaponId.toString());
+      updateStatus(_status);
+    } else {
+      var weaponIds = _status.weaponIds.split(",");
+      weaponIds.add(newWeaponId.toString());
+      _status = _status.copyWith(weaponIds: weaponIds.join(","));
+      updateStatus(_status);
+    }
   }
 
   List<int> getWeaponIds() {
-    return _status.weaponIds.split(",").map(int.parse).toList();
+    if (_status.weaponIds.isEmpty) {
+      return [];
+    }
+    return _status.weaponIds
+        .split(",")
+        .where((item) => item.isNotEmpty)
+        .map(int.parse)
+        .toList();
+  }
+
+  Future<void> loadWeaponList() async {
+    if (_status.weaponIds.isEmpty) {
+      _weapons = [];
+    } else {
+      final weaponList = <EquipmentModel>[];
+      for (var weaponId in _status.weaponIds
+          .split(",")
+          .where((item) => item.isNotEmpty)
+          .map(int.parse)
+          .toList()) {
+        weaponList.add(await database.getEquipmentById(weaponId));
+      }
+      _weapons = weaponList;
+      notifyListeners();
+    }
   }
 
   void equipWeapon(int weaponIndex) {
@@ -372,14 +417,43 @@ class StatusViewModel extends ChangeNotifier {
   }
 
   void addArmor(int newArmorId) {
-    var armorIds = _status.armorIds.split(",");
-    armorIds.add(newArmorId.toString());
-    _status = _status.copyWith(armorIds: armorIds.join(","));
-    updateStatus(_status);
+    if (_status.armorIds.isEmpty) {
+      _status = _status.copyWith(armorIds: newArmorId.toString());
+      updateStatus(_status);
+    } else {
+      var armorIds = _status.armorIds.split(",");
+      armorIds.add(newArmorId.toString());
+      _status = _status.copyWith(armorIds: armorIds.join(","));
+      updateStatus(_status);
+    }
   }
 
   List<int> getArmorIds() {
-    return _status.armorIds.split(",").map(int.parse).toList();
+    if (_status.weaponIds.isEmpty) {
+      return [];
+    }
+    return _status.armorIds
+        .split(",")
+        .where((item) => item.isNotEmpty)
+        .map(int.parse)
+        .toList();
+  }
+
+  Future<void> loadArmorList() async {
+    if (_status.armorIds.isEmpty) {
+      _armors = [];
+    } else {
+      final armorList = <EquipmentModel>[];
+      for (var armorId in _status.armorIds
+          .split(",")
+          .where((item) => item.isNotEmpty)
+          .map(int.parse)
+          .toList()) {
+        armorList.add(await database.getEquipmentById(armorId));
+      }
+      _armors = armorList;
+      notifyListeners();
+    }
   }
 
   void equipArmor(int armorIndex) {
@@ -405,13 +479,47 @@ class StatusViewModel extends ChangeNotifier {
     updateStatus(_status);
   }
 
-  int getAttack() {
+  Future<int> getAttack() async {
     int expAttack = _status.level * expAttackCoefficient;
-    return baseAttack + expAttack;
+    int weaponAttack = _status.weaponIndex == null
+        ? 0
+        : await database
+            .getEquipmentById(getWeaponIds()[_status.weaponIndex!])
+            .then((value) => value.equipmentType.attackPower);
+    return baseAttack + expAttack + weaponAttack;
   }
 
-  int getDefense() {
+  Future<int> getDefense() async {
     int expDefense = _status.level * expDefenseCoefficient;
-    return baseDefense + expDefense;
+    int armorDefense = _status.armorIndex == null
+        ? 0
+        : await database
+            .getEquipmentById(getArmorIds()[_status.armorIndex!])
+            .then((value) => value.equipmentType.defensePower);
+    return baseDefense + expDefense + armorDefense;
+  }
+
+  List<PropertyModel> getProperties() {
+    return [
+      PropertyModel(
+        id: 1,
+        moneyType: MoneyType.gold,
+        amount: _status.gold,
+      ),
+      // PropertyModel(
+      //   id: 2,
+      //   moneyType: MoneyType.diamond,
+      //   amount: _status.diamond,
+      // ),
+    ];
+  }
+
+  Future<void> updateProperty(PropertyModel property) async {
+    if (property.moneyType == MoneyType.gold) {
+      _status = _status.copyWith(gold: property.amount);
+    } else if (property.moneyType == MoneyType.diamond) {
+      _status = _status.copyWith(diamond: property.amount);
+    }
+    updateStatus(_status);
   }
 }
