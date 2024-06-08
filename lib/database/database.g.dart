@@ -2352,15 +2352,32 @@ class $ItemTableTable extends ItemTable
       requiredDuringInsert: false,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _itemsTypeMeta =
-      const VerificationMeta('itemsType');
+  static const VerificationMeta _itemTypeMeta =
+      const VerificationMeta('itemType');
   @override
-  late final GeneratedColumnWithTypeConverter<ItemType, int> itemsType =
-      GeneratedColumn<int>('items_type', aliasedName, false,
+  late final GeneratedColumnWithTypeConverter<ItemType, int> itemType =
+      GeneratedColumn<int>('item_type', aliasedName, false,
               type: DriftSqlType.int, requiredDuringInsert: true)
-          .withConverter<ItemType>($ItemTableTable.$converteritemsType);
+          .withConverter<ItemType>($ItemTableTable.$converteritemType);
+  static const VerificationMeta _moneyTypeMeta =
+      const VerificationMeta('moneyType');
   @override
-  List<GeneratedColumn> get $columns => [id, itemsType];
+  late final GeneratedColumnWithTypeConverter<MoneyType, int> moneyType =
+      GeneratedColumn<int>('money_type', aliasedName, false,
+              type: DriftSqlType.int, requiredDuringInsert: true)
+          .withConverter<MoneyType>($ItemTableTable.$convertermoneyType);
+  static const VerificationMeta _priceMeta = const VerificationMeta('price');
+  @override
+  late final GeneratedColumn<int> price = GeneratedColumn<int>(
+      'price', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _stockMeta = const VerificationMeta('stock');
+  @override
+  late final GeneratedColumn<int> stock = GeneratedColumn<int>(
+      'stock', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, itemType, moneyType, price, stock];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -2374,7 +2391,20 @@ class $ItemTableTable extends ItemTable
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
-    context.handle(_itemsTypeMeta, const VerificationResult.success());
+    context.handle(_itemTypeMeta, const VerificationResult.success());
+    context.handle(_moneyTypeMeta, const VerificationResult.success());
+    if (data.containsKey('price')) {
+      context.handle(
+          _priceMeta, price.isAcceptableOrUnknown(data['price']!, _priceMeta));
+    } else if (isInserting) {
+      context.missing(_priceMeta);
+    }
+    if (data.containsKey('stock')) {
+      context.handle(
+          _stockMeta, stock.isAcceptableOrUnknown(data['stock']!, _stockMeta));
+    } else if (isInserting) {
+      context.missing(_stockMeta);
+    }
     return context;
   }
 
@@ -2386,9 +2416,16 @@ class $ItemTableTable extends ItemTable
     return ItemModel(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      itemsType: $ItemTableTable.$converteritemsType.fromSql(attachedDatabase
+      itemType: $ItemTableTable.$converteritemType.fromSql(attachedDatabase
           .typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}items_type'])!),
+          .read(DriftSqlType.int, data['${effectivePrefix}item_type'])!),
+      moneyType: $ItemTableTable.$convertermoneyType.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}money_type'])!),
+      price: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}price'])!,
+      stock: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}stock'])!,
     );
   }
 
@@ -2397,29 +2434,48 @@ class $ItemTableTable extends ItemTable
     return $ItemTableTable(attachedDatabase, alias);
   }
 
-  static JsonTypeConverter2<ItemType, int, int> $converteritemsType =
+  static JsonTypeConverter2<ItemType, int, int> $converteritemType =
       const EnumIndexConverter<ItemType>(ItemType.values);
+  static JsonTypeConverter2<MoneyType, int, int> $convertermoneyType =
+      const EnumIndexConverter<MoneyType>(MoneyType.values);
 }
 
 class ItemModel extends DataClass implements Insertable<ItemModel> {
   final int id;
-  final ItemType itemsType;
-  const ItemModel({required this.id, required this.itemsType});
+  final ItemType itemType;
+  final MoneyType moneyType;
+  final int price;
+  final int stock;
+  const ItemModel(
+      {required this.id,
+      required this.itemType,
+      required this.moneyType,
+      required this.price,
+      required this.stock});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     {
-      map['items_type'] =
-          Variable<int>($ItemTableTable.$converteritemsType.toSql(itemsType));
+      map['item_type'] =
+          Variable<int>($ItemTableTable.$converteritemType.toSql(itemType));
     }
+    {
+      map['money_type'] =
+          Variable<int>($ItemTableTable.$convertermoneyType.toSql(moneyType));
+    }
+    map['price'] = Variable<int>(price);
+    map['stock'] = Variable<int>(stock);
     return map;
   }
 
   ItemTableCompanion toCompanion(bool nullToAbsent) {
     return ItemTableCompanion(
       id: Value(id),
-      itemsType: Value(itemsType),
+      itemType: Value(itemType),
+      moneyType: Value(moneyType),
+      price: Value(price),
+      stock: Value(stock),
     );
   }
 
@@ -2428,8 +2484,12 @@ class ItemModel extends DataClass implements Insertable<ItemModel> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ItemModel(
       id: serializer.fromJson<int>(json['id']),
-      itemsType: $ItemTableTable.$converteritemsType
-          .fromJson(serializer.fromJson<int>(json['itemsType'])),
+      itemType: $ItemTableTable.$converteritemType
+          .fromJson(serializer.fromJson<int>(json['itemType'])),
+      moneyType: $ItemTableTable.$convertermoneyType
+          .fromJson(serializer.fromJson<int>(json['moneyType'])),
+      price: serializer.fromJson<int>(json['price']),
+      stock: serializer.fromJson<int>(json['stock']),
     );
   }
   @override
@@ -2437,59 +2497,104 @@ class ItemModel extends DataClass implements Insertable<ItemModel> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
-      'itemsType': serializer
-          .toJson<int>($ItemTableTable.$converteritemsType.toJson(itemsType)),
+      'itemType': serializer
+          .toJson<int>($ItemTableTable.$converteritemType.toJson(itemType)),
+      'moneyType': serializer
+          .toJson<int>($ItemTableTable.$convertermoneyType.toJson(moneyType)),
+      'price': serializer.toJson<int>(price),
+      'stock': serializer.toJson<int>(stock),
     };
   }
 
-  ItemModel copyWith({int? id, ItemType? itemsType}) => ItemModel(
+  ItemModel copyWith(
+          {int? id,
+          ItemType? itemType,
+          MoneyType? moneyType,
+          int? price,
+          int? stock}) =>
+      ItemModel(
         id: id ?? this.id,
-        itemsType: itemsType ?? this.itemsType,
+        itemType: itemType ?? this.itemType,
+        moneyType: moneyType ?? this.moneyType,
+        price: price ?? this.price,
+        stock: stock ?? this.stock,
       );
   @override
   String toString() {
     return (StringBuffer('ItemModel(')
           ..write('id: $id, ')
-          ..write('itemsType: $itemsType')
+          ..write('itemType: $itemType, ')
+          ..write('moneyType: $moneyType, ')
+          ..write('price: $price, ')
+          ..write('stock: $stock')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, itemsType);
+  int get hashCode => Object.hash(id, itemType, moneyType, price, stock);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is ItemModel &&
           other.id == this.id &&
-          other.itemsType == this.itemsType);
+          other.itemType == this.itemType &&
+          other.moneyType == this.moneyType &&
+          other.price == this.price &&
+          other.stock == this.stock);
 }
 
 class ItemTableCompanion extends UpdateCompanion<ItemModel> {
   final Value<int> id;
-  final Value<ItemType> itemsType;
+  final Value<ItemType> itemType;
+  final Value<MoneyType> moneyType;
+  final Value<int> price;
+  final Value<int> stock;
   const ItemTableCompanion({
     this.id = const Value.absent(),
-    this.itemsType = const Value.absent(),
+    this.itemType = const Value.absent(),
+    this.moneyType = const Value.absent(),
+    this.price = const Value.absent(),
+    this.stock = const Value.absent(),
   });
   ItemTableCompanion.insert({
     this.id = const Value.absent(),
-    required ItemType itemsType,
-  }) : itemsType = Value(itemsType);
+    required ItemType itemType,
+    required MoneyType moneyType,
+    required int price,
+    required int stock,
+  })  : itemType = Value(itemType),
+        moneyType = Value(moneyType),
+        price = Value(price),
+        stock = Value(stock);
   static Insertable<ItemModel> custom({
     Expression<int>? id,
-    Expression<int>? itemsType,
+    Expression<int>? itemType,
+    Expression<int>? moneyType,
+    Expression<int>? price,
+    Expression<int>? stock,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (itemsType != null) 'items_type': itemsType,
+      if (itemType != null) 'item_type': itemType,
+      if (moneyType != null) 'money_type': moneyType,
+      if (price != null) 'price': price,
+      if (stock != null) 'stock': stock,
     });
   }
 
-  ItemTableCompanion copyWith({Value<int>? id, Value<ItemType>? itemsType}) {
+  ItemTableCompanion copyWith(
+      {Value<int>? id,
+      Value<ItemType>? itemType,
+      Value<MoneyType>? moneyType,
+      Value<int>? price,
+      Value<int>? stock}) {
     return ItemTableCompanion(
       id: id ?? this.id,
-      itemsType: itemsType ?? this.itemsType,
+      itemType: itemType ?? this.itemType,
+      moneyType: moneyType ?? this.moneyType,
+      price: price ?? this.price,
+      stock: stock ?? this.stock,
     );
   }
 
@@ -2499,9 +2604,19 @@ class ItemTableCompanion extends UpdateCompanion<ItemModel> {
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (itemsType.present) {
-      map['items_type'] = Variable<int>(
-          $ItemTableTable.$converteritemsType.toSql(itemsType.value));
+    if (itemType.present) {
+      map['item_type'] = Variable<int>(
+          $ItemTableTable.$converteritemType.toSql(itemType.value));
+    }
+    if (moneyType.present) {
+      map['money_type'] = Variable<int>(
+          $ItemTableTable.$convertermoneyType.toSql(moneyType.value));
+    }
+    if (price.present) {
+      map['price'] = Variable<int>(price.value);
+    }
+    if (stock.present) {
+      map['stock'] = Variable<int>(stock.value);
     }
     return map;
   }
@@ -2510,7 +2625,10 @@ class ItemTableCompanion extends UpdateCompanion<ItemModel> {
   String toString() {
     return (StringBuffer('ItemTableCompanion(')
           ..write('id: $id, ')
-          ..write('itemsType: $itemsType')
+          ..write('itemType: $itemType, ')
+          ..write('moneyType: $moneyType, ')
+          ..write('price: $price, ')
+          ..write('stock: $stock')
           ..write(')'))
         .toString();
   }
@@ -4273,11 +4391,17 @@ class $$EquipmentTableTableOrderingComposer
 
 typedef $$ItemTableTableInsertCompanionBuilder = ItemTableCompanion Function({
   Value<int> id,
-  required ItemType itemsType,
+  required ItemType itemType,
+  required MoneyType moneyType,
+  required int price,
+  required int stock,
 });
 typedef $$ItemTableTableUpdateCompanionBuilder = ItemTableCompanion Function({
   Value<int> id,
-  Value<ItemType> itemsType,
+  Value<ItemType> itemType,
+  Value<MoneyType> moneyType,
+  Value<int> price,
+  Value<int> stock,
 });
 
 class $$ItemTableTableTableManager extends RootTableManager<
@@ -4301,19 +4425,31 @@ class $$ItemTableTableTableManager extends RootTableManager<
               $$ItemTableTableProcessedTableManager(p),
           getUpdateCompanionBuilder: ({
             Value<int> id = const Value.absent(),
-            Value<ItemType> itemsType = const Value.absent(),
+            Value<ItemType> itemType = const Value.absent(),
+            Value<MoneyType> moneyType = const Value.absent(),
+            Value<int> price = const Value.absent(),
+            Value<int> stock = const Value.absent(),
           }) =>
               ItemTableCompanion(
             id: id,
-            itemsType: itemsType,
+            itemType: itemType,
+            moneyType: moneyType,
+            price: price,
+            stock: stock,
           ),
           getInsertCompanionBuilder: ({
             Value<int> id = const Value.absent(),
-            required ItemType itemsType,
+            required ItemType itemType,
+            required MoneyType moneyType,
+            required int price,
+            required int stock,
           }) =>
               ItemTableCompanion.insert(
             id: id,
-            itemsType: itemsType,
+            itemType: itemType,
+            moneyType: moneyType,
+            price: price,
+            stock: stock,
           ),
         ));
 }
@@ -4338,12 +4474,29 @@ class $$ItemTableTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnWithTypeConverterFilters<ItemType, ItemType, int> get itemsType =>
+  ColumnWithTypeConverterFilters<ItemType, ItemType, int> get itemType =>
       $state.composableBuilder(
-          column: $state.table.itemsType,
+          column: $state.table.itemType,
           builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
               column,
               joinBuilders: joinBuilders));
+
+  ColumnWithTypeConverterFilters<MoneyType, MoneyType, int> get moneyType =>
+      $state.composableBuilder(
+          column: $state.table.moneyType,
+          builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
+              column,
+              joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get price => $state.composableBuilder(
+      column: $state.table.price,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get stock => $state.composableBuilder(
+      column: $state.table.stock,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
 }
 
 class $$ItemTableTableOrderingComposer
@@ -4354,8 +4507,23 @@ class $$ItemTableTableOrderingComposer
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<int> get itemsType => $state.composableBuilder(
-      column: $state.table.itemsType,
+  ColumnOrderings<int> get itemType => $state.composableBuilder(
+      column: $state.table.itemType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get moneyType => $state.composableBuilder(
+      column: $state.table.moneyType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get price => $state.composableBuilder(
+      column: $state.table.price,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get stock => $state.composableBuilder(
+      column: $state.table.stock,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }

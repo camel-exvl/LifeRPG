@@ -174,6 +174,29 @@ class AppDatabase extends _$AppDatabase {
   Future<void> deleteProperty(PropertyModel property) =>
       delete(propertyTable).delete(property);
 
+  Future<void> insertItems(List<ItemTableCompanion> items) => batch((batch) {
+        for (var item in items) {
+          batch.insertAll(itemTable, [item]);
+        }
+      });
+
+  Future<void> updateItem(ItemModel item) => update(itemTable).replace(item);
+
+  Future<void> deleteItem(ItemModel item) => delete(itemTable).delete(item);
+
+  Future<List<ItemModel>> getAllItems() async {
+    return (select(itemTable)..orderBy([(t) => OrderingTerm(expression: t.id)]))
+        .get();
+  }
+
+  Future<void> insertInstanceDungeons(
+          List<InstanceDungeonTableCompanion> instanceDungeons) =>
+      batch((batch) {
+        for (var instanceDungeon in instanceDungeons) {
+          batch.insertAll(instanceDungeonTable, [instanceDungeon]);
+        }
+      });
+
   // Setting
   Future<SettingModel> getSetting() async {
     return (select(settingTable)..limit(1)).getSingle();
@@ -241,7 +264,7 @@ class AppDatabase extends _$AppDatabase {
     final backpackModels = await getAllBackpackModel();
     return backpackModels
         .map((backpackModel) =>
-            BackpackItemTypeExtension.getEnumFromBackpackModel(backpackModel))
+            (BackpackItemTypeExtension.getEnumFromBackpackModel(backpackModel)))
         .toList();
   }
 

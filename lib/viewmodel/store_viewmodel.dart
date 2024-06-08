@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:liferpg/database/database.dart';
 import 'package:liferpg/model/common_model.dart';
 import 'package:liferpg/model/store/equipment_model.dart';
+import 'package:liferpg/model/store/item_model.dart';
 
 class StoreViewModel extends ChangeNotifier {
   static final StoreViewModel _instance = StoreViewModel._internal();
@@ -18,6 +19,13 @@ class StoreViewModel extends ChangeNotifier {
   List<EquipmentModel> _equipments = [];
   UnmodifiableListView<EquipmentModel> get equipments =>
       UnmodifiableListView(_equipments);
+
+  List<ItemModel> _items = [];
+  UnmodifiableListView<ItemModel> get items => UnmodifiableListView(_items);
+
+  List<InstanceDungeonModel> _instanceDungeons = [];
+  UnmodifiableListView<InstanceDungeonModel> get instanceDungeons =>
+      UnmodifiableListView(_instanceDungeons);
 
   final database = AppDatabase();
 
@@ -34,7 +42,7 @@ class StoreViewModel extends ChangeNotifier {
         PropertyModel(id: 2, moneyType: MoneyType.diamond, amount: 0),
       ];
     }
-    const initalEquipments = [
+    const initialEquipments = [
       EquipmentModel(
           id: 1,
           equipmentType: EquipmentType.armor,
@@ -53,12 +61,6 @@ class StoreViewModel extends ChangeNotifier {
           moneyType: MoneyType.gold,
           price: 50,
           stock: 20),
-      EquipmentModel(
-          id: 4,
-          equipmentType: EquipmentType.fruit,
-          moneyType: MoneyType.gold,
-          price: 5,
-          stock: 50),
       EquipmentModel(
           id: 5,
           equipmentType: EquipmentType.secretGift,
@@ -90,22 +92,30 @@ class StoreViewModel extends ChangeNotifier {
           price: 150,
           stock: 1),
       EquipmentModel(
-          id: 10,
-          equipmentType: EquipmentType.potion,
-          moneyType: MoneyType.gold,
-          price: 50,
-          stock: 20),
-      EquipmentModel(
           id: 11,
           equipmentType: EquipmentType.sword,
           moneyType: MoneyType.gold,
           price: 200,
           stock: 10),
     ];
+    const List<ItemModel> initialItems = [
+      ItemModel(
+          id: 1,
+          itemType: ItemType.redPotion,
+          moneyType: MoneyType.diamond,
+          price: 5,
+          stock: 100)
+    ];
+    const List<InstanceDungeonModel> initialInstanceDungeons = [];
     await _insertProperties(initialProperties);
-    await _insertEquipments(initalEquipments);
+    await _insertEquipments(initialEquipments);
+    await _insertItems(initialItems);
+    await _insertInstanceDungeons(initialInstanceDungeons);
+
     _properties = await database.getAllProperties();
     _equipments = await database.getAllEquipments();
+    _items = await database.getAllItems();
+
     notifyListeners();
   }
 
@@ -119,27 +129,75 @@ class StoreViewModel extends ChangeNotifier {
         .toList());
   }
 
+  Future<void> _insertItems(List<ItemModel> items) async {
+    await database.insertItems(items
+        .map((e) => ItemTableCompanion(
+              id: Value(e.id),
+              itemType: Value(e.itemType),
+              stock: Value(e.stock),
+              price: Value(e.price),
+              moneyType: Value(e.moneyType),
+            ))
+        .toList());
+  }
+
+  Future<void> _insertInstanceDungeons(
+      List<InstanceDungeonModel> instanceDungeons) async {
+    await database.insertInstanceDungeons(instanceDungeons
+        .map((e) => InstanceDungeonTableCompanion(
+              id: Value(e.id),
+              instanceDungeonType: Value(e.instanceDungeonType),
+            ))
+        .toList());
+  }
+
   Future<void> updateProperty(PropertyModel property) async {
     await database.updateProperty(property);
     await loadProperties();
   }
 
-  Future<void> buy(EquipmentModel equipment) async {
+  Future<void> buy(dynamic item) async {
     final property = _properties
-        .firstWhere((property) => property.moneyType == equipment.moneyType);
-    if (property.amount >= equipment.price) {
-      await updateProperty(PropertyModel(
-          id: property.id,
-          moneyType: property.moneyType,
-          amount: property.amount - equipment.price));
-      await updateEquipment(EquipmentModel(
-          id: equipment.id,
-          equipmentType: equipment.equipmentType,
-          moneyType: equipment.moneyType,
-          price: equipment.price,
-          stock: equipment.stock - 1));
-      await addToBackpack(equipment.equipmentType);
+        .firstWhere((property) => property.moneyType == item.moneyType);
+    if (property.amount >= item.price) {
+      if (item is EquipmentModel) {
+        await updateProperty(PropertyModel(
+            id: property.id,
+            moneyType: property.moneyType,
+            amount: property.amount - item.price));
+        await updateEquipment(EquipmentModel(
+            id: item.id,
+            equipmentType: item.equipmentType,
+            moneyType: item.moneyType,
+            price: item.price,
+            stock: item.stock - 1));
+        await addToBackpack(item.equipmentType);
+      } else if (item is ItemModel) {
+        await updateProperty(PropertyModel(
+            id: property.id,
+            moneyType: property.moneyType,
+            amount: property.amount - item.price));
+        await updateItem(ItemModel(
+            id: item.id,
+            itemType: item.itemType,
+            moneyType: item.moneyType,
+            price: item.price,
+            stock: item.stock - 1));
+        await addToBackpack(item.itemType);
+      } else {
+        throw Exception('Unsupported item type');
+      }
     }
+  }
+
+  Future<void> updateItem(ItemModel item) async {
+    await database.updateItem(item);
+    await loadItems();
+  }
+
+  Future<void> loadItems() async {
+    _items = await database.getAllItems();
+    notifyListeners();
   }
 
   Future<void> addToBackpack(Enum item) async {

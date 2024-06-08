@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:liferpg/database/database.dart';
 import 'package:liferpg/model/common_model.dart';
 import 'package:liferpg/model/store/equipment_model.dart';
+import 'package:liferpg/model/store/instance_dungeon_model.dart';
+import 'package:liferpg/model/store/item_model.dart';
 import 'package:liferpg/viewmodel/store_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -21,6 +23,7 @@ class StoreViewState extends State<StoreView>
     Future.microtask(() async {
       await viewModel.loadProperties();
       await viewModel.loadEquipments();
+      await viewModel.loadItems();
     });
   }
 
@@ -41,8 +44,11 @@ class StoreViewState extends State<StoreView>
                       title: AppLocalizations.of(context)!.equipments,
                       initiallyExpanded: true,
                       children: viewModel.equipments
-                          .map((equipment) => Equipment(
-                                item: equipment,
+                          .map((equipment) => StoreItem(
+                                itemType: equipment.equipmentType,
+                                moneyType: equipment.moneyType,
+                                price: equipment.price,
+                                stock: equipment.stock,
                                 affordable: equipment.price <=
                                         viewModel.properties
                                             .firstWhere((property) =>
@@ -57,9 +63,23 @@ class StoreViewState extends State<StoreView>
                           .toList()),
                   CustomExpansionTile(
                       title: AppLocalizations.of(context)!.items,
-                      children: const [
-                        Placeholder(),
-                      ]),
+                      children: viewModel.items.map((item) {
+                        return StoreItem(
+                          itemType: item.itemType,
+                          moneyType: item.moneyType,
+                          price: item.price,
+                          stock: item.stock,
+                          affordable: item.price <=
+                                  viewModel.properties
+                                      .firstWhere((property) =>
+                                          property.moneyType == item.moneyType)
+                                      .amount &&
+                              item.stock > 0,
+                          buy: () async {
+                            await viewModel.buy(item);
+                          },
+                        );
+                      }).toList()),
                   CustomExpansionTile(
                       title: AppLocalizations.of(context)!.instanceDungeon,
                       children: const [
@@ -124,33 +144,69 @@ class MoneyDetail extends StatefulWidget {
   MoneyDetailState createState() => MoneyDetailState();
 }
 
-class Equipment extends StatelessWidget {
-  final EquipmentType equipmentType;
+class StoreItem extends StatelessWidget {
+  final Enum itemType;
   final MoneyType moneyType;
   final int price;
   final int stock;
   final bool affordable;
   final Function? buy;
 
-  Equipment(
-      {super.key,
-      required EquipmentModel item,
-      this.affordable = false,
-      this.buy})
-      : equipmentType = item.equipmentType,
-        moneyType = item.moneyType,
-        price = item.price,
-        stock = item.stock;
+  const StoreItem({
+    super.key,
+    required this.itemType,
+    required this.moneyType,
+    required this.price,
+    required this.stock,
+    this.affordable = false,
+    this.buy,
+  }) : assert(itemType is EquipmentType || itemType is ItemType,
+            'itemType must be either EquipmentType or ItemType');
 
   @override
   Widget build(BuildContext context) {
+    String name = '';
+    String iconPath;
+    String description = '';
+    int attackPower = 0;
+    int defensePower = 0;
+    String attackPowerIconPath;
+    String defensePowerIconPath;
+
+    if (itemType is EquipmentType) {
+      var equipment = itemType as EquipmentType;
+      name = equipment.name(context);
+      iconPath = equipment.iconPath;
+      description = equipment.description(context);
+      attackPower = equipment.attackPower;
+      defensePower = equipment.defensePower;
+      attackPowerIconPath = equipment.attackPowerIconPath;
+      defensePowerIconPath = equipment.defensePowerIconPath;
+    } else if (itemType is ItemType) {
+      var item = itemType as ItemType;
+      name = item.name(context);
+      iconPath = item.iconPath;
+      description = item.description(context);
+      attackPower = item.attackPower;
+      defensePower = item.defensePower;
+      attackPowerIconPath = item.attackPowerIconPath;
+      defensePowerIconPath = item.defensePowerIconPath;
+    }
+    // else if (itemType is InstanceDungeonType) {
+    //   var instanceDungeon = itemType as InstanceDungeonType;
+    //   // TODO: Implement the instance dungeon item
+    // }
+    else {
+      throw Exception('Unsupported item type');
+    }
+
     return GestureDetector(
       onTap: () {
         showDialog(
             context: context,
             builder: (BuildContext context) => AlertDialog(
                   title: Text(
-                    equipmentType.name(context),
+                    name,
                     textAlign: TextAlign.center,
                   ),
                   content: Column(
@@ -158,7 +214,7 @@ class Equipment extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Image(
-                        image: AssetImage(equipmentType.iconPath),
+                        image: AssetImage(iconPath),
                         width: 60,
                         height: 60,
                       ),
@@ -172,25 +228,24 @@ class Equipment extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        equipmentType.description(context),
+                        description,
                         textAlign: TextAlign.left,
                       ),
                       const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          if (equipmentType.attackPower != 0)
+                          if (attackPower != 0)
                             IconWithText(
-                              iconPath: equipmentType.attackPowerIconPath,
-                              text: " +${equipmentType.attackPower}",
+                              iconPath: attackPowerIconPath,
+                              text: " +$attackPower",
                             ),
-                          if (equipmentType.attackPower != 0 &&
-                              equipmentType.defensePower != 0)
+                          if (attackPower != 0 && defensePower != 0)
                             const SizedBox(width: 30), // 添加间距仅在attackPower非零时
-                          if (equipmentType.defensePower != 0)
+                          if (defensePower != 0)
                             IconWithText(
-                              iconPath: equipmentType.defensePowerIconPath,
-                              text: " +${equipmentType.defensePower}",
+                              iconPath: defensePowerIconPath,
+                              text: " +$defensePower",
                             ),
                         ],
                       )
@@ -243,11 +298,11 @@ class Equipment extends StatelessWidget {
           child: Column(
             children: <Widget>[
               Image(
-                image: AssetImage(equipmentType.iconPath),
+                image: AssetImage(iconPath),
                 width: 30,
                 height: 30,
               ),
-              Text(equipmentType.name(context),
+              Text(name,
                   style: Theme.of(context).textTheme.bodyLarge,
                   textAlign: TextAlign.center),
               IconWithText(iconPath: moneyType.iconPath, text: price.toString())

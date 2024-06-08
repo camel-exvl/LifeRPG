@@ -6,13 +6,11 @@ enum EquipmentType {
   armor,
   arrow,
   boots,
-  fruit,
   secretGift,
   magicHat,
   key,
   magicBook,
   necklace,
-  potion,
   sword,
 }
 
@@ -39,8 +37,6 @@ extension EquipmentTypeExtension on EquipmentType {
 
       case EquipmentType.boots:
         return AppLocalizations.of(context)!.boots;
-      case EquipmentType.fruit:
-        return AppLocalizations.of(context)!.fruit;
       case EquipmentType.secretGift:
         return AppLocalizations.of(context)!.secretGift;
       case EquipmentType.magicHat:
@@ -51,8 +47,6 @@ extension EquipmentTypeExtension on EquipmentType {
         return AppLocalizations.of(context)!.magicBook;
       case EquipmentType.necklace:
         return AppLocalizations.of(context)!.necklace;
-      case EquipmentType.potion:
-        return AppLocalizations.of(context)!.potion;
       case EquipmentType.sword:
         return AppLocalizations.of(context)!.sword;
     }
@@ -66,8 +60,6 @@ extension EquipmentTypeExtension on EquipmentType {
         return 'res/icons/kyrise/arrow_01e.png';
       case EquipmentType.boots:
         return 'res/icons/kyrise/boots_01c.png';
-      case EquipmentType.fruit:
-        return 'res/icons/kyrise/fruit_01a.png';
       case EquipmentType.secretGift:
         return 'res/icons/kyrise/gift_01e.png';
       case EquipmentType.magicHat:
@@ -78,8 +70,6 @@ extension EquipmentTypeExtension on EquipmentType {
         return 'res/icons/kyrise/book_02g.png';
       case EquipmentType.necklace:
         return 'res/icons/kyrise/necklace_01d.png';
-      case EquipmentType.potion:
-        return 'res/icons/kyrise/potion_01a.png';
       case EquipmentType.sword:
         return 'res/icons/kyrise/sword_02c.png';
     }
@@ -93,8 +83,6 @@ extension EquipmentTypeExtension on EquipmentType {
         return AppLocalizations.of(context)!.arrowDescription;
       case EquipmentType.boots:
         return AppLocalizations.of(context)!.bootsDescription;
-      case EquipmentType.fruit:
-        return AppLocalizations.of(context)!.fruitDescription;
       case EquipmentType.secretGift:
         return AppLocalizations.of(context)!.secretGiftDescription;
       case EquipmentType.magicHat:
@@ -105,8 +93,6 @@ extension EquipmentTypeExtension on EquipmentType {
         return AppLocalizations.of(context)!.magicBookDescription;
       case EquipmentType.necklace:
         return AppLocalizations.of(context)!.necklaceDescription;
-      case EquipmentType.potion:
-        return AppLocalizations.of(context)!.potionDescription;
       case EquipmentType.sword:
         return AppLocalizations.of(context)!.swordDescription;
     }
@@ -120,8 +106,6 @@ extension EquipmentTypeExtension on EquipmentType {
         return 5;
       case EquipmentType.boots:
         return 2;
-      case EquipmentType.fruit:
-        return 0;
       case EquipmentType.secretGift:
         return 0;
       case EquipmentType.magicHat:
@@ -132,8 +116,6 @@ extension EquipmentTypeExtension on EquipmentType {
         return 7;
       case EquipmentType.necklace:
         return 1;
-      case EquipmentType.potion:
-        return 0;
       case EquipmentType.sword:
         return 15;
     }
@@ -147,8 +129,6 @@ extension EquipmentTypeExtension on EquipmentType {
         return 0;
       case EquipmentType.boots:
         return 5;
-      case EquipmentType.fruit:
-        return 0;
       case EquipmentType.secretGift:
         return 0;
       case EquipmentType.magicHat:
@@ -159,8 +139,6 @@ extension EquipmentTypeExtension on EquipmentType {
         return 10;
       case EquipmentType.necklace:
         return 3;
-      case EquipmentType.potion:
-        return 0;
       case EquipmentType.sword:
         return 5;
     }

@@ -20,12 +20,12 @@ class _BackpackView extends State<BackpackView> {
       create: (context) => BackpackViewmodel(),
       child: Consumer<BackpackViewmodel>(
         builder: (context, viewModel, child) {
-          viewModel.loadBackpackItems(); // TODO
-          final backpackItems = viewModel.backpackItems;
-          final equipmentItems = backpackItems.whereType<EquipmentType>();
-          final itemItems = backpackItems.whereType<ItemType>();
+          viewModel.loadBackpack(); // TODO
+          final backpackTypes = viewModel.backpackTypes;
+          final equipments = backpackTypes.whereType<EquipmentType>();
+          final items = backpackTypes.whereType<ItemType>();
           final instanceDungeonItems =
-              backpackItems.whereType<InstanceDungeonType>();
+              backpackTypes.whereType<InstanceDungeonType>();
           return Scaffold(
             appBar: AppBar(
               title: Text(AppLocalizations.of(context)!.backpack),
@@ -40,23 +40,28 @@ class _BackpackView extends State<BackpackView> {
             ),
             body: ListView(
               children: <Widget>[
-                if (equipmentItems.isNotEmpty)
+                if (equipments.isNotEmpty)
                   ListTile(
                     title: Text(AppLocalizations.of(context)!.equipments),
                   ),
-                ...equipmentItems.map((equipment) {
+                ...equipments.map((equipment) {
                   return BackpackItem(
                     title: equipment.name(context),
                     description: equipment.description(context),
                     image: equipment.iconPath,
                   );
                 }),
-                if (itemItems.isNotEmpty)
+                if (items.isNotEmpty)
                   ListTile(
                     title: Text(AppLocalizations.of(context)!.items),
                   ),
-                ...itemItems.map((item) {
-                  return const BackpackItem();
+                ...items.map((item) {
+                  return BackpackItem(
+                    title: item.name(context),
+                    description: item.description(context),
+                    image: item.iconPath,
+                    amount: viewModel.getAmount(item),
+                  );
                 }),
                 if (instanceDungeonItems.isNotEmpty)
                   ListTile(
