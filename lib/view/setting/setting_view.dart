@@ -17,7 +17,7 @@ class _SettingView extends State<SettingView> {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.setting),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_outlined), // 换成你想要的图标
+          icon: const Icon(Icons.arrow_back_outlined),
           onPressed: () {
             Navigator.pop(context);
           },

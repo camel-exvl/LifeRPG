@@ -8,6 +8,8 @@ import 'package:liferpg/viewmodel/store_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../model/store/property_model.dart';
+
 class StoreViewState extends State<StoreView>
     with AutomaticKeepAliveClientMixin {
   final viewModel = StoreViewModel();
@@ -15,14 +17,14 @@ class StoreViewState extends State<StoreView>
   @override
   bool get wantKeepAlive => true;
 
-  @override
-  void initState() {
-    super.initState();
-    Future.microtask(() async {
-      await viewModel.loadProperties();
-      await viewModel.loadEquipments();
-    });
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   Future.microtask(() async {
+  //     await viewModel.loadProperties();
+  //     await viewModel.loadEquipments();
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
