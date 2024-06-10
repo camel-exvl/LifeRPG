@@ -2905,6 +2905,449 @@ class AchievementTableCompanion extends UpdateCompanion<AchievementModel> {
   }
 }
 
+class $ChallengeTableTable extends ChallengeTable
+    with TableInfo<$ChallengeTableTable, ChallengeModel> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ChallengeTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _imagePathMeta =
+      const VerificationMeta('imagePath');
+  @override
+  late final GeneratedColumn<String> imagePath = GeneratedColumn<String>(
+      'image_path', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _bossNameMeta =
+      const VerificationMeta('bossName');
+  @override
+  late final GeneratedColumn<String> bossName = GeneratedColumn<String>(
+      'boss_name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _hpMeta = const VerificationMeta('hp');
+  @override
+  late final GeneratedColumn<int> hp = GeneratedColumn<int>(
+      'hp', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _attackMeta = const VerificationMeta('attack');
+  @override
+  late final GeneratedColumn<int> attack = GeneratedColumn<int>(
+      'attack', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _defenseMeta =
+      const VerificationMeta('defense');
+  @override
+  late final GeneratedColumn<int> defense = GeneratedColumn<int>(
+      'defense', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _rewardGoldMeta =
+      const VerificationMeta('rewardGold');
+  @override
+  late final GeneratedColumn<int> rewardGold = GeneratedColumn<int>(
+      'reward_gold', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        name,
+        description,
+        imagePath,
+        bossName,
+        hp,
+        attack,
+        defense,
+        rewardGold
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'challenge_table';
+  @override
+  VerificationContext validateIntegrity(Insertable<ChallengeModel> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    } else if (isInserting) {
+      context.missing(_descriptionMeta);
+    }
+    if (data.containsKey('image_path')) {
+      context.handle(_imagePathMeta,
+          imagePath.isAcceptableOrUnknown(data['image_path']!, _imagePathMeta));
+    } else if (isInserting) {
+      context.missing(_imagePathMeta);
+    }
+    if (data.containsKey('boss_name')) {
+      context.handle(_bossNameMeta,
+          bossName.isAcceptableOrUnknown(data['boss_name']!, _bossNameMeta));
+    } else if (isInserting) {
+      context.missing(_bossNameMeta);
+    }
+    if (data.containsKey('hp')) {
+      context.handle(_hpMeta, hp.isAcceptableOrUnknown(data['hp']!, _hpMeta));
+    } else if (isInserting) {
+      context.missing(_hpMeta);
+    }
+    if (data.containsKey('attack')) {
+      context.handle(_attackMeta,
+          attack.isAcceptableOrUnknown(data['attack']!, _attackMeta));
+    } else if (isInserting) {
+      context.missing(_attackMeta);
+    }
+    if (data.containsKey('defense')) {
+      context.handle(_defenseMeta,
+          defense.isAcceptableOrUnknown(data['defense']!, _defenseMeta));
+    } else if (isInserting) {
+      context.missing(_defenseMeta);
+    }
+    if (data.containsKey('reward_gold')) {
+      context.handle(
+          _rewardGoldMeta,
+          rewardGold.isAcceptableOrUnknown(
+              data['reward_gold']!, _rewardGoldMeta));
+    } else if (isInserting) {
+      context.missing(_rewardGoldMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ChallengeModel map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ChallengeModel(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
+      imagePath: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}image_path'])!,
+      bossName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}boss_name'])!,
+      hp: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}hp'])!,
+      attack: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}attack'])!,
+      defense: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}defense'])!,
+      rewardGold: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}reward_gold'])!,
+    );
+  }
+
+  @override
+  $ChallengeTableTable createAlias(String alias) {
+    return $ChallengeTableTable(attachedDatabase, alias);
+  }
+}
+
+class ChallengeModel extends DataClass implements Insertable<ChallengeModel> {
+  final int id;
+  final String name;
+  final String description;
+  final String imagePath;
+  final String bossName;
+  final int hp;
+  final int attack;
+  final int defense;
+  final int rewardGold;
+  const ChallengeModel(
+      {required this.id,
+      required this.name,
+      required this.description,
+      required this.imagePath,
+      required this.bossName,
+      required this.hp,
+      required this.attack,
+      required this.defense,
+      required this.rewardGold});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['name'] = Variable<String>(name);
+    map['description'] = Variable<String>(description);
+    map['image_path'] = Variable<String>(imagePath);
+    map['boss_name'] = Variable<String>(bossName);
+    map['hp'] = Variable<int>(hp);
+    map['attack'] = Variable<int>(attack);
+    map['defense'] = Variable<int>(defense);
+    map['reward_gold'] = Variable<int>(rewardGold);
+    return map;
+  }
+
+  ChallengeTableCompanion toCompanion(bool nullToAbsent) {
+    return ChallengeTableCompanion(
+      id: Value(id),
+      name: Value(name),
+      description: Value(description),
+      imagePath: Value(imagePath),
+      bossName: Value(bossName),
+      hp: Value(hp),
+      attack: Value(attack),
+      defense: Value(defense),
+      rewardGold: Value(rewardGold),
+    );
+  }
+
+  factory ChallengeModel.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ChallengeModel(
+      id: serializer.fromJson<int>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      description: serializer.fromJson<String>(json['description']),
+      imagePath: serializer.fromJson<String>(json['imagePath']),
+      bossName: serializer.fromJson<String>(json['bossName']),
+      hp: serializer.fromJson<int>(json['hp']),
+      attack: serializer.fromJson<int>(json['attack']),
+      defense: serializer.fromJson<int>(json['defense']),
+      rewardGold: serializer.fromJson<int>(json['rewardGold']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'name': serializer.toJson<String>(name),
+      'description': serializer.toJson<String>(description),
+      'imagePath': serializer.toJson<String>(imagePath),
+      'bossName': serializer.toJson<String>(bossName),
+      'hp': serializer.toJson<int>(hp),
+      'attack': serializer.toJson<int>(attack),
+      'defense': serializer.toJson<int>(defense),
+      'rewardGold': serializer.toJson<int>(rewardGold),
+    };
+  }
+
+  ChallengeModel copyWith(
+          {int? id,
+          String? name,
+          String? description,
+          String? imagePath,
+          String? bossName,
+          int? hp,
+          int? attack,
+          int? defense,
+          int? rewardGold}) =>
+      ChallengeModel(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        imagePath: imagePath ?? this.imagePath,
+        bossName: bossName ?? this.bossName,
+        hp: hp ?? this.hp,
+        attack: attack ?? this.attack,
+        defense: defense ?? this.defense,
+        rewardGold: rewardGold ?? this.rewardGold,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('ChallengeModel(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('imagePath: $imagePath, ')
+          ..write('bossName: $bossName, ')
+          ..write('hp: $hp, ')
+          ..write('attack: $attack, ')
+          ..write('defense: $defense, ')
+          ..write('rewardGold: $rewardGold')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, name, description, imagePath, bossName,
+      hp, attack, defense, rewardGold);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ChallengeModel &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.description == this.description &&
+          other.imagePath == this.imagePath &&
+          other.bossName == this.bossName &&
+          other.hp == this.hp &&
+          other.attack == this.attack &&
+          other.defense == this.defense &&
+          other.rewardGold == this.rewardGold);
+}
+
+class ChallengeTableCompanion extends UpdateCompanion<ChallengeModel> {
+  final Value<int> id;
+  final Value<String> name;
+  final Value<String> description;
+  final Value<String> imagePath;
+  final Value<String> bossName;
+  final Value<int> hp;
+  final Value<int> attack;
+  final Value<int> defense;
+  final Value<int> rewardGold;
+  const ChallengeTableCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.description = const Value.absent(),
+    this.imagePath = const Value.absent(),
+    this.bossName = const Value.absent(),
+    this.hp = const Value.absent(),
+    this.attack = const Value.absent(),
+    this.defense = const Value.absent(),
+    this.rewardGold = const Value.absent(),
+  });
+  ChallengeTableCompanion.insert({
+    this.id = const Value.absent(),
+    required String name,
+    required String description,
+    required String imagePath,
+    required String bossName,
+    required int hp,
+    required int attack,
+    required int defense,
+    required int rewardGold,
+  })  : name = Value(name),
+        description = Value(description),
+        imagePath = Value(imagePath),
+        bossName = Value(bossName),
+        hp = Value(hp),
+        attack = Value(attack),
+        defense = Value(defense),
+        rewardGold = Value(rewardGold);
+  static Insertable<ChallengeModel> custom({
+    Expression<int>? id,
+    Expression<String>? name,
+    Expression<String>? description,
+    Expression<String>? imagePath,
+    Expression<String>? bossName,
+    Expression<int>? hp,
+    Expression<int>? attack,
+    Expression<int>? defense,
+    Expression<int>? rewardGold,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (description != null) 'description': description,
+      if (imagePath != null) 'image_path': imagePath,
+      if (bossName != null) 'boss_name': bossName,
+      if (hp != null) 'hp': hp,
+      if (attack != null) 'attack': attack,
+      if (defense != null) 'defense': defense,
+      if (rewardGold != null) 'reward_gold': rewardGold,
+    });
+  }
+
+  ChallengeTableCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? name,
+      Value<String>? description,
+      Value<String>? imagePath,
+      Value<String>? bossName,
+      Value<int>? hp,
+      Value<int>? attack,
+      Value<int>? defense,
+      Value<int>? rewardGold}) {
+    return ChallengeTableCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      imagePath: imagePath ?? this.imagePath,
+      bossName: bossName ?? this.bossName,
+      hp: hp ?? this.hp,
+      attack: attack ?? this.attack,
+      defense: defense ?? this.defense,
+      rewardGold: rewardGold ?? this.rewardGold,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (imagePath.present) {
+      map['image_path'] = Variable<String>(imagePath.value);
+    }
+    if (bossName.present) {
+      map['boss_name'] = Variable<String>(bossName.value);
+    }
+    if (hp.present) {
+      map['hp'] = Variable<int>(hp.value);
+    }
+    if (attack.present) {
+      map['attack'] = Variable<int>(attack.value);
+    }
+    if (defense.present) {
+      map['defense'] = Variable<int>(defense.value);
+    }
+    if (rewardGold.present) {
+      map['reward_gold'] = Variable<int>(rewardGold.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ChallengeTableCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('imagePath: $imagePath, ')
+          ..write('bossName: $bossName, ')
+          ..write('hp: $hp, ')
+          ..write('attack: $attack, ')
+          ..write('defense: $defense, ')
+          ..write('rewardGold: $rewardGold')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   _$AppDatabaseManager get managers => _$AppDatabaseManager(this);
@@ -2916,6 +3359,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $EquipmentTableTable equipmentTable = $EquipmentTableTable(this);
   late final $AchievementTableTable achievementTable =
       $AchievementTableTable(this);
+  late final $ChallengeTableTable challengeTable = $ChallengeTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2927,7 +3371,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         statusTable,
         settingTable,
         equipmentTable,
-        achievementTable
+        achievementTable,
+        challengeTable
       ];
 }
 
@@ -4244,6 +4689,208 @@ class $$AchievementTableTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
+typedef $$ChallengeTableTableInsertCompanionBuilder = ChallengeTableCompanion
+    Function({
+  Value<int> id,
+  required String name,
+  required String description,
+  required String imagePath,
+  required String bossName,
+  required int hp,
+  required int attack,
+  required int defense,
+  required int rewardGold,
+});
+typedef $$ChallengeTableTableUpdateCompanionBuilder = ChallengeTableCompanion
+    Function({
+  Value<int> id,
+  Value<String> name,
+  Value<String> description,
+  Value<String> imagePath,
+  Value<String> bossName,
+  Value<int> hp,
+  Value<int> attack,
+  Value<int> defense,
+  Value<int> rewardGold,
+});
+
+class $$ChallengeTableTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $ChallengeTableTable,
+    ChallengeModel,
+    $$ChallengeTableTableFilterComposer,
+    $$ChallengeTableTableOrderingComposer,
+    $$ChallengeTableTableProcessedTableManager,
+    $$ChallengeTableTableInsertCompanionBuilder,
+    $$ChallengeTableTableUpdateCompanionBuilder> {
+  $$ChallengeTableTableTableManager(
+      _$AppDatabase db, $ChallengeTableTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$ChallengeTableTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$ChallengeTableTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$ChallengeTableTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<int> id = const Value.absent(),
+            Value<String> name = const Value.absent(),
+            Value<String> description = const Value.absent(),
+            Value<String> imagePath = const Value.absent(),
+            Value<String> bossName = const Value.absent(),
+            Value<int> hp = const Value.absent(),
+            Value<int> attack = const Value.absent(),
+            Value<int> defense = const Value.absent(),
+            Value<int> rewardGold = const Value.absent(),
+          }) =>
+              ChallengeTableCompanion(
+            id: id,
+            name: name,
+            description: description,
+            imagePath: imagePath,
+            bossName: bossName,
+            hp: hp,
+            attack: attack,
+            defense: defense,
+            rewardGold: rewardGold,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<int> id = const Value.absent(),
+            required String name,
+            required String description,
+            required String imagePath,
+            required String bossName,
+            required int hp,
+            required int attack,
+            required int defense,
+            required int rewardGold,
+          }) =>
+              ChallengeTableCompanion.insert(
+            id: id,
+            name: name,
+            description: description,
+            imagePath: imagePath,
+            bossName: bossName,
+            hp: hp,
+            attack: attack,
+            defense: defense,
+            rewardGold: rewardGold,
+          ),
+        ));
+}
+
+class $$ChallengeTableTableProcessedTableManager extends ProcessedTableManager<
+    _$AppDatabase,
+    $ChallengeTableTable,
+    ChallengeModel,
+    $$ChallengeTableTableFilterComposer,
+    $$ChallengeTableTableOrderingComposer,
+    $$ChallengeTableTableProcessedTableManager,
+    $$ChallengeTableTableInsertCompanionBuilder,
+    $$ChallengeTableTableUpdateCompanionBuilder> {
+  $$ChallengeTableTableProcessedTableManager(super.$state);
+}
+
+class $$ChallengeTableTableFilterComposer
+    extends FilterComposer<_$AppDatabase, $ChallengeTableTable> {
+  $$ChallengeTableTableFilterComposer(super.$state);
+  ColumnFilters<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get description => $state.composableBuilder(
+      column: $state.table.description,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get imagePath => $state.composableBuilder(
+      column: $state.table.imagePath,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get bossName => $state.composableBuilder(
+      column: $state.table.bossName,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get hp => $state.composableBuilder(
+      column: $state.table.hp,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get attack => $state.composableBuilder(
+      column: $state.table.attack,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get defense => $state.composableBuilder(
+      column: $state.table.defense,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get rewardGold => $state.composableBuilder(
+      column: $state.table.rewardGold,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$ChallengeTableTableOrderingComposer
+    extends OrderingComposer<_$AppDatabase, $ChallengeTableTable> {
+  $$ChallengeTableTableOrderingComposer(super.$state);
+  ColumnOrderings<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get description => $state.composableBuilder(
+      column: $state.table.description,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get imagePath => $state.composableBuilder(
+      column: $state.table.imagePath,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get bossName => $state.composableBuilder(
+      column: $state.table.bossName,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get hp => $state.composableBuilder(
+      column: $state.table.hp,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get attack => $state.composableBuilder(
+      column: $state.table.attack,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get defense => $state.composableBuilder(
+      column: $state.table.defense,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get rewardGold => $state.composableBuilder(
+      column: $state.table.rewardGold,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
 class _$AppDatabaseManager {
   final _$AppDatabase _db;
   _$AppDatabaseManager(this._db);
@@ -4261,4 +4908,6 @@ class _$AppDatabaseManager {
       $$EquipmentTableTableTableManager(_db, _db.equipmentTable);
   $$AchievementTableTableTableManager get achievementTable =>
       $$AchievementTableTableTableManager(_db, _db.achievementTable);
+  $$ChallengeTableTableTableManager get challengeTable =>
+      $$ChallengeTableTableTableManager(_db, _db.challengeTable);
 }

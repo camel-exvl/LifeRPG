@@ -9,13 +9,14 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqlite3/sqlite3.dart';
 import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
 
+import '../model/challenge/challenge_model.dart';
 import '../model/common_model.dart';
+import '../model/setting/setting_model.dart';
+import '../model/status/achievement_model.dart';
 import '../model/status/attribute_model.dart';
 import '../model/status/status_model.dart';
 import '../model/target/habit_model.dart';
 import '../model/target/task_model.dart';
-import '../model/setting/setting_model.dart';
-import '../model/status/achievement_model.dart';
 
 part 'database.g.dart';
 
@@ -26,8 +27,8 @@ part 'database.g.dart';
   StatusTable,
   SettingTable,
   EquipmentTable,
-  AchievementTable
-  // PropertyTable
+  AchievementTable,
+  ChallengeTable
 ])
 class AppDatabase extends _$AppDatabase {
   static final AppDatabase instance = AppDatabase._internal();
@@ -86,6 +87,19 @@ class AppDatabase extends _$AppDatabase {
       }
     });
   }
+
+  // Challenge
+  Future<List<ChallengeModel>> getAllChallenges() =>
+      select(challengeTable).get();
+
+  Future<int> insertChallenge(ChallengeTableCompanion challenge) =>
+      into(challengeTable).insert(challenge);
+
+  Future<void> updateChallenge(ChallengeModel challenge) =>
+      update(challengeTable).replace(challenge);
+
+  Future<void> deleteChallenge(ChallengeModel challenge) =>
+      delete(challengeTable).delete(challenge);
 
   // Status
   Future<StatusModel> getStatus(int statusId) async {
