@@ -1884,14 +1884,10 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
     return (StringBuffer('StatusModel(')
           ..write('id: $id, ')
           ..write('level: $level, ')
-          ..write('exp: $exp, ')
-          ..write('gold: $gold, ')
-          ..write('diamond: $diamond, ')
-          ..write('hp: $hp, ')
-          ..write('weaponIds: $weaponIds, ')
-          ..write('armorIds: $armorIds, ')
-          ..write('weaponIndex: $weaponIndex, ')
-          ..write('armorIndex: $armorIndex')
+          ..write('exp: $exp, ')..write('gold: $gold, ')..write(
+          'diamond: $diamond, ')..write('hp: $hp, ')..write(
+          'weaponIds: $weaponIds, ')..write('armorIds: $armorIds, ')..write(
+          'weaponIndex: $weaponIndex, ')..write('armorIndex: $armorIndex')
           ..write(')'))
         .toString();
   }
@@ -1980,17 +1976,16 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
     });
   }
 
-  StatusTableCompanion copyWith(
-      {Value<int>? id,
-      Value<int>? level,
-      Value<int>? exp,
-      Value<int>? gold,
-      Value<int>? diamond,
-      Value<int>? hp,
-      Value<String>? weaponIds,
-      Value<String>? armorIds,
-      Value<int?>? weaponIndex,
-      Value<int?>? armorIndex}) {
+  StatusTableCompanion copyWith({Value<int>? id,
+    Value<int>? level,
+    Value<int>? exp,
+    Value<int>? gold,
+    Value<int>? diamond,
+    Value<int>? hp,
+    Value<String>? weaponIds,
+    Value<String>? armorIds,
+    Value<int?>? weaponIndex,
+    Value<int?>? armorIndex}) {
     return StatusTableCompanion(
       id: id ?? this.id,
       level: level ?? this.level,
@@ -2046,14 +2041,10 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
     return (StringBuffer('StatusTableCompanion(')
           ..write('id: $id, ')
           ..write('level: $level, ')
-          ..write('exp: $exp, ')
-          ..write('gold: $gold, ')
-          ..write('diamond: $diamond, ')
-          ..write('hp: $hp, ')
-          ..write('weaponIds: $weaponIds, ')
-          ..write('armorIds: $armorIds, ')
-          ..write('weaponIndex: $weaponIndex, ')
-          ..write('armorIndex: $armorIndex')
+          ..write('exp: $exp, ')..write('gold: $gold, ')..write(
+          'diamond: $diamond, ')..write('hp: $hp, ')..write(
+          'weaponIds: $weaponIds, ')..write('armorIds: $armorIds, ')..write(
+          'weaponIndex: $weaponIndex, ')..write('armorIndex: $armorIndex')
           ..write(')'))
         .toString();
   }
@@ -2756,6 +2747,7 @@ class ChallengeModel extends DataClass implements Insertable<ChallengeModel> {
   final int attack;
   final int defense;
   final int rewardGold;
+
   const ChallengeModel(
       {required this.id,
       required this.name,
