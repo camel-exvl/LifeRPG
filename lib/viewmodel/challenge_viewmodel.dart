@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
+import 'package:liferpg/viewmodel/status_viewmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../database/database.dart';
@@ -17,10 +18,13 @@ class ChallengeViewModel extends ChangeNotifier {
 
   final database = AppDatabase();
   List<ChallengeModel> _challenges = [];
-  ChallengeModel? curChallenge;
+  StatusViewModel statusViewModel = StatusViewModel();
+  int hp = 10;
+  int maxHp = 10;
 
   UnmodifiableListView<ChallengeModel> get challenges =>
       UnmodifiableListView(_challenges);
+  ChallengeModel? curChallenge;
 
   Future<void> initOnFirstRun(BuildContext context) async {
     final challenges = [
@@ -49,6 +53,8 @@ class ChallengeViewModel extends ChangeNotifier {
     if (curChallengeID != null) {
       curChallenge = await database.getChallengeById(curChallengeID);
     }
+    hp = statusViewModel.getHP();
+    maxHp = statusViewModel.getMaxHp();
     notifyListeners();
   }
 

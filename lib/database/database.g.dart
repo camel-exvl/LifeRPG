@@ -1882,12 +1882,11 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
   @override
   String toString() {
     return (StringBuffer('StatusModel(')
-          ..write('id: $id, ')
-          ..write('level: $level, ')..write('exp: $exp, ')..write(
-          'gold: $gold, ')..write('diamond: $diamond, ')..write(
-          'hp: $hp, ')..write('weaponIds: $weaponIds, ')..write(
-          'armorIds: $armorIds, ')..write('weaponIndex: $weaponIndex, ')..write(
-          'armorIndex: $armorIndex')
+          ..write('id: $id, ')..write('level: $level, ')..write(
+          'exp: $exp, ')..write('gold: $gold, ')..write(
+          'diamond: $diamond, ')..write('hp: $hp, ')..write(
+          'weaponIds: $weaponIds, ')..write('armorIds: $armorIds, ')..write(
+          'weaponIndex: $weaponIndex, ')..write('armorIndex: $armorIndex')
           ..write(')'))
         .toString();
   }
@@ -2040,12 +2039,11 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
   @override
   String toString() {
     return (StringBuffer('StatusTableCompanion(')
-          ..write('id: $id, ')
-          ..write('level: $level, ')..write('exp: $exp, ')..write(
-          'gold: $gold, ')..write('diamond: $diamond, ')..write(
-          'hp: $hp, ')..write('weaponIds: $weaponIds, ')..write(
-          'armorIds: $armorIds, ')..write('weaponIndex: $weaponIndex, ')..write(
-          'armorIndex: $armorIndex')
+          ..write('id: $id, ')..write('level: $level, ')..write(
+          'exp: $exp, ')..write('gold: $gold, ')..write(
+          'diamond: $diamond, ')..write('hp: $hp, ')..write(
+          'weaponIds: $weaponIds, ')..write('armorIds: $armorIds, ')..write(
+          'weaponIndex: $weaponIndex, ')..write('armorIndex: $armorIndex')
           ..write(')'))
         .toString();
   }
@@ -2632,6 +2630,13 @@ class $ChallengeTableTable extends ChallengeTable
   late final GeneratedColumn<int> rewardGold = GeneratedColumn<int>(
       'reward_gold', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _logMeta = const VerificationMeta('log');
+  @override
+  late final GeneratedColumnWithTypeConverter<List<Map<String, dynamic>>?,
+      String> log = GeneratedColumn<String>('log', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false)
+      .withConverter<List<Map<String, dynamic>>?>(
+          $ChallengeTableTable.$converterlogn);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -2643,7 +2648,8 @@ class $ChallengeTableTable extends ChallengeTable
         curHp,
         attack,
         defense,
-        rewardGold
+        rewardGold,
+        log
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2716,6 +2722,7 @@ class $ChallengeTableTable extends ChallengeTable
     } else if (isInserting) {
       context.missing(_rewardGoldMeta);
     }
+    context.handle(_logMeta, const VerificationResult.success());
     return context;
   }
 
@@ -2745,6 +2752,9 @@ class $ChallengeTableTable extends ChallengeTable
           .read(DriftSqlType.int, data['${effectivePrefix}defense'])!,
       rewardGold: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}reward_gold'])!,
+      log: $ChallengeTableTable.$converterlogn.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}log'])),
     );
   }
 
@@ -2752,6 +2762,11 @@ class $ChallengeTableTable extends ChallengeTable
   $ChallengeTableTable createAlias(String alias) {
     return $ChallengeTableTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<List<Map<String, dynamic>>, String> $converterlog =
+      const JsonArrayConverter();
+  static TypeConverter<List<Map<String, dynamic>>?, String?> $converterlogn =
+      NullAwareTypeConverter.wrap($converterlog);
 }
 
 class ChallengeModel extends DataClass implements Insertable<ChallengeModel> {
@@ -2765,6 +2780,7 @@ class ChallengeModel extends DataClass implements Insertable<ChallengeModel> {
   final int attack;
   final int defense;
   final int rewardGold;
+  final List<Map<String, dynamic>>? log;
   const ChallengeModel(
       {required this.id,
       required this.name,
@@ -2775,7 +2791,8 @@ class ChallengeModel extends DataClass implements Insertable<ChallengeModel> {
       required this.curHp,
       required this.attack,
       required this.defense,
-      required this.rewardGold});
+      required this.rewardGold,
+      this.log});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -2789,6 +2806,10 @@ class ChallengeModel extends DataClass implements Insertable<ChallengeModel> {
     map['attack'] = Variable<int>(attack);
     map['defense'] = Variable<int>(defense);
     map['reward_gold'] = Variable<int>(rewardGold);
+    if (!nullToAbsent || log != null) {
+      map['log'] =
+          Variable<String>($ChallengeTableTable.$converterlogn.toSql(log));
+    }
     return map;
   }
 
@@ -2804,6 +2825,7 @@ class ChallengeModel extends DataClass implements Insertable<ChallengeModel> {
       attack: Value(attack),
       defense: Value(defense),
       rewardGold: Value(rewardGold),
+      log: log == null && nullToAbsent ? const Value.absent() : Value(log),
     );
   }
 
@@ -2821,6 +2843,7 @@ class ChallengeModel extends DataClass implements Insertable<ChallengeModel> {
       attack: serializer.fromJson<int>(json['attack']),
       defense: serializer.fromJson<int>(json['defense']),
       rewardGold: serializer.fromJson<int>(json['rewardGold']),
+      log: serializer.fromJson<List<Map<String, dynamic>>?>(json['log']),
     );
   }
   @override
@@ -2837,6 +2860,7 @@ class ChallengeModel extends DataClass implements Insertable<ChallengeModel> {
       'attack': serializer.toJson<int>(attack),
       'defense': serializer.toJson<int>(defense),
       'rewardGold': serializer.toJson<int>(rewardGold),
+      'log': serializer.toJson<List<Map<String, dynamic>>?>(log),
     };
   }
 
@@ -2850,7 +2874,8 @@ class ChallengeModel extends DataClass implements Insertable<ChallengeModel> {
           int? curHp,
           int? attack,
           int? defense,
-          int? rewardGold}) =>
+          int? rewardGold,
+          Value<List<Map<String, dynamic>>?> log = const Value.absent()}) =>
       ChallengeModel(
         id: id ?? this.id,
         name: name ?? this.name,
@@ -2862,6 +2887,7 @@ class ChallengeModel extends DataClass implements Insertable<ChallengeModel> {
         attack: attack ?? this.attack,
         defense: defense ?? this.defense,
         rewardGold: rewardGold ?? this.rewardGold,
+        log: log.present ? log.value : this.log,
       );
   @override
   String toString() {
@@ -2869,19 +2895,19 @@ class ChallengeModel extends DataClass implements Insertable<ChallengeModel> {
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
-          ..write('imagePath: $imagePath, ')
-          ..write('bossName: $bossName, ')..write('totalHp: $totalHp, ')..write(
+          ..write('imagePath: $imagePath, ')..write(
+          'bossName: $bossName, ')..write('totalHp: $totalHp, ')..write(
           'curHp: $curHp, ')
           ..write('attack: $attack, ')
-          ..write('defense: $defense, ')
-          ..write('rewardGold: $rewardGold')
+          ..write('defense: $defense, ')..write(
+          'rewardGold: $rewardGold, ')..write('log: $log')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode => Object.hash(id, name, description, imagePath, bossName,
-      totalHp, curHp, attack, defense, rewardGold);
+      totalHp, curHp, attack, defense, rewardGold, log);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -2895,7 +2921,8 @@ class ChallengeModel extends DataClass implements Insertable<ChallengeModel> {
           other.curHp == this.curHp &&
           other.attack == this.attack &&
           other.defense == this.defense &&
-          other.rewardGold == this.rewardGold);
+          other.rewardGold == this.rewardGold &&
+          other.log == this.log);
 }
 
 class ChallengeTableCompanion extends UpdateCompanion<ChallengeModel> {
@@ -2909,6 +2936,7 @@ class ChallengeTableCompanion extends UpdateCompanion<ChallengeModel> {
   final Value<int> attack;
   final Value<int> defense;
   final Value<int> rewardGold;
+  final Value<List<Map<String, dynamic>>?> log;
   const ChallengeTableCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
@@ -2920,6 +2948,7 @@ class ChallengeTableCompanion extends UpdateCompanion<ChallengeModel> {
     this.attack = const Value.absent(),
     this.defense = const Value.absent(),
     this.rewardGold = const Value.absent(),
+    this.log = const Value.absent(),
   });
   ChallengeTableCompanion.insert({
     this.id = const Value.absent(),
@@ -2932,6 +2961,7 @@ class ChallengeTableCompanion extends UpdateCompanion<ChallengeModel> {
     required int attack,
     required int defense,
     required int rewardGold,
+    this.log = const Value.absent(),
   })  : name = Value(name),
         description = Value(description),
         imagePath = Value(imagePath),
@@ -2952,6 +2982,7 @@ class ChallengeTableCompanion extends UpdateCompanion<ChallengeModel> {
     Expression<int>? attack,
     Expression<int>? defense,
     Expression<int>? rewardGold,
+    Expression<String>? log,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2964,6 +2995,7 @@ class ChallengeTableCompanion extends UpdateCompanion<ChallengeModel> {
       if (attack != null) 'attack': attack,
       if (defense != null) 'defense': defense,
       if (rewardGold != null) 'reward_gold': rewardGold,
+      if (log != null) 'log': log,
     });
   }
 
@@ -2977,7 +3009,8 @@ class ChallengeTableCompanion extends UpdateCompanion<ChallengeModel> {
       Value<int>? curHp,
       Value<int>? attack,
       Value<int>? defense,
-      Value<int>? rewardGold}) {
+      Value<int>? rewardGold,
+      Value<List<Map<String, dynamic>>?>? log}) {
     return ChallengeTableCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -2989,6 +3022,7 @@ class ChallengeTableCompanion extends UpdateCompanion<ChallengeModel> {
       attack: attack ?? this.attack,
       defense: defense ?? this.defense,
       rewardGold: rewardGold ?? this.rewardGold,
+      log: log ?? this.log,
     );
   }
 
@@ -3025,6 +3059,10 @@ class ChallengeTableCompanion extends UpdateCompanion<ChallengeModel> {
     if (rewardGold.present) {
       map['reward_gold'] = Variable<int>(rewardGold.value);
     }
+    if (log.present) {
+      map['log'] = Variable<String>(
+          $ChallengeTableTable.$converterlogn.toSql(log.value));
+    }
     return map;
   }
 
@@ -3034,12 +3072,12 @@ class ChallengeTableCompanion extends UpdateCompanion<ChallengeModel> {
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
-          ..write('imagePath: $imagePath, ')
-          ..write('bossName: $bossName, ')..write('totalHp: $totalHp, ')..write(
+          ..write('imagePath: $imagePath, ')..write(
+          'bossName: $bossName, ')..write('totalHp: $totalHp, ')..write(
           'curHp: $curHp, ')
           ..write('attack: $attack, ')
-          ..write('defense: $defense, ')
-          ..write('rewardGold: $rewardGold')
+          ..write('defense: $defense, ')..write(
+          'rewardGold: $rewardGold, ')..write('log: $log')
           ..write(')'))
         .toString();
   }
@@ -4240,6 +4278,7 @@ typedef $$ChallengeTableTableInsertCompanionBuilder = ChallengeTableCompanion
   required int attack,
   required int defense,
   required int rewardGold,
+  Value<List<Map<String, dynamic>>?> log,
 });
 typedef $$ChallengeTableTableUpdateCompanionBuilder = ChallengeTableCompanion
     Function({
@@ -4253,6 +4292,7 @@ typedef $$ChallengeTableTableUpdateCompanionBuilder = ChallengeTableCompanion
   Value<int> attack,
   Value<int> defense,
   Value<int> rewardGold,
+  Value<List<Map<String, dynamic>>?> log,
 });
 
 class $$ChallengeTableTableTableManager extends RootTableManager<
@@ -4286,6 +4326,7 @@ class $$ChallengeTableTableTableManager extends RootTableManager<
             Value<int> attack = const Value.absent(),
             Value<int> defense = const Value.absent(),
             Value<int> rewardGold = const Value.absent(),
+            Value<List<Map<String, dynamic>>?> log = const Value.absent(),
           }) =>
               ChallengeTableCompanion(
             id: id,
@@ -4298,6 +4339,7 @@ class $$ChallengeTableTableTableManager extends RootTableManager<
             attack: attack,
             defense: defense,
             rewardGold: rewardGold,
+            log: log,
           ),
           getInsertCompanionBuilder: ({
             Value<int> id = const Value.absent(),
@@ -4310,6 +4352,7 @@ class $$ChallengeTableTableTableManager extends RootTableManager<
             required int attack,
             required int defense,
             required int rewardGold,
+            Value<List<Map<String, dynamic>>?> log = const Value.absent(),
           }) =>
               ChallengeTableCompanion.insert(
             id: id,
@@ -4322,6 +4365,7 @@ class $$ChallengeTableTableTableManager extends RootTableManager<
             attack: attack,
             defense: defense,
             rewardGold: rewardGold,
+            log: log,
           ),
         ));
 }
@@ -4390,6 +4434,14 @@ class $$ChallengeTableTableFilterComposer
       column: $state.table.rewardGold,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnWithTypeConverterFilters<List<Map<String, dynamic>>?,
+          List<Map<String, dynamic>>, String>
+      get log => $state.composableBuilder(
+          column: $state.table.log,
+          builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
+              column,
+              joinBuilders: joinBuilders));
 }
 
 class $$ChallengeTableTableOrderingComposer
@@ -4442,6 +4494,11 @@ class $$ChallengeTableTableOrderingComposer
 
   ColumnOrderings<int> get rewardGold => $state.composableBuilder(
       column: $state.table.rewardGold,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get log => $state.composableBuilder(
+      column: $state.table.log,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }

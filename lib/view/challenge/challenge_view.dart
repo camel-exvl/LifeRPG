@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/view/challenge/challenge_select_view.dart';
 import 'package:liferpg/viewmodel/challenge_viewmodel.dart';
+import 'package:liferpg/viewmodel/status_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/challenge/challenge_model.dart';
@@ -89,83 +90,108 @@ class BossInfoView extends StatefulWidget {
 class _BossInfoViewState extends State<BossInfoView> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Expanded(
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(AppLocalizations.of(context)!.knight,
-                style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 8.0),
-            Column(
-              children: [
-                Row(
-                  children: [
-                    Text('${AppLocalizations.of(context)!.hp}: '),
-                    Expanded(
-                      child: LinearProgressIndicator(
-                        value: 0.5,
-                        semanticsLabel: AppLocalizations.of(context)!.knightHp,
-                        color:
-                            Theme.of(context).colorScheme.onTertiaryContainer,
-                        backgroundColor:
-                            Theme.of(context).colorScheme.outlineVariant,
-                      ),
-                    ),
-                  ],
-                ),
-                const Align(
-                    alignment: Alignment.centerRight, child: Text('500/1000')),
-              ],
-            ),
-            Text('${AppLocalizations.of(context)!.attack}: 100'),
-            Text('${AppLocalizations.of(context)!.defense}: 50'),
-          ]),
-        ),
-        const VerticalDivider(),
-        if (widget.viewModel.curChallenge != null)
-          Expanded(
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(
-                  getChallengeLocalizedString(
-                          context, widget.viewModel.curChallenge!)
-                      .bossName,
-                  style: Theme.of(context).textTheme.titleLarge),
-              const SizedBox(height: 8.0),
-              Column(
+    return ChangeNotifierProvider(
+        create: (context) => StatusViewModel(),
+        child: Consumer<StatusViewModel>(
+            builder: (context, statusViewModel, child) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      Text('${AppLocalizations.of(context)!.hp}: '),
-                      Expanded(
-                        child: LinearProgressIndicator(
-                          value: widget.viewModel.curChallenge!.curHp /
-                              widget.viewModel.curChallenge!.totalHp,
-                          semanticsLabel: AppLocalizations.of(context)!.bossHp,
-                          color:
-                              Theme.of(context).colorScheme.onTertiaryContainer,
-                          backgroundColor:
-                              Theme.of(context).colorScheme.outlineVariant,
-                        ),
-                      ),
-                    ],
+                  Expanded(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(AppLocalizations.of(context)!.knight,
+                              style: Theme.of(context).textTheme.titleLarge),
+                          const SizedBox(height: 8.0),
+                          Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Text('${AppLocalizations.of(context)!.hp}: '),
+                                  Expanded(
+                                    child: LinearProgressIndicator(
+                                      value: widget.viewModel.hp /
+                                          widget.viewModel.maxHp,
+                                      semanticsLabel:
+                                          AppLocalizations.of(context)!
+                                              .knightHp,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onTertiaryContainer,
+                                      backgroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .outlineVariant,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                      '${widget.viewModel.hp}/${widget.viewModel.maxHp}')),
+                            ],
+                          ),
+                          Text(
+                              '${AppLocalizations.of(context)!.attack}: ${statusViewModel.attack}'),
+                          Text(
+                              '${AppLocalizations.of(context)!.defense}: ${statusViewModel.defense}'),
+                        ]),
                   ),
-                  Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                          '${widget.viewModel.curChallenge!.curHp}/${widget.viewModel.curChallenge!.totalHp}')),
-                ],
-              ),
-              Text(
-                  '${AppLocalizations.of(context)!.attack}: ${widget.viewModel.curChallenge!.attack}'),
-              Text(
-                  '${AppLocalizations.of(context)!.defense}: ${widget.viewModel.curChallenge!.defense}'),
-            ]),
-          )
-      ]),
-    );
+                  const VerticalDivider(),
+                  if (widget.viewModel.curChallenge != null)
+                    Expanded(
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                getChallengeLocalizedString(
+                                        context, widget.viewModel.curChallenge!)
+                                    .bossName,
+                                style: Theme.of(context).textTheme.titleLarge),
+                            const SizedBox(height: 8.0),
+                            Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                        '${AppLocalizations.of(context)!.hp}: '),
+                                    Expanded(
+                                      child: LinearProgressIndicator(
+                                        value: widget
+                                                .viewModel.curChallenge!.curHp /
+                                            widget.viewModel.curChallenge!
+                                                .totalHp,
+                                        semanticsLabel:
+                                            AppLocalizations.of(context)!
+                                                .bossHp,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onTertiaryContainer,
+                                        backgroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .outlineVariant,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                        '${widget.viewModel.curChallenge!.curHp}/${widget.viewModel.curChallenge!.totalHp}')),
+                              ],
+                            ),
+                            Text(
+                                '${AppLocalizations.of(context)!.attack}: ${widget.viewModel.curChallenge!.attack}'),
+                            Text(
+                                '${AppLocalizations.of(context)!.defense}: ${widget.viewModel.curChallenge!.defense}'),
+                          ]),
+                    )
+                ]),
+          );
+        }));
   }
 }
 
