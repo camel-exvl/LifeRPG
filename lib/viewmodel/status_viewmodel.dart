@@ -59,6 +59,8 @@ class StatusViewModel extends ChangeNotifier {
   List<AttributeModel> _attributes = [];
   List<EquipmentModel> _weapons = [];
   List<EquipmentModel> _armors = [];
+  int attack = 0;
+  int defense = 0;
 
   StatusModel get status => _status;
 
@@ -133,6 +135,8 @@ class StatusViewModel extends ChangeNotifier {
 
   Future<void> loadStatus() async {
     _status = await database.getStatus(1);
+    attack = await calculateAttack();
+    defense = await calculateDefense();
     notifyListeners();
   }
 
@@ -404,14 +408,18 @@ class StatusViewModel extends ChangeNotifier {
     }
   }
 
-  void equipWeapon(int weaponIndex) {
+  Future<void> equipWeapon(int weaponIndex) async {
     _status = _status.copyWith(weaponIndex: Value<int?>(weaponIndex));
+    attack = await calculateAttack();
+    defense = await calculateDefense();
     notifyListeners();
     updateStatus(_status);
   }
 
-  void removeWeapon() {
+  Future<void> removeWeapon() async{
     _status = _status.copyWith(weaponIndex: const Value<int?>(null));
+    attack = await calculateAttack();
+    defense = await calculateDefense();
     notifyListeners();
     updateStatus(_status);
   }
@@ -456,16 +464,24 @@ class StatusViewModel extends ChangeNotifier {
     }
   }
 
-  void equipArmor(int armorIndex) {
+  Future<void> equipArmor(int armorIndex) async {
     _status = _status.copyWith(armorIndex: Value<int?>(armorIndex));
+    attack = await calculateAttack();
+    defense = await calculateDefense();
     notifyListeners();
     updateStatus(_status);
   }
 
-  void removeArmor() {
+  Future<void> removeArmor() async {
     _status = _status.copyWith(armorIndex: const Value<int?>(null));
+    attack = await calculateAttack();
+    defense = await calculateDefense();
     notifyListeners();
     updateStatus(_status);
+  }
+
+  int getHP() {
+    return _status.hp;
   }
 
   void updateHP(int hp_) {
@@ -479,7 +495,7 @@ class StatusViewModel extends ChangeNotifier {
     updateStatus(_status);
   }
 
-  Future<int> getAttack() async {
+  Future<int> calculateAttack() async {
     int expAttack = _status.level * expAttackCoefficient;
     int weaponAttack = _status.weaponIndex == null
         ? 0
@@ -489,7 +505,7 @@ class StatusViewModel extends ChangeNotifier {
     return baseAttack + expAttack + weaponAttack;
   }
 
-  Future<int> getDefense() async {
+  Future<int> calculateDefense() async {
     int expDefense = _status.level * expDefenseCoefficient;
     int armorDefense = _status.armorIndex == null
         ? 0
@@ -497,6 +513,14 @@ class StatusViewModel extends ChangeNotifier {
             .getEquipmentById(getArmorIds()[_status.armorIndex!])
             .then((value) => value.equipmentType.defensePower);
     return baseDefense + expDefense + armorDefense;
+  }
+
+  int getAttack() {
+    return attack;
+  }
+
+  int getDefense() {
+    return defense;
   }
 
   List<PropertyModel> getProperties() {
