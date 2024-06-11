@@ -1628,7 +1628,7 @@ class $StatusTableTable extends StatusTable
       'weapon_ids', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: false,
-      defaultValue: const Constant(''));
+      defaultValue: const Constant(""));
   static const VerificationMeta _armorIdsMeta =
       const VerificationMeta('armorIds');
   @override
@@ -1636,7 +1636,7 @@ class $StatusTableTable extends StatusTable
       'armor_ids', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: false,
-      defaultValue: const Constant(''));
+      defaultValue: const Constant(""));
   static const VerificationMeta _weaponIndexMeta =
       const VerificationMeta('weaponIndex');
   @override
