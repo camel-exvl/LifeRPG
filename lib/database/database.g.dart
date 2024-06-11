@@ -1649,14 +1649,6 @@ class $StatusTableTable extends StatusTable
   late final GeneratedColumn<int> armorIndex = GeneratedColumn<int>(
       'armor_index', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
-  static const VerificationMeta _achievementIdsMeta =
-      const VerificationMeta('achievementIds');
-  @override
-  late final GeneratedColumn<String> achievementIds = GeneratedColumn<String>(
-      'achievement_ids', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      defaultValue: const Constant(""));
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -1668,8 +1660,7 @@ class $StatusTableTable extends StatusTable
         weaponIds,
         armorIds,
         weaponIndex,
-        armorIndex,
-        achievementIds
+        armorIndex
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1733,12 +1724,6 @@ class $StatusTableTable extends StatusTable
           armorIndex.isAcceptableOrUnknown(
               data['armor_index']!, _armorIndexMeta));
     }
-    if (data.containsKey('achievement_ids')) {
-      context.handle(
-          _achievementIdsMeta,
-          achievementIds.isAcceptableOrUnknown(
-              data['achievement_ids']!, _achievementIdsMeta));
-    }
     return context;
   }
 
@@ -1768,8 +1753,6 @@ class $StatusTableTable extends StatusTable
           .read(DriftSqlType.int, data['${effectivePrefix}weapon_index']),
       armorIndex: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}armor_index']),
-      achievementIds: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}achievement_ids'])!,
     );
   }
 
@@ -1790,7 +1773,6 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
   final String armorIds;
   final int? weaponIndex;
   final int? armorIndex;
-  final String achievementIds;
   const StatusModel(
       {required this.id,
       required this.level,
@@ -1801,8 +1783,7 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
       required this.weaponIds,
       required this.armorIds,
       this.weaponIndex,
-      this.armorIndex,
-      required this.achievementIds});
+      this.armorIndex});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -1820,7 +1801,6 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
     if (!nullToAbsent || armorIndex != null) {
       map['armor_index'] = Variable<int>(armorIndex);
     }
-    map['achievement_ids'] = Variable<String>(achievementIds);
     return map;
   }
 
@@ -1840,7 +1820,6 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
       armorIndex: armorIndex == null && nullToAbsent
           ? const Value.absent()
           : Value(armorIndex),
-      achievementIds: Value(achievementIds),
     );
   }
 
@@ -1858,7 +1837,6 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
       armorIds: serializer.fromJson<String>(json['armorIds']),
       weaponIndex: serializer.fromJson<int?>(json['weaponIndex']),
       armorIndex: serializer.fromJson<int?>(json['armorIndex']),
-      achievementIds: serializer.fromJson<String>(json['achievementIds']),
     );
   }
   @override
@@ -1875,7 +1853,6 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
       'armorIds': serializer.toJson<String>(armorIds),
       'weaponIndex': serializer.toJson<int?>(weaponIndex),
       'armorIndex': serializer.toJson<int?>(armorIndex),
-      'achievementIds': serializer.toJson<String>(achievementIds),
     };
   }
 
@@ -1889,8 +1866,7 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
           String? weaponIds,
           String? armorIds,
           Value<int?> weaponIndex = const Value.absent(),
-          Value<int?> armorIndex = const Value.absent(),
-          String? achievementIds}) =>
+          Value<int?> armorIndex = const Value.absent()}) =>
       StatusModel(
         id: id ?? this.id,
         level: level ?? this.level,
@@ -1902,7 +1878,6 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
         armorIds: armorIds ?? this.armorIds,
         weaponIndex: weaponIndex.present ? weaponIndex.value : this.weaponIndex,
         armorIndex: armorIndex.present ? armorIndex.value : this.armorIndex,
-        achievementIds: achievementIds ?? this.achievementIds,
       );
   @override
   String toString() {
@@ -1916,15 +1891,14 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
           ..write('weaponIds: $weaponIds, ')
           ..write('armorIds: $armorIds, ')
           ..write('weaponIndex: $weaponIndex, ')
-          ..write('armorIndex: $armorIndex, ')
-          ..write('achievementIds: $achievementIds')
+          ..write('armorIndex: $armorIndex')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode => Object.hash(id, level, exp, gold, diamond, hp, weaponIds,
-      armorIds, weaponIndex, armorIndex, achievementIds);
+      armorIds, weaponIndex, armorIndex);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1938,8 +1912,7 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
           other.weaponIds == this.weaponIds &&
           other.armorIds == this.armorIds &&
           other.weaponIndex == this.weaponIndex &&
-          other.armorIndex == this.armorIndex &&
-          other.achievementIds == this.achievementIds);
+          other.armorIndex == this.armorIndex);
 }
 
 class StatusTableCompanion extends UpdateCompanion<StatusModel> {
@@ -1953,7 +1926,6 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
   final Value<String> armorIds;
   final Value<int?> weaponIndex;
   final Value<int?> armorIndex;
-  final Value<String> achievementIds;
   const StatusTableCompanion({
     this.id = const Value.absent(),
     this.level = const Value.absent(),
@@ -1965,7 +1937,6 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
     this.armorIds = const Value.absent(),
     this.weaponIndex = const Value.absent(),
     this.armorIndex = const Value.absent(),
-    this.achievementIds = const Value.absent(),
   });
   StatusTableCompanion.insert({
     this.id = const Value.absent(),
@@ -1978,7 +1949,6 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
     this.armorIds = const Value.absent(),
     this.weaponIndex = const Value.absent(),
     this.armorIndex = const Value.absent(),
-    this.achievementIds = const Value.absent(),
   })  : level = Value(level),
         exp = Value(exp),
         gold = Value(gold),
@@ -1995,7 +1965,6 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
     Expression<String>? armorIds,
     Expression<int>? weaponIndex,
     Expression<int>? armorIndex,
-    Expression<String>? achievementIds,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2008,7 +1977,6 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
       if (armorIds != null) 'armor_ids': armorIds,
       if (weaponIndex != null) 'weapon_index': weaponIndex,
       if (armorIndex != null) 'armor_index': armorIndex,
-      if (achievementIds != null) 'achievement_ids': achievementIds,
     });
   }
 
@@ -2022,8 +1990,7 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
       Value<String>? weaponIds,
       Value<String>? armorIds,
       Value<int?>? weaponIndex,
-      Value<int?>? armorIndex,
-      Value<String>? achievementIds}) {
+      Value<int?>? armorIndex}) {
     return StatusTableCompanion(
       id: id ?? this.id,
       level: level ?? this.level,
@@ -2035,7 +2002,6 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
       armorIds: armorIds ?? this.armorIds,
       weaponIndex: weaponIndex ?? this.weaponIndex,
       armorIndex: armorIndex ?? this.armorIndex,
-      achievementIds: achievementIds ?? this.achievementIds,
     );
   }
 
@@ -2072,9 +2038,6 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
     if (armorIndex.present) {
       map['armor_index'] = Variable<int>(armorIndex.value);
     }
-    if (achievementIds.present) {
-      map['achievement_ids'] = Variable<String>(achievementIds.value);
-    }
     return map;
   }
 
@@ -2090,8 +2053,7 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
           ..write('weaponIds: $weaponIds, ')
           ..write('armorIds: $armorIds, ')
           ..write('weaponIndex: $weaponIndex, ')
-          ..write('armorIndex: $armorIndex, ')
-          ..write('achievementIds: $achievementIds')
+          ..write('armorIndex: $armorIndex')
           ..write(')'))
         .toString();
   }
@@ -2612,299 +2574,6 @@ class EquipmentTableCompanion extends UpdateCompanion<EquipmentModel> {
   }
 }
 
-class $AchievementTableTable extends AchievementTable
-    with TableInfo<$AchievementTableTable, AchievementModel> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $AchievementTableTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
-      hasAutoIncrement: true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _nameZHMeta = const VerificationMeta('nameZH');
-  @override
-  late final GeneratedColumn<String> nameZH = GeneratedColumn<String>(
-      'name_z_h', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _nameENMeta = const VerificationMeta('nameEN');
-  @override
-  late final GeneratedColumn<String> nameEN = GeneratedColumn<String>(
-      'name_e_n', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _descriptionZHMeta =
-      const VerificationMeta('descriptionZH');
-  @override
-  late final GeneratedColumn<String> descriptionZH = GeneratedColumn<String>(
-      'description_z_h', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _descriptionENMeta =
-      const VerificationMeta('descriptionEN');
-  @override
-  late final GeneratedColumn<String> descriptionEN = GeneratedColumn<String>(
-      'description_e_n', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  @override
-  List<GeneratedColumn> get $columns =>
-      [id, nameZH, nameEN, descriptionZH, descriptionEN];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'achievement_table';
-  @override
-  VerificationContext validateIntegrity(Insertable<AchievementModel> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('name_z_h')) {
-      context.handle(_nameZHMeta,
-          nameZH.isAcceptableOrUnknown(data['name_z_h']!, _nameZHMeta));
-    } else if (isInserting) {
-      context.missing(_nameZHMeta);
-    }
-    if (data.containsKey('name_e_n')) {
-      context.handle(_nameENMeta,
-          nameEN.isAcceptableOrUnknown(data['name_e_n']!, _nameENMeta));
-    } else if (isInserting) {
-      context.missing(_nameENMeta);
-    }
-    if (data.containsKey('description_z_h')) {
-      context.handle(
-          _descriptionZHMeta,
-          descriptionZH.isAcceptableOrUnknown(
-              data['description_z_h']!, _descriptionZHMeta));
-    } else if (isInserting) {
-      context.missing(_descriptionZHMeta);
-    }
-    if (data.containsKey('description_e_n')) {
-      context.handle(
-          _descriptionENMeta,
-          descriptionEN.isAcceptableOrUnknown(
-              data['description_e_n']!, _descriptionENMeta));
-    } else if (isInserting) {
-      context.missing(_descriptionENMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  AchievementModel map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return AchievementModel(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      nameZH: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}name_z_h'])!,
-      nameEN: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}name_e_n'])!,
-      descriptionZH: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}description_z_h'])!,
-      descriptionEN: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}description_e_n'])!,
-    );
-  }
-
-  @override
-  $AchievementTableTable createAlias(String alias) {
-    return $AchievementTableTable(attachedDatabase, alias);
-  }
-}
-
-class AchievementModel extends DataClass
-    implements Insertable<AchievementModel> {
-  final int id;
-  final String nameZH;
-  final String nameEN;
-  final String descriptionZH;
-  final String descriptionEN;
-  const AchievementModel(
-      {required this.id,
-      required this.nameZH,
-      required this.nameEN,
-      required this.descriptionZH,
-      required this.descriptionEN});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['name_z_h'] = Variable<String>(nameZH);
-    map['name_e_n'] = Variable<String>(nameEN);
-    map['description_z_h'] = Variable<String>(descriptionZH);
-    map['description_e_n'] = Variable<String>(descriptionEN);
-    return map;
-  }
-
-  AchievementTableCompanion toCompanion(bool nullToAbsent) {
-    return AchievementTableCompanion(
-      id: Value(id),
-      nameZH: Value(nameZH),
-      nameEN: Value(nameEN),
-      descriptionZH: Value(descriptionZH),
-      descriptionEN: Value(descriptionEN),
-    );
-  }
-
-  factory AchievementModel.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return AchievementModel(
-      id: serializer.fromJson<int>(json['id']),
-      nameZH: serializer.fromJson<String>(json['nameZH']),
-      nameEN: serializer.fromJson<String>(json['nameEN']),
-      descriptionZH: serializer.fromJson<String>(json['descriptionZH']),
-      descriptionEN: serializer.fromJson<String>(json['descriptionEN']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'nameZH': serializer.toJson<String>(nameZH),
-      'nameEN': serializer.toJson<String>(nameEN),
-      'descriptionZH': serializer.toJson<String>(descriptionZH),
-      'descriptionEN': serializer.toJson<String>(descriptionEN),
-    };
-  }
-
-  AchievementModel copyWith(
-          {int? id,
-          String? nameZH,
-          String? nameEN,
-          String? descriptionZH,
-          String? descriptionEN}) =>
-      AchievementModel(
-        id: id ?? this.id,
-        nameZH: nameZH ?? this.nameZH,
-        nameEN: nameEN ?? this.nameEN,
-        descriptionZH: descriptionZH ?? this.descriptionZH,
-        descriptionEN: descriptionEN ?? this.descriptionEN,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('AchievementModel(')
-          ..write('id: $id, ')
-          ..write('nameZH: $nameZH, ')
-          ..write('nameEN: $nameEN, ')
-          ..write('descriptionZH: $descriptionZH, ')
-          ..write('descriptionEN: $descriptionEN')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(id, nameZH, nameEN, descriptionZH, descriptionEN);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is AchievementModel &&
-          other.id == this.id &&
-          other.nameZH == this.nameZH &&
-          other.nameEN == this.nameEN &&
-          other.descriptionZH == this.descriptionZH &&
-          other.descriptionEN == this.descriptionEN);
-}
-
-class AchievementTableCompanion extends UpdateCompanion<AchievementModel> {
-  final Value<int> id;
-  final Value<String> nameZH;
-  final Value<String> nameEN;
-  final Value<String> descriptionZH;
-  final Value<String> descriptionEN;
-  const AchievementTableCompanion({
-    this.id = const Value.absent(),
-    this.nameZH = const Value.absent(),
-    this.nameEN = const Value.absent(),
-    this.descriptionZH = const Value.absent(),
-    this.descriptionEN = const Value.absent(),
-  });
-  AchievementTableCompanion.insert({
-    this.id = const Value.absent(),
-    required String nameZH,
-    required String nameEN,
-    required String descriptionZH,
-    required String descriptionEN,
-  })  : nameZH = Value(nameZH),
-        nameEN = Value(nameEN),
-        descriptionZH = Value(descriptionZH),
-        descriptionEN = Value(descriptionEN);
-  static Insertable<AchievementModel> custom({
-    Expression<int>? id,
-    Expression<String>? nameZH,
-    Expression<String>? nameEN,
-    Expression<String>? descriptionZH,
-    Expression<String>? descriptionEN,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (nameZH != null) 'name_z_h': nameZH,
-      if (nameEN != null) 'name_e_n': nameEN,
-      if (descriptionZH != null) 'description_z_h': descriptionZH,
-      if (descriptionEN != null) 'description_e_n': descriptionEN,
-    });
-  }
-
-  AchievementTableCompanion copyWith(
-      {Value<int>? id,
-      Value<String>? nameZH,
-      Value<String>? nameEN,
-      Value<String>? descriptionZH,
-      Value<String>? descriptionEN}) {
-    return AchievementTableCompanion(
-      id: id ?? this.id,
-      nameZH: nameZH ?? this.nameZH,
-      nameEN: nameEN ?? this.nameEN,
-      descriptionZH: descriptionZH ?? this.descriptionZH,
-      descriptionEN: descriptionEN ?? this.descriptionEN,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (nameZH.present) {
-      map['name_z_h'] = Variable<String>(nameZH.value);
-    }
-    if (nameEN.present) {
-      map['name_e_n'] = Variable<String>(nameEN.value);
-    }
-    if (descriptionZH.present) {
-      map['description_z_h'] = Variable<String>(descriptionZH.value);
-    }
-    if (descriptionEN.present) {
-      map['description_e_n'] = Variable<String>(descriptionEN.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('AchievementTableCompanion(')
-          ..write('id: $id, ')
-          ..write('nameZH: $nameZH, ')
-          ..write('nameEN: $nameEN, ')
-          ..write('descriptionZH: $descriptionZH, ')
-          ..write('descriptionEN: $descriptionEN')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class $ChallengeTableTable extends ChallengeTable
     with TableInfo<$ChallengeTableTable, ChallengeModel> {
   @override
@@ -3357,8 +3026,6 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $StatusTableTable statusTable = $StatusTableTable(this);
   late final $SettingTableTable settingTable = $SettingTableTable(this);
   late final $EquipmentTableTable equipmentTable = $EquipmentTableTable(this);
-  late final $AchievementTableTable achievementTable =
-      $AchievementTableTable(this);
   late final $ChallengeTableTable challengeTable = $ChallengeTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
@@ -3371,7 +3038,6 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         statusTable,
         settingTable,
         equipmentTable,
-        achievementTable,
         challengeTable
       ];
 }
@@ -4082,7 +3748,6 @@ typedef $$StatusTableTableInsertCompanionBuilder = StatusTableCompanion
   Value<String> armorIds,
   Value<int?> weaponIndex,
   Value<int?> armorIndex,
-  Value<String> achievementIds,
 });
 typedef $$StatusTableTableUpdateCompanionBuilder = StatusTableCompanion
     Function({
@@ -4096,7 +3761,6 @@ typedef $$StatusTableTableUpdateCompanionBuilder = StatusTableCompanion
   Value<String> armorIds,
   Value<int?> weaponIndex,
   Value<int?> armorIndex,
-  Value<String> achievementIds,
 });
 
 class $$StatusTableTableTableManager extends RootTableManager<
@@ -4129,7 +3793,6 @@ class $$StatusTableTableTableManager extends RootTableManager<
             Value<String> armorIds = const Value.absent(),
             Value<int?> weaponIndex = const Value.absent(),
             Value<int?> armorIndex = const Value.absent(),
-            Value<String> achievementIds = const Value.absent(),
           }) =>
               StatusTableCompanion(
             id: id,
@@ -4142,7 +3805,6 @@ class $$StatusTableTableTableManager extends RootTableManager<
             armorIds: armorIds,
             weaponIndex: weaponIndex,
             armorIndex: armorIndex,
-            achievementIds: achievementIds,
           ),
           getInsertCompanionBuilder: ({
             Value<int> id = const Value.absent(),
@@ -4155,7 +3817,6 @@ class $$StatusTableTableTableManager extends RootTableManager<
             Value<String> armorIds = const Value.absent(),
             Value<int?> weaponIndex = const Value.absent(),
             Value<int?> armorIndex = const Value.absent(),
-            Value<String> achievementIds = const Value.absent(),
           }) =>
               StatusTableCompanion.insert(
             id: id,
@@ -4168,7 +3829,6 @@ class $$StatusTableTableTableManager extends RootTableManager<
             armorIds: armorIds,
             weaponIndex: weaponIndex,
             armorIndex: armorIndex,
-            achievementIds: achievementIds,
           ),
         ));
 }
@@ -4237,11 +3897,6 @@ class $$StatusTableTableFilterComposer
       column: $state.table.armorIndex,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get achievementIds => $state.composableBuilder(
-      column: $state.table.achievementIds,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
 }
 
 class $$StatusTableTableOrderingComposer
@@ -4294,11 +3949,6 @@ class $$StatusTableTableOrderingComposer
 
   ColumnOrderings<int> get armorIndex => $state.composableBuilder(
       column: $state.table.armorIndex,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get achievementIds => $state.composableBuilder(
-      column: $state.table.achievementIds,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
@@ -4550,145 +4200,6 @@ class $$EquipmentTableTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
-typedef $$AchievementTableTableInsertCompanionBuilder
-    = AchievementTableCompanion Function({
-  Value<int> id,
-  required String nameZH,
-  required String nameEN,
-  required String descriptionZH,
-  required String descriptionEN,
-});
-typedef $$AchievementTableTableUpdateCompanionBuilder
-    = AchievementTableCompanion Function({
-  Value<int> id,
-  Value<String> nameZH,
-  Value<String> nameEN,
-  Value<String> descriptionZH,
-  Value<String> descriptionEN,
-});
-
-class $$AchievementTableTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $AchievementTableTable,
-    AchievementModel,
-    $$AchievementTableTableFilterComposer,
-    $$AchievementTableTableOrderingComposer,
-    $$AchievementTableTableProcessedTableManager,
-    $$AchievementTableTableInsertCompanionBuilder,
-    $$AchievementTableTableUpdateCompanionBuilder> {
-  $$AchievementTableTableTableManager(
-      _$AppDatabase db, $AchievementTableTable table)
-      : super(TableManagerState(
-          db: db,
-          table: table,
-          filteringComposer:
-              $$AchievementTableTableFilterComposer(ComposerState(db, table)),
-          orderingComposer:
-              $$AchievementTableTableOrderingComposer(ComposerState(db, table)),
-          getChildManagerBuilder: (p) =>
-              $$AchievementTableTableProcessedTableManager(p),
-          getUpdateCompanionBuilder: ({
-            Value<int> id = const Value.absent(),
-            Value<String> nameZH = const Value.absent(),
-            Value<String> nameEN = const Value.absent(),
-            Value<String> descriptionZH = const Value.absent(),
-            Value<String> descriptionEN = const Value.absent(),
-          }) =>
-              AchievementTableCompanion(
-            id: id,
-            nameZH: nameZH,
-            nameEN: nameEN,
-            descriptionZH: descriptionZH,
-            descriptionEN: descriptionEN,
-          ),
-          getInsertCompanionBuilder: ({
-            Value<int> id = const Value.absent(),
-            required String nameZH,
-            required String nameEN,
-            required String descriptionZH,
-            required String descriptionEN,
-          }) =>
-              AchievementTableCompanion.insert(
-            id: id,
-            nameZH: nameZH,
-            nameEN: nameEN,
-            descriptionZH: descriptionZH,
-            descriptionEN: descriptionEN,
-          ),
-        ));
-}
-
-class $$AchievementTableTableProcessedTableManager
-    extends ProcessedTableManager<
-        _$AppDatabase,
-        $AchievementTableTable,
-        AchievementModel,
-        $$AchievementTableTableFilterComposer,
-        $$AchievementTableTableOrderingComposer,
-        $$AchievementTableTableProcessedTableManager,
-        $$AchievementTableTableInsertCompanionBuilder,
-        $$AchievementTableTableUpdateCompanionBuilder> {
-  $$AchievementTableTableProcessedTableManager(super.$state);
-}
-
-class $$AchievementTableTableFilterComposer
-    extends FilterComposer<_$AppDatabase, $AchievementTableTable> {
-  $$AchievementTableTableFilterComposer(super.$state);
-  ColumnFilters<int> get id => $state.composableBuilder(
-      column: $state.table.id,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get nameZH => $state.composableBuilder(
-      column: $state.table.nameZH,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get nameEN => $state.composableBuilder(
-      column: $state.table.nameEN,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get descriptionZH => $state.composableBuilder(
-      column: $state.table.descriptionZH,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get descriptionEN => $state.composableBuilder(
-      column: $state.table.descriptionEN,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-}
-
-class $$AchievementTableTableOrderingComposer
-    extends OrderingComposer<_$AppDatabase, $AchievementTableTable> {
-  $$AchievementTableTableOrderingComposer(super.$state);
-  ColumnOrderings<int> get id => $state.composableBuilder(
-      column: $state.table.id,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get nameZH => $state.composableBuilder(
-      column: $state.table.nameZH,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get nameEN => $state.composableBuilder(
-      column: $state.table.nameEN,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get descriptionZH => $state.composableBuilder(
-      column: $state.table.descriptionZH,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get descriptionEN => $state.composableBuilder(
-      column: $state.table.descriptionEN,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-}
-
 typedef $$ChallengeTableTableInsertCompanionBuilder = ChallengeTableCompanion
     Function({
   Value<int> id,
@@ -4906,8 +4417,6 @@ class _$AppDatabaseManager {
       $$SettingTableTableTableManager(_db, _db.settingTable);
   $$EquipmentTableTableTableManager get equipmentTable =>
       $$EquipmentTableTableTableManager(_db, _db.equipmentTable);
-  $$AchievementTableTableTableManager get achievementTable =>
-      $$AchievementTableTableTableManager(_db, _db.achievementTable);
   $$ChallengeTableTableTableManager get challengeTable =>
       $$ChallengeTableTableTableManager(_db, _db.challengeTable);
 }
