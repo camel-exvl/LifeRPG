@@ -134,5 +134,17 @@
   "items": "Items",
   "instanceDungeon": "Instance Dungeon",
   "equip": "Equip",
-  "takeOff": "Take Off"
+  "takeOff": "Take Off",
+  "curChallenge": "Current Challenge",
+  "switchChallenge": "Switch Challenge",
+  "selectChallenge": "Select Challenge",
+  "knight": "Knight",
+  "knightHp": "Knight Health",
+  "bossHp": "Boss Health",
+  "dragonLair": "Dragon Lair",
+  "dragonLairDescription": "TODO",
+  "dragonLairBoss": "Dragon",
+  "hp": "Hp",
+  "attack": "Attack",
+  "defense": "Defense"
 }

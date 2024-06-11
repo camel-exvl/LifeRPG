@@ -1883,11 +1883,11 @@ class StatusModel extends DataClass implements Insertable<StatusModel> {
   String toString() {
     return (StringBuffer('StatusModel(')
           ..write('id: $id, ')
-          ..write('level: $level, ')
-          ..write('exp: $exp, ')..write('gold: $gold, ')..write(
-          'diamond: $diamond, ')..write('hp: $hp, ')..write(
-          'weaponIds: $weaponIds, ')..write('armorIds: $armorIds, ')..write(
-          'weaponIndex: $weaponIndex, ')..write('armorIndex: $armorIndex')
+          ..write('level: $level, ')..write('exp: $exp, ')..write(
+          'gold: $gold, ')..write('diamond: $diamond, ')..write(
+          'hp: $hp, ')..write('weaponIds: $weaponIds, ')..write(
+          'armorIds: $armorIds, ')..write('weaponIndex: $weaponIndex, ')..write(
+          'armorIndex: $armorIndex')
           ..write(')'))
         .toString();
   }
@@ -1976,16 +1976,17 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
     });
   }
 
-  StatusTableCompanion copyWith({Value<int>? id,
-    Value<int>? level,
-    Value<int>? exp,
-    Value<int>? gold,
-    Value<int>? diamond,
-    Value<int>? hp,
-    Value<String>? weaponIds,
-    Value<String>? armorIds,
-    Value<int?>? weaponIndex,
-    Value<int?>? armorIndex}) {
+  StatusTableCompanion copyWith(
+      {Value<int>? id,
+      Value<int>? level,
+      Value<int>? exp,
+      Value<int>? gold,
+      Value<int>? diamond,
+      Value<int>? hp,
+      Value<String>? weaponIds,
+      Value<String>? armorIds,
+      Value<int?>? weaponIndex,
+      Value<int?>? armorIndex}) {
     return StatusTableCompanion(
       id: id ?? this.id,
       level: level ?? this.level,
@@ -2040,11 +2041,11 @@ class StatusTableCompanion extends UpdateCompanion<StatusModel> {
   String toString() {
     return (StringBuffer('StatusTableCompanion(')
           ..write('id: $id, ')
-          ..write('level: $level, ')
-          ..write('exp: $exp, ')..write('gold: $gold, ')..write(
-          'diamond: $diamond, ')..write('hp: $hp, ')..write(
-          'weaponIds: $weaponIds, ')..write('armorIds: $armorIds, ')..write(
-          'weaponIndex: $weaponIndex, ')..write('armorIndex: $armorIndex')
+          ..write('level: $level, ')..write('exp: $exp, ')..write(
+          'gold: $gold, ')..write('diamond: $diamond, ')..write(
+          'hp: $hp, ')..write('weaponIds: $weaponIds, ')..write(
+          'armorIds: $armorIds, ')..write('weaponIndex: $weaponIndex, ')..write(
+          'armorIndex: $armorIndex')
           ..write(')'))
         .toString();
   }
@@ -2603,10 +2604,16 @@ class $ChallengeTableTable extends ChallengeTable
   late final GeneratedColumn<String> bossName = GeneratedColumn<String>(
       'boss_name', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _hpMeta = const VerificationMeta('hp');
+  static const VerificationMeta _totalHpMeta =
+      const VerificationMeta('totalHp');
   @override
-  late final GeneratedColumn<int> hp = GeneratedColumn<int>(
-      'hp', aliasedName, false,
+  late final GeneratedColumn<int> totalHp = GeneratedColumn<int>(
+      'total_hp', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _curHpMeta = const VerificationMeta('curHp');
+  @override
+  late final GeneratedColumn<int> curHp = GeneratedColumn<int>(
+      'cur_hp', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _attackMeta = const VerificationMeta('attack');
   @override
@@ -2632,7 +2639,8 @@ class $ChallengeTableTable extends ChallengeTable
         description,
         imagePath,
         bossName,
-        hp,
+        totalHp,
+        curHp,
         attack,
         defense,
         rewardGold
@@ -2676,10 +2684,17 @@ class $ChallengeTableTable extends ChallengeTable
     } else if (isInserting) {
       context.missing(_bossNameMeta);
     }
-    if (data.containsKey('hp')) {
-      context.handle(_hpMeta, hp.isAcceptableOrUnknown(data['hp']!, _hpMeta));
+    if (data.containsKey('total_hp')) {
+      context.handle(_totalHpMeta,
+          totalHp.isAcceptableOrUnknown(data['total_hp']!, _totalHpMeta));
     } else if (isInserting) {
-      context.missing(_hpMeta);
+      context.missing(_totalHpMeta);
+    }
+    if (data.containsKey('cur_hp')) {
+      context.handle(
+          _curHpMeta, curHp.isAcceptableOrUnknown(data['cur_hp']!, _curHpMeta));
+    } else if (isInserting) {
+      context.missing(_curHpMeta);
     }
     if (data.containsKey('attack')) {
       context.handle(_attackMeta,
@@ -2720,8 +2735,10 @@ class $ChallengeTableTable extends ChallengeTable
           .read(DriftSqlType.string, data['${effectivePrefix}image_path'])!,
       bossName: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}boss_name'])!,
-      hp: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}hp'])!,
+      totalHp: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}total_hp'])!,
+      curHp: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}cur_hp'])!,
       attack: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}attack'])!,
       defense: attachedDatabase.typeMapping
@@ -2743,18 +2760,19 @@ class ChallengeModel extends DataClass implements Insertable<ChallengeModel> {
   final String description;
   final String imagePath;
   final String bossName;
-  final int hp;
+  final int totalHp;
+  final int curHp;
   final int attack;
   final int defense;
   final int rewardGold;
-
   const ChallengeModel(
       {required this.id,
       required this.name,
       required this.description,
       required this.imagePath,
       required this.bossName,
-      required this.hp,
+      required this.totalHp,
+      required this.curHp,
       required this.attack,
       required this.defense,
       required this.rewardGold});
@@ -2766,7 +2784,8 @@ class ChallengeModel extends DataClass implements Insertable<ChallengeModel> {
     map['description'] = Variable<String>(description);
     map['image_path'] = Variable<String>(imagePath);
     map['boss_name'] = Variable<String>(bossName);
-    map['hp'] = Variable<int>(hp);
+    map['total_hp'] = Variable<int>(totalHp);
+    map['cur_hp'] = Variable<int>(curHp);
     map['attack'] = Variable<int>(attack);
     map['defense'] = Variable<int>(defense);
     map['reward_gold'] = Variable<int>(rewardGold);
@@ -2780,7 +2799,8 @@ class ChallengeModel extends DataClass implements Insertable<ChallengeModel> {
       description: Value(description),
       imagePath: Value(imagePath),
       bossName: Value(bossName),
-      hp: Value(hp),
+      totalHp: Value(totalHp),
+      curHp: Value(curHp),
       attack: Value(attack),
       defense: Value(defense),
       rewardGold: Value(rewardGold),
@@ -2796,7 +2816,8 @@ class ChallengeModel extends DataClass implements Insertable<ChallengeModel> {
       description: serializer.fromJson<String>(json['description']),
       imagePath: serializer.fromJson<String>(json['imagePath']),
       bossName: serializer.fromJson<String>(json['bossName']),
-      hp: serializer.fromJson<int>(json['hp']),
+      totalHp: serializer.fromJson<int>(json['totalHp']),
+      curHp: serializer.fromJson<int>(json['curHp']),
       attack: serializer.fromJson<int>(json['attack']),
       defense: serializer.fromJson<int>(json['defense']),
       rewardGold: serializer.fromJson<int>(json['rewardGold']),
@@ -2811,7 +2832,8 @@ class ChallengeModel extends DataClass implements Insertable<ChallengeModel> {
       'description': serializer.toJson<String>(description),
       'imagePath': serializer.toJson<String>(imagePath),
       'bossName': serializer.toJson<String>(bossName),
-      'hp': serializer.toJson<int>(hp),
+      'totalHp': serializer.toJson<int>(totalHp),
+      'curHp': serializer.toJson<int>(curHp),
       'attack': serializer.toJson<int>(attack),
       'defense': serializer.toJson<int>(defense),
       'rewardGold': serializer.toJson<int>(rewardGold),
@@ -2824,7 +2846,8 @@ class ChallengeModel extends DataClass implements Insertable<ChallengeModel> {
           String? description,
           String? imagePath,
           String? bossName,
-          int? hp,
+          int? totalHp,
+          int? curHp,
           int? attack,
           int? defense,
           int? rewardGold}) =>
@@ -2834,7 +2857,8 @@ class ChallengeModel extends DataClass implements Insertable<ChallengeModel> {
         description: description ?? this.description,
         imagePath: imagePath ?? this.imagePath,
         bossName: bossName ?? this.bossName,
-        hp: hp ?? this.hp,
+        totalHp: totalHp ?? this.totalHp,
+        curHp: curHp ?? this.curHp,
         attack: attack ?? this.attack,
         defense: defense ?? this.defense,
         rewardGold: rewardGold ?? this.rewardGold,
@@ -2846,8 +2870,8 @@ class ChallengeModel extends DataClass implements Insertable<ChallengeModel> {
           ..write('name: $name, ')
           ..write('description: $description, ')
           ..write('imagePath: $imagePath, ')
-          ..write('bossName: $bossName, ')
-          ..write('hp: $hp, ')
+          ..write('bossName: $bossName, ')..write('totalHp: $totalHp, ')..write(
+          'curHp: $curHp, ')
           ..write('attack: $attack, ')
           ..write('defense: $defense, ')
           ..write('rewardGold: $rewardGold')
@@ -2857,7 +2881,7 @@ class ChallengeModel extends DataClass implements Insertable<ChallengeModel> {
 
   @override
   int get hashCode => Object.hash(id, name, description, imagePath, bossName,
-      hp, attack, defense, rewardGold);
+      totalHp, curHp, attack, defense, rewardGold);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -2867,7 +2891,8 @@ class ChallengeModel extends DataClass implements Insertable<ChallengeModel> {
           other.description == this.description &&
           other.imagePath == this.imagePath &&
           other.bossName == this.bossName &&
-          other.hp == this.hp &&
+          other.totalHp == this.totalHp &&
+          other.curHp == this.curHp &&
           other.attack == this.attack &&
           other.defense == this.defense &&
           other.rewardGold == this.rewardGold);
@@ -2879,7 +2904,8 @@ class ChallengeTableCompanion extends UpdateCompanion<ChallengeModel> {
   final Value<String> description;
   final Value<String> imagePath;
   final Value<String> bossName;
-  final Value<int> hp;
+  final Value<int> totalHp;
+  final Value<int> curHp;
   final Value<int> attack;
   final Value<int> defense;
   final Value<int> rewardGold;
@@ -2889,7 +2915,8 @@ class ChallengeTableCompanion extends UpdateCompanion<ChallengeModel> {
     this.description = const Value.absent(),
     this.imagePath = const Value.absent(),
     this.bossName = const Value.absent(),
-    this.hp = const Value.absent(),
+    this.totalHp = const Value.absent(),
+    this.curHp = const Value.absent(),
     this.attack = const Value.absent(),
     this.defense = const Value.absent(),
     this.rewardGold = const Value.absent(),
@@ -2900,7 +2927,8 @@ class ChallengeTableCompanion extends UpdateCompanion<ChallengeModel> {
     required String description,
     required String imagePath,
     required String bossName,
-    required int hp,
+    required int totalHp,
+    required int curHp,
     required int attack,
     required int defense,
     required int rewardGold,
@@ -2908,7 +2936,8 @@ class ChallengeTableCompanion extends UpdateCompanion<ChallengeModel> {
         description = Value(description),
         imagePath = Value(imagePath),
         bossName = Value(bossName),
-        hp = Value(hp),
+        totalHp = Value(totalHp),
+        curHp = Value(curHp),
         attack = Value(attack),
         defense = Value(defense),
         rewardGold = Value(rewardGold);
@@ -2918,7 +2947,8 @@ class ChallengeTableCompanion extends UpdateCompanion<ChallengeModel> {
     Expression<String>? description,
     Expression<String>? imagePath,
     Expression<String>? bossName,
-    Expression<int>? hp,
+    Expression<int>? totalHp,
+    Expression<int>? curHp,
     Expression<int>? attack,
     Expression<int>? defense,
     Expression<int>? rewardGold,
@@ -2929,7 +2959,8 @@ class ChallengeTableCompanion extends UpdateCompanion<ChallengeModel> {
       if (description != null) 'description': description,
       if (imagePath != null) 'image_path': imagePath,
       if (bossName != null) 'boss_name': bossName,
-      if (hp != null) 'hp': hp,
+      if (totalHp != null) 'total_hp': totalHp,
+      if (curHp != null) 'cur_hp': curHp,
       if (attack != null) 'attack': attack,
       if (defense != null) 'defense': defense,
       if (rewardGold != null) 'reward_gold': rewardGold,
@@ -2942,7 +2973,8 @@ class ChallengeTableCompanion extends UpdateCompanion<ChallengeModel> {
       Value<String>? description,
       Value<String>? imagePath,
       Value<String>? bossName,
-      Value<int>? hp,
+      Value<int>? totalHp,
+      Value<int>? curHp,
       Value<int>? attack,
       Value<int>? defense,
       Value<int>? rewardGold}) {
@@ -2952,7 +2984,8 @@ class ChallengeTableCompanion extends UpdateCompanion<ChallengeModel> {
       description: description ?? this.description,
       imagePath: imagePath ?? this.imagePath,
       bossName: bossName ?? this.bossName,
-      hp: hp ?? this.hp,
+      totalHp: totalHp ?? this.totalHp,
+      curHp: curHp ?? this.curHp,
       attack: attack ?? this.attack,
       defense: defense ?? this.defense,
       rewardGold: rewardGold ?? this.rewardGold,
@@ -2977,8 +3010,11 @@ class ChallengeTableCompanion extends UpdateCompanion<ChallengeModel> {
     if (bossName.present) {
       map['boss_name'] = Variable<String>(bossName.value);
     }
-    if (hp.present) {
-      map['hp'] = Variable<int>(hp.value);
+    if (totalHp.present) {
+      map['total_hp'] = Variable<int>(totalHp.value);
+    }
+    if (curHp.present) {
+      map['cur_hp'] = Variable<int>(curHp.value);
     }
     if (attack.present) {
       map['attack'] = Variable<int>(attack.value);
@@ -2999,8 +3035,8 @@ class ChallengeTableCompanion extends UpdateCompanion<ChallengeModel> {
           ..write('name: $name, ')
           ..write('description: $description, ')
           ..write('imagePath: $imagePath, ')
-          ..write('bossName: $bossName, ')
-          ..write('hp: $hp, ')
+          ..write('bossName: $bossName, ')..write('totalHp: $totalHp, ')..write(
+          'curHp: $curHp, ')
           ..write('attack: $attack, ')
           ..write('defense: $defense, ')
           ..write('rewardGold: $rewardGold')
@@ -4199,7 +4235,8 @@ typedef $$ChallengeTableTableInsertCompanionBuilder = ChallengeTableCompanion
   required String description,
   required String imagePath,
   required String bossName,
-  required int hp,
+  required int totalHp,
+  required int curHp,
   required int attack,
   required int defense,
   required int rewardGold,
@@ -4211,7 +4248,8 @@ typedef $$ChallengeTableTableUpdateCompanionBuilder = ChallengeTableCompanion
   Value<String> description,
   Value<String> imagePath,
   Value<String> bossName,
-  Value<int> hp,
+  Value<int> totalHp,
+  Value<int> curHp,
   Value<int> attack,
   Value<int> defense,
   Value<int> rewardGold,
@@ -4243,7 +4281,8 @@ class $$ChallengeTableTableTableManager extends RootTableManager<
             Value<String> description = const Value.absent(),
             Value<String> imagePath = const Value.absent(),
             Value<String> bossName = const Value.absent(),
-            Value<int> hp = const Value.absent(),
+            Value<int> totalHp = const Value.absent(),
+            Value<int> curHp = const Value.absent(),
             Value<int> attack = const Value.absent(),
             Value<int> defense = const Value.absent(),
             Value<int> rewardGold = const Value.absent(),
@@ -4254,7 +4293,8 @@ class $$ChallengeTableTableTableManager extends RootTableManager<
             description: description,
             imagePath: imagePath,
             bossName: bossName,
-            hp: hp,
+            totalHp: totalHp,
+            curHp: curHp,
             attack: attack,
             defense: defense,
             rewardGold: rewardGold,
@@ -4265,7 +4305,8 @@ class $$ChallengeTableTableTableManager extends RootTableManager<
             required String description,
             required String imagePath,
             required String bossName,
-            required int hp,
+            required int totalHp,
+            required int curHp,
             required int attack,
             required int defense,
             required int rewardGold,
@@ -4276,7 +4317,8 @@ class $$ChallengeTableTableTableManager extends RootTableManager<
             description: description,
             imagePath: imagePath,
             bossName: bossName,
-            hp: hp,
+            totalHp: totalHp,
+            curHp: curHp,
             attack: attack,
             defense: defense,
             rewardGold: rewardGold,
@@ -4324,8 +4366,13 @@ class $$ChallengeTableTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<int> get hp => $state.composableBuilder(
-      column: $state.table.hp,
+  ColumnFilters<int> get totalHp => $state.composableBuilder(
+      column: $state.table.totalHp,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get curHp => $state.composableBuilder(
+      column: $state.table.curHp,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -4373,8 +4420,13 @@ class $$ChallengeTableTableOrderingComposer
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<int> get hp => $state.composableBuilder(
-      column: $state.table.hp,
+  ColumnOrderings<int> get totalHp => $state.composableBuilder(
+      column: $state.table.totalHp,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get curHp => $state.composableBuilder(
+      column: $state.table.curHp,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 

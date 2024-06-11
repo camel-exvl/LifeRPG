@@ -92,6 +92,10 @@ class AppDatabase extends _$AppDatabase {
   Future<List<ChallengeModel>> getAllChallenges() =>
       select(challengeTable).get();
 
+  Future<ChallengeModel> getChallengeById(int id) async {
+    return (select(challengeTable)..where((t) => t.id.equals(id))).getSingle();
+  }
+
   Future<int> insertChallenge(ChallengeTableCompanion challenge) =>
       into(challengeTable).insert(challenge);
 

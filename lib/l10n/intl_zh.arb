@@ -134,5 +134,17 @@
   "items": "道具",
   "instanceDungeon": "副本",
   "equip": "装备",
-  "takeOff": "卸下"
+  "takeOff": "卸下",
+  "curChallenge": "当前副本",
+  "switchChallenge": "切换副本",
+  "selectChallenge": "选择副本",
+  "knight": "骑士",
+  "knightHp": "骑士生命值",
+  "bossHp": "Boss生命值",
+  "dragonLair": "龙之巢穴",
+  "dragonLairDescription": "TODO",
+  "dragonLairBoss": "龙王",
+  "hp": "生命值",
+  "attack": "攻击力",
+  "defense": "防御力"
 }

@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:liferpg/view/challenge/challenge_select_view.dart';
+import 'package:liferpg/viewmodel/challenge_viewmodel.dart';
+import 'package:provider/provider.dart';
+
+import '../../model/challenge/challenge_model.dart';
 
 class ChallengeView extends StatefulWidget {
   const ChallengeView({super.key});
@@ -10,22 +16,29 @@ class ChallengeView extends StatefulWidget {
 class _ChallengeViewState extends State<ChallengeView> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Column(
-        children: [
-          QuestSwitchView(),
-          Divider(),
-          BossInfoView(),
-          Divider(),
-          ChallengeLogView()
-        ],
-      ),
+    return ChangeNotifierProvider(
+      create: (context) => ChallengeViewModel(),
+      child: Consumer<ChallengeViewModel>(builder: (context, viewModel, child) {
+        return Scaffold(
+          body: Column(
+            children: [
+              QuestSwitchView(viewModel: viewModel),
+              const Divider(),
+              BossInfoView(viewModel: viewModel),
+              const Divider(),
+              ChallengeLogView(viewModel: viewModel)
+            ],
+          ),
+        );
+      }),
     );
   }
 }
 
 class QuestSwitchView extends StatefulWidget {
-  const QuestSwitchView({super.key});
+  const QuestSwitchView({super.key, required this.viewModel});
+
+  final ChallengeViewModel viewModel;
 
   @override
   State<QuestSwitchView> createState() => _QuestSwitchViewState();
@@ -36,14 +49,28 @@ class _QuestSwitchViewState extends State<QuestSwitchView> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        const Image(
-          image: AssetImage('res/icons/boss/dragon_lair.png'),
-        ),
-        Text('当前副本：龙之巢穴', style: Theme.of(context).textTheme.headlineSmall),
+        if (widget.viewModel.curChallenge != null)
+          Wrap(children: [
+            Image(
+              image: AssetImage(widget.viewModel.curChallenge!.imagePath),
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Text(
+                  '${AppLocalizations.of(context)!.curChallenge}: ${getChallengeLocalizedString(context, widget.viewModel.curChallenge!).name}',
+                  style: Theme.of(context).textTheme.headlineSmall),
+            ),
+          ]),
         const SizedBox(height: 8.0),
         OutlinedButton(
-          onPressed: () {},
-          child: const Text('切换副本'),
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>
+                    ChallengeSelectView(viewModel: widget.viewModel)));
+          },
+          child: Text(widget.viewModel.curChallenge != null
+              ? AppLocalizations.of(context)!.switchChallenge
+              : AppLocalizations.of(context)!.selectChallenge),
         ),
       ],
     );
@@ -51,7 +78,9 @@ class _QuestSwitchViewState extends State<QuestSwitchView> {
 }
 
 class BossInfoView extends StatefulWidget {
-  const BossInfoView({super.key});
+  const BossInfoView({super.key, required this.viewModel});
+
+  final ChallengeViewModel viewModel;
 
   @override
   State<BossInfoView> createState() => _BossInfoViewState();
@@ -66,17 +95,18 @@ class _BossInfoViewState extends State<BossInfoView> {
         Expanded(
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('骑士', style: Theme.of(context).textTheme.titleLarge),
+            Text(AppLocalizations.of(context)!.knight,
+                style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 8.0),
             Column(
               children: [
                 Row(
                   children: [
-                    const Text('生命值: '),
+                    Text('${AppLocalizations.of(context)!.hp}: '),
                     Expanded(
                       child: LinearProgressIndicator(
                         value: 0.5,
-                        semanticsLabel: '50%',
+                        semanticsLabel: AppLocalizations.of(context)!.knightHp,
                         color:
                             Theme.of(context).colorScheme.onTertiaryContainer,
                         backgroundColor:
@@ -89,48 +119,60 @@ class _BossInfoViewState extends State<BossInfoView> {
                     alignment: Alignment.centerRight, child: Text('500/1000')),
               ],
             ),
-            const Text('攻击力: 100'),
-            const Text('防御力: 50'),
+            Text('${AppLocalizations.of(context)!.attack}: 100'),
+            Text('${AppLocalizations.of(context)!.defense}: 50'),
           ]),
         ),
         const VerticalDivider(),
-        Expanded(
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('龙', style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 8.0),
-            Column(
-              children: [
-                Row(
-                  children: [
-                    const Text('生命值: '),
-                    Expanded(
-                      child: LinearProgressIndicator(
-                        value: 0.5,
-                        semanticsLabel: '50%',
-                        color:
-                            Theme.of(context).colorScheme.onTertiaryContainer,
-                        backgroundColor:
-                            Theme.of(context).colorScheme.outlineVariant,
+        if (widget.viewModel.curChallenge != null)
+          Expanded(
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(
+                  getChallengeLocalizedString(
+                          context, widget.viewModel.curChallenge!)
+                      .bossName,
+                  style: Theme.of(context).textTheme.titleLarge),
+              const SizedBox(height: 8.0),
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      Text('${AppLocalizations.of(context)!.hp}: '),
+                      Expanded(
+                        child: LinearProgressIndicator(
+                          value: widget.viewModel.curChallenge!.curHp /
+                              widget.viewModel.curChallenge!.totalHp,
+                          semanticsLabel: AppLocalizations.of(context)!.bossHp,
+                          color:
+                              Theme.of(context).colorScheme.onTertiaryContainer,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.outlineVariant,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                const Align(
-                    alignment: Alignment.centerRight, child: Text('500/1000')),
-              ],
-            ),
-            const Text('攻击力: 100'),
-            const Text('防御力: 50'),
-          ]),
-        )
+                    ],
+                  ),
+                  Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                          '${widget.viewModel.curChallenge!.curHp}/${widget.viewModel.curChallenge!.totalHp}')),
+                ],
+              ),
+              Text(
+                  '${AppLocalizations.of(context)!.attack}: ${widget.viewModel.curChallenge!.attack}'),
+              Text(
+                  '${AppLocalizations.of(context)!.defense}: ${widget.viewModel.curChallenge!.defense}'),
+            ]),
+          )
       ]),
     );
   }
 }
 
 class ChallengeLogView extends StatefulWidget {
-  const ChallengeLogView({super.key});
+  const ChallengeLogView({super.key, required this.viewModel});
+
+  final ChallengeViewModel viewModel;
 
   @override
   State<ChallengeLogView> createState() => _ChallengeLogViewState();
