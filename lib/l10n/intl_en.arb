@@ -146,5 +146,7 @@
   "dragonLairBoss": "Dragon",
   "hp": "Hp",
   "attack": "Attack",
-  "defense": "Defense"
+  "defense": "Defense",
+  "attackFromKnight": "Knight deals {damage} points of damage to {boss}",
+  "attackFromBoss": "{boss} deals {damage} points of damage to Knight"
 }

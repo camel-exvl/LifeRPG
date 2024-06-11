@@ -11,6 +11,7 @@ import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
 
 import '../model/challenge/challenge_model.dart';
 import '../model/common_model.dart';
+import '../model/converter.dart';
 import '../model/setting/setting_model.dart';
 import '../model/status/achievement_model.dart';
 import '../model/status/attribute_model.dart';

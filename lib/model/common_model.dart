@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 enum Difficulty { easy, medium, hard }
@@ -39,6 +41,17 @@ extension DifficultyExtension on Difficulty {
         return 'res/icons/medium.png';
       case Difficulty.hard:
         return 'res/icons/hard.png';
+    }
+  }
+
+  double attackRatio(int finishedCount) {
+    switch (this) {
+      case Difficulty.easy:
+        return 0.8 + log(finishedCount) / 12;
+      case Difficulty.medium:
+        return 1.0 + log(finishedCount) / 10;
+      case Difficulty.hard:
+        return 1.2 + log(finishedCount) / 8;
     }
   }
 }

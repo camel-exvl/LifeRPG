@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/database/database.dart';
 import 'package:liferpg/model/reward/reward_response_model.dart';
+import 'package:liferpg/viewmodel/challenge_viewmodel.dart';
 import 'package:liferpg/viewmodel/status_viewmodel.dart';
 
 import '../model/common_model.dart';
@@ -19,7 +20,8 @@ class HabitViewModel extends ChangeNotifier {
   factory HabitViewModel() => instance;
 
   final database = AppDatabase();
-  final statusViewModel = StatusViewModel();
+  final _statusViewModel = StatusViewModel();
+  final _challengeViewModel = ChallengeViewModel();
   List<HabitModel> _habits = [];
 
   UnmodifiableListView<HabitModel> get habits => UnmodifiableListView(_habits);
@@ -127,14 +129,17 @@ class HabitViewModel extends ChangeNotifier {
   }
 
   Future<RewardResponseModel> finishHabit(HabitModel habit) async {
-    final response = statusViewModel.getReward(RewardRequestModel(
+    RewardRequestModel request = RewardRequestModel(
       difficulty: habit.difficulty,
       category: habit.category,
       finishedCount: habit.finishedCount,
       lastFinishedAt: habit.lastFinishedAt,
       rewardCoefficient: habit.rewardCoefficient,
       habitType: habit.type,
-    ));
+    );
+    final response = _statusViewModel.getReward(request);
+    _challengeViewModel.attackBoss(request);
+
     habit = habit.copyWith(
       finishedCount: habit.finishedCount + 1,
       rewardCoefficient: response.penaltyCoefficient,

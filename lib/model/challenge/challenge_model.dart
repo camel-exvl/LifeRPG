@@ -1,9 +1,9 @@
-import 'dart:convert';
-
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart' hide Table;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/database/database.dart';
+
+import '../converter.dart';
 
 // the challenge that user has bought
 @DataClassName("ChallengeModel")
@@ -28,24 +28,7 @@ class ChallengeTable extends Table {
 
   IntColumn get rewardGold => integer()();
 
-  TextColumn get log => text().map(const JsonArrayConverter()).nullable()();
-}
-
-class JsonArrayConverter
-    extends TypeConverter<List<Map<String, dynamic>>, String> {
-  const JsonArrayConverter();
-
-  @override
-  List<Map<String, dynamic>> fromSql(String fromDb) {
-    return (json.decode(fromDb) as List)
-        .map((item) => item as Map<String, dynamic>)
-        .toList();
-  }
-
-  @override
-  String toSql(List<Map<String, dynamic>> value) {
-    return json.encode(value);
-  }
+  TextColumn get log => text().map(const JsonArrayConverter())();
 }
 
 ChallengeModel getChallengeLocalizedString(

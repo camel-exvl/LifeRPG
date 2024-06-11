@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
 import 'package:liferpg/view/challenge/challenge_select_view.dart';
 import 'package:liferpg/viewmodel/challenge_viewmodel.dart';
 import 'package:liferpg/viewmodel/status_viewmodel.dart';
@@ -27,7 +28,8 @@ class _ChallengeViewState extends State<ChallengeView> {
               const Divider(),
               BossInfoView(viewModel: viewModel),
               const Divider(),
-              ChallengeLogView(viewModel: viewModel)
+              if (viewModel.curChallenge != null)
+                ChallengeLogView(viewModel: viewModel)
             ],
           ),
         );
@@ -207,6 +209,8 @@ class ChallengeLogView extends StatefulWidget {
 class _ChallengeLogViewState extends State<ChallengeLogView> {
   @override
   Widget build(BuildContext context) {
+    List<Map<String, dynamic>> list =
+        widget.viewModel.curChallenge!.log.reversed.toList();
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -220,15 +224,27 @@ class _ChallengeLogViewState extends State<ChallengeLogView> {
         child: Column(children: [
           Expanded(
             child: ListView.builder(
-              itemCount: 10,
+              itemCount: list.length,
               itemBuilder: (BuildContext context, int index) {
-                return const ListTile(
-                  title: Text('骑士对龙造成了100点伤害'),
-                  subtitle: Text('2021-09-01 12:00:00'),
+                Map<String, dynamic> log = list[index];
+                return ListTile(
+                  title: Text(log["attack"]
+                      ? AppLocalizations.of(context)!.attackFromKnight(
+                          getChallengeLocalizedString(
+                                  context, widget.viewModel.curChallenge!)
+                              .bossName,
+                          log["damage"])
+                      : AppLocalizations.of(context)!.attackFromBoss(
+                          getChallengeLocalizedString(
+                                  context, widget.viewModel.curChallenge!)
+                              .bossName,
+                          log["damage"])),
+                  subtitle: Text(
+                      DateFormat("yyyy-MM-dd HH:mm:ss").format(log["time"])),
                 );
               },
             ),
-          ),
+          )
         ]),
       ),
     );

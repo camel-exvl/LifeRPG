@@ -2,10 +2,13 @@ import 'dart:collection';
 
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
+import 'package:liferpg/model/common_model.dart';
+import 'package:liferpg/model/target/habit_model.dart';
 import 'package:liferpg/viewmodel/status_viewmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../database/database.dart';
+import '../model/reward/reward_request_model.dart';
 
 class ChallengeViewModel extends ChangeNotifier {
   static final ChallengeViewModel instance = ChallengeViewModel._internal();
@@ -36,9 +39,10 @@ class ChallengeViewModel extends ChangeNotifier {
           bossName: "",
           totalHp: 100,
           curHp: 100,
-          attack: 10,
-          defense: 5,
-          rewardGold: 100)
+          attack: 60,
+          defense: 50,
+          rewardGold: 100,
+          log: [])
     ];
 
     for (var challenge in challenges) {
@@ -70,16 +74,16 @@ class ChallengeViewModel extends ChangeNotifier {
   Future<void> insertChallenge(ChallengeModel challenge) async {
     database
         .insertChallenge(ChallengeTableCompanion(
-      name: Value(challenge.name),
-      description: Value(challenge.description),
-      imagePath: Value(challenge.imagePath),
-      bossName: Value(challenge.bossName),
-      totalHp: Value(challenge.totalHp),
-      curHp: Value(challenge.curHp),
-      attack: Value(challenge.attack),
-      defense: Value(challenge.defense),
-      rewardGold: Value(challenge.rewardGold),
-    ))
+            name: Value(challenge.name),
+            description: Value(challenge.description),
+            imagePath: Value(challenge.imagePath),
+            bossName: Value(challenge.bossName),
+            totalHp: Value(challenge.totalHp),
+            curHp: Value(challenge.curHp),
+            attack: Value(challenge.attack),
+            defense: Value(challenge.defense),
+            rewardGold: Value(challenge.rewardGold),
+            log: Value(challenge.log)))
         .then((value) {
       challenge = challenge.copyWith(id: value);
       _challenges.add(challenge);
@@ -98,5 +102,39 @@ class ChallengeViewModel extends ChangeNotifier {
     _challenges.removeWhere((element) => element.id == challenge.id);
     notifyListeners();
     database.deleteChallenge(challenge);
+  }
+
+  Future<void> attackBoss(RewardRequestModel request) async {
+    if (curChallenge == null) {
+      return;
+    }
+    double damageRatio = request.rewardCoefficient *
+        request.difficulty.attackRatio(request.finishedCount + 1);
+    if (request.habitType == HabitType.bad) {
+      return attackKnight(damageRatio);
+    }
+
+    int damage =
+        ((statusViewModel.attack - curChallenge!.defense) * damageRatio)
+            .round();
+    List<Map<String, dynamic>> updatedLog = curChallenge!.log;
+    updatedLog.add({"time": DateTime.now(), "attack": true, "damage": damage});
+    curChallenge = curChallenge!
+        .copyWith(curHp: curChallenge!.curHp - damage, log: updatedLog);
+    await updateChallenge(curChallenge!);
+  }
+
+  Future<void> attackKnight(double ratio) async {
+    if (curChallenge == null) {
+      return;
+    }
+    int damage =
+        ((curChallenge!.attack - statusViewModel.defense) * ratio).round();
+    List<Map<String, dynamic>> updatedLog = curChallenge!.log;
+    updatedLog.add({"time": DateTime.now(), "attack": false, "damage": damage});
+    hp -= damage;
+    statusViewModel.updateHP(-damage);
+    curChallenge = curChallenge!.copyWith(log: updatedLog);
+    await updateChallenge(curChallenge!);
   }
 }
