@@ -86,7 +86,7 @@ class _TaskViewState extends State<TaskView>
                             ? null
                             : () async {
                                 final response =
-                                    await viewModel.finishTask(task);
+                                    await viewModel.finishTask(context, task);
                                 if (context.mounted) {
                                   await FinishDialog().show(context, response);
                                 }

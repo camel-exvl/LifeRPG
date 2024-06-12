@@ -64,7 +64,8 @@ class _HabitViewState extends State<HabitView>
                           height: Theme.of(context).iconTheme.size,
                         ),
                         onPressed: () async {
-                          final response = await viewModel.finishHabit(habit);
+                          final response =
+                              await viewModel.finishHabit(context, habit);
                           if (context.mounted) {
                             await FinishDialog().show(context, response);
                           }

@@ -128,7 +128,8 @@ class HabitViewModel extends ChangeNotifier {
     database.reorderHabits(_habits, oldIndex, newIndex);
   }
 
-  Future<RewardResponseModel> finishHabit(HabitModel habit) async {
+  Future<RewardResponseModel> finishHabit(
+      BuildContext context, HabitModel habit) async {
     RewardRequestModel request = RewardRequestModel(
       difficulty: habit.difficulty,
       category: habit.category,
@@ -138,7 +139,7 @@ class HabitViewModel extends ChangeNotifier {
       habitType: habit.type,
     );
     final response = _statusViewModel.getReward(request);
-    _challengeViewModel.attackBoss(request);
+    _challengeViewModel.attackBoss(context, request);
 
     habit = habit.copyWith(
       finishedCount: habit.finishedCount + 1,

@@ -144,7 +144,8 @@ class TaskViewModel extends ChangeNotifier {
     database.reorderTasks(_tasks, oldIndex, newIndex);
   }
 
-  Future<RewardResponseModel> finishTask(TaskModel task) async {
+  Future<RewardResponseModel> finishTask(
+      BuildContext context, TaskModel task) async {
     RewardRequestModel request = RewardRequestModel(
       difficulty: task.difficulty,
       category: task.category,
@@ -154,7 +155,7 @@ class TaskViewModel extends ChangeNotifier {
       habitType: null,
     );
     final response = _statusViewModel.getReward(request);
-    _challengeViewModel.attackBoss(request);
+    _challengeViewModel.attackBoss(context, request);
     if (task.repeatType == RepeatType.none) {
       // delete the task if it's not repeatable
       removeTask(task);

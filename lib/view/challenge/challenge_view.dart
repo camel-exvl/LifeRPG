@@ -239,8 +239,8 @@ class _ChallengeLogViewState extends State<ChallengeLogView> {
                                   context, widget.viewModel.curChallenge!)
                               .bossName,
                           log["damage"])),
-                  subtitle: Text(
-                      DateFormat("yyyy-MM-dd HH:mm:ss").format(log["time"])),
+                  subtitle: Text(DateFormat("yyyy-MM-dd HH:mm:ss")
+                      .format(DateTime.parse(log["time"]))),
                 );
               },
             ),

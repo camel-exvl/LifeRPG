@@ -148,5 +148,6 @@
   "attack": "攻击力",
   "defense": "防御力",
   "attackFromKnight": "骑士对{boss}造成了{damage}点伤害",
-  "attackFromBoss": "{boss}对骑士造成了{damage}点伤害"
+  "attackFromBoss": "{boss}对骑士造成了{damage}点伤害",
+  "challengeCompleted": "副本完成"
 }
