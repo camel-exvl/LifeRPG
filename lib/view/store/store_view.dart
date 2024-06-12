@@ -17,14 +17,14 @@ class StoreViewState extends State<StoreView>
   @override
   bool get wantKeepAlive => true;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   Future.microtask(() async {
-  //     await viewModel.loadProperties();
-  //     await viewModel.loadEquipments();
-  //   });
-  // }
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() async {
+      await viewModel.loadProperties();
+      await viewModel.loadEquipments();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

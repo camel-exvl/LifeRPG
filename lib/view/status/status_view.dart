@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:liferpg/view/status/dialog/achievement_dialog.dart';
 import '../../viewmodel/status_viewmodel.dart';
 import '../setting/setting_view.dart';
+import 'achievement_view.dart';
 import 'backpack_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/database/database.dart';
@@ -28,8 +30,7 @@ class _StatusViewState extends State<StatusView>
   }
 
   Future<void> loadData() async {
-    await viewModel.loadStatus();
-    await viewModel.loadAttributes();
+    await viewModel.loadAll();
   }
 
   @override
@@ -44,7 +45,7 @@ class _StatusViewState extends State<StatusView>
               child: ListView(// 使用 ListView 来替换 Column
                   children: [
                 StatusCard(viewModel: viewModel),
-                // AchievementCard(viewModel: viewModel),
+                AchievementCard(viewModel: viewModel),
                 AttributesCard(viewModel: viewModel),
                 OptionsCard(viewModel: viewModel),
               ]));
@@ -130,63 +131,90 @@ class StatusCard extends StatelessWidget {
   }
 }
 
-// class AchievementCard extends StatelessWidget {
-//   final StatusViewModel viewModel;
-//
-//   const AchievementCard({super.key, required this.viewModel});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Card(
-//       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-//       child: ClipRRect(
-//         borderRadius: BorderRadius.circular(10.0),
-//         child: Container(
-//           color: Theme.of(context).colorScheme.tertiaryContainer,
-//           child: Column(mainAxisSize: MainAxisSize.min, children: [
-//             ListTile(
-//               title: Text(
-//                 AppLocalizations.of(context)!.achievement,
-//                 style: TextStyle(
-//                   fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
-//                   fontWeight: FontWeight.bold,
-//                   color: Theme.of(context).colorScheme.onTertiaryContainer,
-//                 ),
-//               ),
-//             ),
-//             Column(
-//               // children: viewModel.achievements.map((achievement) {
-//               //   return ListTile(
-//               //     title: Text(
-//               //       achievement.name,
-//               //       style: TextStyle(
-//               //         color: Theme.of(context).colorScheme.onTertiaryContainer,
-//               //       ),
-//               //     ),
-//               //     subtitle: Text(
-//               //       achievement.description,
-//               //       style: TextStyle(
-//               //         color: Theme.of(context).colorScheme.onTertiaryContainer,
-//               //       ),
-//               //     ),
-//               //     leading: Image.asset(
-//               //       achievement.iconPath,
-//               //       width: (Theme.of(context).textTheme.headlineSmall?.fontSize ??
-//               //               15) *
-//               //           1.2,
-//               //       height: (Theme.of(context).textTheme.headlineSmall?.fontSize ??
-//               //               15) *
-//               //           1.2,
-//               //     ),
-//               //   );
-//               // }).toList(),
-//             )
-//           ]),
-//         ),
-//       ),
-//     );
-//   }
-// }
+class AchievementCard extends StatelessWidget {
+  final StatusViewModel viewModel;
+
+  const AchievementCard({super.key, required this.viewModel});
+
+  @override
+  Widget build(BuildContext context) {
+    Set<int> achievedIds = viewModel.getAchievedAchievementIds();
+    List<AchievementModel> displayedAchievements =
+        viewModel.getDisplayAchievements();
+
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10.0),
+        child: Container(
+          color: Theme.of(context).colorScheme.tertiaryContainer,
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            ListTile(
+              title: Text(
+                AppLocalizations.of(context)!.achievement,
+                style: TextStyle(
+                  fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onTertiaryContainer,
+                ),
+              ),
+              trailing: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AchievementView(),
+                    ),
+                  );
+                },
+                child: Text(
+                  '${achievedIds.length}/${viewModel.achievements.length} >',
+                  style: TextStyle(
+                    fontSize: Theme.of(context).textTheme.titleMedium?.fontSize,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onTertiaryContainer,
+                  ),
+                ),
+              ),
+            ),
+            LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                // 获取每行的高度
+                double rowHeight = 100;
+                // 计算行数
+                int rowCount = (displayedAchievements.length / 4).ceil();
+                // 如果行数大于2，限制为2行的高度，否则为实际行数的高度
+                double gridViewHeight =
+                    rowCount > 2 ? rowHeight * 2 : rowHeight * rowCount;
+
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: SizedBox(
+                    height: gridViewHeight,
+                    child: Wrap(
+                      spacing: 8, // 控制水平间距
+                      runSpacing: 4, // 控制垂直间距
+                      children: displayedAchievements.map((achievement) {
+                        return SizedBox(
+                          width: (constraints.maxWidth - 24) / 4,
+                          height: rowHeight,
+                          child: AchievementItemCard(
+                            achievement: achievement,
+                            isAchieved: achievedIds.contains(achievement.id),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ]),
+        ),
+      ),
+    );
+  }
+}
 
 class AttributesCard extends StatelessWidget {
   final StatusViewModel viewModel;
@@ -418,5 +446,45 @@ class OptionsCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class AchievementItemCard extends StatelessWidget {
+  final AchievementModel achievement;
+  final bool isAchieved;
+
+  const AchievementItemCard(
+      {super.key, required this.achievement, required this.isAchieved});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+        onTap: () {
+          AchievementDialog(achievement: achievement, isAchieved: isAchieved)
+              .show(context);
+        },
+        child: Card(
+            child: Container(
+          color: Theme.of(context).colorScheme.tertiaryContainer,
+          child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+            Expanded(flex: 2, child: Container()),
+            Expanded(
+              flex: 6,
+              child: Image.asset(isAchieved
+                  ? 'res/icons/achievement_achieved.png'
+                  : 'res/icons/achievement_not_achieved.png'),
+            ),
+            Expanded(
+                flex: 6,
+                child: Center(
+                  child: Text(
+                    Localizations.localeOf(context).languageCode == 'en'
+                        ? achievement.nameEN
+                        : achievement.nameZH,
+                    textAlign: TextAlign.center,
+                  ),
+                )),
+          ]),
+        )));
   }
 }
