@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:liferpg/view/store/store_view.dart';
+import 'package:liferpg/view/challenge/challenge_view.dart';
 import 'package:liferpg/view/status/status_view.dart';
+import 'package:liferpg/view/store/store_view.dart';
 import 'package:liferpg/view/target/target_view.dart';
+import 'package:liferpg/viewmodel/challenge_viewmodel.dart';
 import 'package:liferpg/viewmodel/habit_viewmodel.dart';
 import 'package:liferpg/viewmodel/status_viewmodel.dart';
 import 'package:liferpg/viewmodel/store_viewmodel.dart';
@@ -21,7 +23,7 @@ class _HomeViewState extends State<HomeView> {
 
   final List<Widget> _views = const <Widget>[
     TargetView(),
-    Placeholder(),
+    ChallengeView(),
     StoreView(),
     StatusView()
   ];
@@ -37,10 +39,12 @@ class _HomeViewState extends State<HomeView> {
       final statusViewModel = StatusViewModel();
       final habitViewModel = HabitViewModel();
       final taskViewModel = TaskViewModel();
+      final challengeViewModel = ChallengeViewModel();
       final storeViewModel = StoreViewModel();
 
       if (context.mounted) await habitViewModel.initOnFirstRun(context);
       if (context.mounted) await taskViewModel.initOnFirstRun(context);
+      if (context.mounted) await challengeViewModel.initOnFirstRun(context);
       await statusViewModel.initOnFirstRun();
       await storeViewModel.initOnFirstRun();
     }

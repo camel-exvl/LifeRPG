@@ -4,6 +4,7 @@ import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/database/database.dart';
+import 'package:liferpg/viewmodel/challenge_viewmodel.dart';
 import 'package:liferpg/viewmodel/status_viewmodel.dart';
 
 import '../model/common_model.dart';
@@ -19,7 +20,8 @@ class TaskViewModel extends ChangeNotifier {
   factory TaskViewModel() => instance;
 
   final database = AppDatabase();
-  final statusViewModel = StatusViewModel();
+  final _statusViewModel = StatusViewModel();
+  final _challengeViewModel = ChallengeViewModel();
   List<TaskModel> _tasks = [];
 
   UnmodifiableListView<TaskModel> get tasks => UnmodifiableListView(_tasks);
@@ -142,15 +144,18 @@ class TaskViewModel extends ChangeNotifier {
     database.reorderTasks(_tasks, oldIndex, newIndex);
   }
 
-  Future<RewardResponseModel> finishTask(TaskModel task) async {
-    final response = statusViewModel.getReward(RewardRequestModel(
+  Future<RewardResponseModel> finishTask(
+      BuildContext context, TaskModel task) async {
+    RewardRequestModel request = RewardRequestModel(
       difficulty: task.difficulty,
       category: task.category,
       finishedCount: task.finishedCount,
       lastFinishedAt: task.lastFinishedAt,
       rewardCoefficient: task.rewardCoefficient,
       habitType: null,
-    ));
+    );
+    final response = _statusViewModel.getReward(request);
+    _challengeViewModel.attackBoss(context, request);
     if (task.repeatType == RepeatType.none) {
       // delete the task if it's not repeatable
       removeTask(task);

@@ -1,18 +1,18 @@
 import 'dart:collection';
+import 'dart:math' as math;
 
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/database/database.dart';
 import 'package:liferpg/viewmodel/store_viewmodel.dart';
-import 'dart:math' as math;
 
 import '../model/common_model.dart';
 import '../model/reward/reward_request_model.dart';
 import '../model/reward/reward_response_model.dart';
+import '../model/store/equipment_model.dart';
 import '../model/store/property_model.dart';
 import '../model/target/habit_model.dart';
-import '../model/store/equipment_model.dart';
 
 class StatusViewModel extends ChangeNotifier {
   static final StatusViewModel _instance = StatusViewModel._internal();
@@ -614,6 +614,10 @@ class StatusViewModel extends ChangeNotifier {
     return _status.hp;
   }
 
+  int getMaxHp() {
+    return maxHP;
+  }
+
   void updateHP(int hp_) {
     var newHP = _status.hp + hp_;
     if (newHP <= 0) {
@@ -643,14 +647,6 @@ class StatusViewModel extends ChangeNotifier {
             .getEquipmentById(getArmorIds()[_status.armorIndex!])
             .then((value) => value.equipmentType.defensePower);
     return baseDefense + expDefense + armorDefense;
-  }
-
-  int getAttack() {
-    return attack;
-  }
-
-  int getDefense() {
-    return defense;
   }
 
   List<PropertyModel> getProperties() {
