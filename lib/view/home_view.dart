@@ -50,11 +50,7 @@ class _HomeViewState extends State<HomeView> {
     await initOnFirstRun(context);
 
     final statusViewModel = StatusViewModel();
-    await statusViewModel.loadStatus();
-
-    final storeViewModel = StoreViewModel();
-    await storeViewModel.loadProperties();
-    await storeViewModel.loadEquipments();
+    await statusViewModel.loadAll();
   }
 
   @override

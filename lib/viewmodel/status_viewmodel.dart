@@ -55,10 +55,12 @@ class StatusViewModel extends ChangeNotifier {
       weaponIds: "",
       armorIds: "",
       weaponIndex: null,
-      armorIndex: null);
+      armorIndex: null,
+      achievementIds: "");
   List<AttributeModel> _attributes = [];
   List<EquipmentModel> _weapons = [];
   List<EquipmentModel> _armors = [];
+  List<AchievementModel> _achievements = [];
   int attack = 0;
   int defense = 0;
 
@@ -72,6 +74,9 @@ class StatusViewModel extends ChangeNotifier {
 
   UnmodifiableListView<EquipmentModel> get armors =>
       UnmodifiableListView(_armors);
+
+  UnmodifiableListView<AchievementModel> get achievements =>
+      UnmodifiableListView(_achievements);
 
   Future<void> initOnFirstRun() async {
     await insertStatus(_status);
@@ -126,17 +131,102 @@ class StatusViewModel extends ChangeNotifier {
         exp: 0,
       ),
     ];
+    _achievements = [
+      const AchievementModel(
+        id: 1,
+        nameZH: "初次出击",
+        nameEN: "First Strike",
+        descriptionZH: "你已经成功完成了你的第一个任务，这是你旅程的第一步。",
+        descriptionEN:
+            "You have successfully completed your first task, this is the first step of your journey.",
+      ),
+      const AchievementModel(
+        id: 2,
+        nameZH: "习惯成自然",
+        nameEN: "Habitual Success",
+        descriptionZH: "你已经连续5次完成了一个习惯，这显示了你的毅力和决心。",
+        descriptionEN:
+            "You have completed a habit 5 times in a row, demonstrating your perseverance and determination.",
+      ),
+      const AchievementModel(
+        id: 3,
+        nameZH: "人生升级",
+        nameEN: "Life Upgrade",
+        descriptionZH: "你的人生等级已经达到2级，你的经验和技能正在不断增长。",
+        descriptionEN:
+            "Your life level has reached level 2, your experience and skills are constantly growing.",
+      ),
+      const AchievementModel(
+        id: 4,
+        nameZH: "力量觉醒",
+        nameEN: "Power Awakening",
+        descriptionZH: "你的力量等级已经达到2级，你的体能和力量正在不断增强。",
+        descriptionEN:
+            "Your power level has reached level 2, your physical strength and power are constantly increasing.",
+      ),
+      const AchievementModel(
+        id: 5,
+        nameZH: "才华横溢",
+        nameEN: "Talent Overflow",
+        descriptionZH: "你的才能等级已经达到2级，你的天赋和技巧正在不断提升。",
+        descriptionEN:
+            "Your talent level has reached level 2, your talents and skills are constantly improving.",
+      ),
+      const AchievementModel(
+        id: 6,
+        nameZH: "文化熏陶",
+        nameEN: "Cultural Infusion",
+        descriptionZH: "你的文化等级已经达到2级，你的知识和理解正在不断深化。",
+        descriptionEN:
+            "Your culture level has reached level 2, your knowledge and understanding are constantly deepening.",
+      ),
+      const AchievementModel(
+        id: 7,
+        nameZH: "魅力四射",
+        nameEN: "Charismatic Radiance",
+        descriptionZH: "你的魅力等级已经达到2级，你的吸引力和影响力正在不断增强。",
+        descriptionEN:
+            "Your charm level has reached level 2, your attractiveness and influence are constantly increasing.",
+      ),
+      const AchievementModel(
+        id: 8,
+        nameZH: "环境适应",
+        nameEN: "Environmental Adaptation",
+        descriptionZH: "你的环境等级已经达到2级，你的适应能力和环境意识正在不断提升。",
+        descriptionEN:
+            "Your environment level has reached level 2, your adaptability and environmental awareness are constantly improving.",
+      ),
+      const AchievementModel(
+        id: 9,
+        nameZH: "智力飞跃",
+        nameEN: "Intellectual Leap",
+        descriptionZH: "你的智力等级已经达到2级，你的思维和理解正在不断提升。",
+        descriptionEN:
+            "Your intelligence level has reached level 2, your thinking and understanding are constantly improving.",
+      )
+    ];
     notifyListeners();
 
     for (var attribute in _attributes) {
       await insertAttribute(attribute);
     }
+    for (var achievement in _achievements) {
+      await insertAchievement(achievement);
+    }
+  }
+
+  Future<void> loadAll() async {
+    await loadStatus();
+    await loadAttributes();
+    await loadWeaponList();
+    await loadArmorList();
   }
 
   Future<void> loadStatus() async {
     _status = await database.getStatus(1);
     attack = await calculateAttack();
     defense = await calculateDefense();
+    _achievements = await database.getAllAchievements();
     notifyListeners();
   }
 
@@ -159,6 +249,10 @@ class StatusViewModel extends ChangeNotifier {
     database.deleteStatus(status);
   }
 
+  Future<void> saveStatus() async {
+    await updateStatus(_status);
+  }
+
   Future<void> insertAttribute(AttributeModel attribute) async {
     database.insertAttribute(attribute.toCompanion(false));
   }
@@ -174,6 +268,29 @@ class StatusViewModel extends ChangeNotifier {
     _attributes.remove(attribute);
     notifyListeners();
     database.deleteAttribute(attribute);
+  }
+
+  Future<void> saveAttribute() async {
+    for (var attribute in _attributes) {
+      await updateAttribute(attribute);
+    }
+  }
+
+  Future<void> insertAchievement(AchievementModel achievement) async {
+    await database.insertAchievement(achievement.toCompanion(false));
+  }
+
+  Future<void> updateAchievement(AchievementModel achievement) async {
+    _achievements[_achievements
+        .indexWhere((element) => element.id == achievement.id)] = achievement;
+    notifyListeners();
+    await database.updateAchievement(achievement);
+  }
+
+  Future<void> removeAchievement(AchievementModel achievement) async {
+    _achievements.remove(achievement);
+    notifyListeners();
+    await database.deleteAchievement(achievement);
   }
 
   double getExpPercent() {
@@ -311,10 +428,26 @@ class StatusViewModel extends ChangeNotifier {
     response.penaltyCoefficient = rewardCoefficient;
 
     updateAfterReward(response);
+
+    List<int> newAchievedAchievementIds = [];
+    newAchievedAchievementIds.addAll(achievementTypeCount(request));
+    newAchievedAchievementIds.addAll(achievementTypeLevel());
+
+    for (var achievementId in newAchievedAchievementIds) {
+      addAchievement(achievementId);
+    }
+    saveStatus();
+    saveAttribute();
+
+    // 商店页要更新
+    StoreViewModel storeViewModel = StoreViewModel();
+    storeViewModel.loadProperties();
+
+    notifyListeners();
     return response;
   }
 
-  Future<void> updateAfterReward(RewardResponseModel response) async {
+  void updateAfterReward(RewardResponseModel response) {
     int newGold = _status.gold + response.gold;
     int newLifeLevel = _status.level;
     int newLifeExp =
@@ -344,7 +477,8 @@ class StatusViewModel extends ChangeNotifier {
               level: newAttributeLevel,
               exp: newAttributeExp,
             );
-        updateAttribute(newAttribute);
+        _attributes[_attributes.indexWhere(
+            (element) => element.id == newAttribute.id)] = newAttribute;
       }
     }
 
@@ -361,11 +495,7 @@ class StatusViewModel extends ChangeNotifier {
       exp: newLifeExp,
       gold: newGold,
     );
-    updateStatus(newStatus);
-
-    StoreViewModel storeViewModel = StoreViewModel();
-    storeViewModel.loadProperties();
-    notifyListeners();
+    _status = newStatus;
   }
 
   void addWeapon(int newWeaponId) {
@@ -416,7 +546,7 @@ class StatusViewModel extends ChangeNotifier {
     updateStatus(_status);
   }
 
-  Future<void> removeWeapon() async{
+  Future<void> removeWeapon() async {
     _status = _status.copyWith(weaponIndex: const Value<int?>(null));
     attack = await calculateAttack();
     defense = await calculateDefense();
@@ -545,5 +675,120 @@ class StatusViewModel extends ChangeNotifier {
       _status = _status.copyWith(diamond: property.amount);
     }
     updateStatus(_status);
+  }
+
+  Set<int> getAchievedAchievementIds() {
+    return _status.achievementIds.isEmpty
+        ? {}
+        : _status.achievementIds
+            .split(",")
+            .where((item) => item.isNotEmpty)
+            .map(int.parse)
+            .toSet();
+  }
+
+  List<AchievementModel> getDisplayAchievements() {
+    int count = 8;
+    Set<int> achievedAchievementIds = getAchievedAchievementIds();
+    if (_achievements.length < count) {
+      count = _achievements.length;
+    }
+
+    List<AchievementModel> temp = [];
+
+    for (var i = 0; i < _achievements.length; i++) {
+      if (achievedAchievementIds.contains(_achievements[i].id)) {
+        temp.add(_achievements[i]);
+      }
+      if (temp.length == count) {
+        return temp;
+      }
+    }
+
+    for (var i = 0; i < _achievements.length; i++) {
+      temp.add(_achievements
+          .where((element) => !achievedAchievementIds.contains(element.id))
+          .elementAt(i));
+      if (temp.length == count) {
+        return temp;
+      }
+    }
+    return temp;
+  }
+
+  void addAchievement(int newAchievementId) {
+    if (_status.achievementIds.isEmpty) {
+      _status = _status.copyWith(achievementIds: newAchievementId.toString());
+      updateStatus(_status);
+    } else {
+      var achievementIds = _status.achievementIds.split(",");
+      achievementIds.add(newAchievementId.toString());
+      _status = _status.copyWith(achievementIds: achievementIds.join(","));
+      updateStatus(_status);
+    }
+  }
+
+  List<int> achievementTypeCount(RewardRequestModel request) {
+    List<int> ret = [];
+    if (request.habitType == null) {
+      if (!getAchievedAchievementIds().contains(1)) {
+        ret.add(1);
+      }
+    } else {
+      if (request.finishedCount == 5) {
+        if (!getAchievedAchievementIds().contains(2)) {
+          ret.add(2);
+        }
+      }
+    }
+    return ret;
+  }
+
+  List<int> achievementTypeLevel() {
+    Set<int> achievedAchievementIds = getAchievedAchievementIds();
+    List<int> ret = [];
+
+    if (_status.level == 2) {
+      if (!achievedAchievementIds.contains(3)) {
+        ret.add(3);
+      }
+    }
+    for (var attribute in _attributes) {
+      if (attribute.level == 2) {
+        switch (attribute.name) {
+          case "strength":
+            if (!achievedAchievementIds.contains(4)) {
+              ret.add(4);
+            }
+            break;
+          case "talent":
+            if (!achievedAchievementIds.contains(5)) {
+              ret.add(5);
+            }
+            break;
+          case "culture":
+            if (!achievedAchievementIds.contains(6)) {
+              ret.add(6);
+            }
+            break;
+          case "charisma":
+            if (!achievedAchievementIds.contains(7)) {
+              ret.add(7);
+            }
+            break;
+          case "environment":
+            if (!achievedAchievementIds.contains(8)) {
+              ret.add(8);
+            }
+            break;
+          case "intelligence":
+            if (!achievedAchievementIds.contains(9)) {
+              ret.add(9);
+            }
+            break;
+        }
+      }
+    }
+    return ret;
   }
 }
