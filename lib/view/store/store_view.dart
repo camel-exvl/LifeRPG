@@ -66,8 +66,15 @@ class StoreViewState extends State<StoreView>
                               challenge: challenge,
                               affordable: challenge.price <=
                                   viewModel.properties
-                                      .firstWhere((property) =>
-                                          property.moneyType == MoneyType.gold)
+                                      .firstWhere(
+                                          (property) =>
+                                              property.moneyType ==
+                                              MoneyType.gold,
+                                          orElse: () => PropertyModel(
+                                                id: 0,
+                                                moneyType: MoneyType.gold,
+                                                amount: 0,
+                                              ))
                                       .amount,
                               buy: () async {
                                 await viewModel.buyChallenge(challenge);
@@ -83,9 +90,16 @@ class StoreViewState extends State<StoreView>
                                 item: equipment,
                                 affordable: equipment.price <=
                                         viewModel.properties
-                                            .firstWhere((property) =>
-                                                property.moneyType ==
-                                                equipment.moneyType)
+                                            .firstWhere(
+                                                (property) =>
+                                                    property.moneyType ==
+                                                    equipment.moneyType,
+                                                orElse: () => PropertyModel(
+                                                      id: 0,
+                                                      moneyType:
+                                                          equipment.moneyType,
+                                                      amount: 0,
+                                                    ))
                                             .amount &&
                                     equipment.stock > 0,
                                 buy: () async {
