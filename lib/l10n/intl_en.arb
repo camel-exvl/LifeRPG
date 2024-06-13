@@ -155,5 +155,6 @@
   "mechanicalCastleBoss": "Mechanical Guardian",
   "ghostShip": "Ghost Ship",
   "ghostShipDescription": "Amidst the fog-laden seas, where the moonlight barely pierces the dense, swirling mist, drifts the Ghost Ship, an eerie dungeon that chills the bones of even the hardiest sailors. This spectral vessel, a relic of a long-lost pirate fleet, appears and vanishes without warning, its sails tattered and whispering with the voices of the damned. The deck, slick with spectral dew, creaks underfoot, and ghostly figures flit in and out of sight, their mournful wails carried on the cold, salty breeze. Below deck, cobwebbed corridors twist and turn, leading to treasure-filled holds guarded by vengeful spirits. The air is thick with the scent of old sea brine and decay, and lanterns flicker with ghostly blue flames, casting unsettling shadows. At the ship's helm, the ghostly captain, eyes glowing with malevolent intent, stands watch, forever cursed to sail the endless waters. The Ghost Ship is a place of sorrow and mystery, where adventurers must navigate spectral horrors and unravel the ship’s dark past to claim the treasures that lie within.",
-  "ghostShipBoss": "Ghost Captain"
+  "ghostShipBoss": "Ghost Captain",
+  "quitChallenge": "Quit Challenge"
 }

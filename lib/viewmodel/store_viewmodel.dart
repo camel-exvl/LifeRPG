@@ -172,6 +172,18 @@ class StoreViewModel extends ChangeNotifier {
   //   await loadProperties();
   // }
 
+  Future<void> updateProperty(int delta) async {
+    final property = _properties
+        .firstWhere((property) => property.moneyType == MoneyType.gold);
+    final statusViewModel = StatusViewModel();
+    await statusViewModel.updateProperty(PropertyModel(
+        id: property.id,
+        moneyType: property.moneyType,
+        amount: property.amount + delta));
+    property.amount += delta;
+    notifyListeners();
+  }
+
   Future<void> buyChallenge(StoreChallengeModel challenge) async {
     final property = _properties
         .firstWhere((property) => property.moneyType == MoneyType.gold);
