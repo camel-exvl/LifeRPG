@@ -85,28 +85,29 @@ class StoreViewState extends State<StoreView>
                   CustomExpansionTile(
                       title: AppLocalizations.of(context)!.items,
                       initiallyExpanded: true,
-                      children: viewModel.props
-                          .map((equipment) => Equipment(
-                                item: equipment,
-                                affordable: equipment.price <=
-                                        viewModel.properties
-                                            .firstWhere(
-                                                (property) =>
-                                                    property.moneyType ==
-                                                    equipment.moneyType,
-                                                orElse: () => PropertyModel(
-                                                      id: 0,
-                                                      moneyType:
-                                                          equipment.moneyType,
-                                                      amount: 0,
-                                                    ))
-                                            .amount &&
-                                    equipment.stock > 0,
-                                buy: () async {
-                                  await viewModel.buy(equipment);
-                                },
-                              ))
-                          .toList())
+                      children: [
+                        ...viewModel.props.map((equipment) => Equipment(
+                              item: equipment,
+                              affordable: equipment.price <=
+                                      viewModel.properties
+                                          .firstWhere(
+                                              (property) =>
+                                                  property.moneyType ==
+                                                  equipment.moneyType,
+                                              orElse: () => PropertyModel(
+                                                    id: 0,
+                                                    moneyType:
+                                                        equipment.moneyType,
+                                                    amount: 0,
+                                                  ))
+                                          .amount &&
+                                  equipment.stock > 0,
+                              buy: () async {
+                                await viewModel.buy(equipment);
+                              },
+                            )),
+                        AddItem(),
+                      ])
                 ]),
               ));
         },
@@ -302,6 +303,172 @@ class Challenge extends StatelessWidget {
               IconWithText(
                   iconPath: MoneyType.gold.iconPath,
                   text: challenge.price.toString())
+            ],
+          )),
+    );
+  }
+}
+
+class CustomedItemInfo {
+  final String title;
+  final String description;
+  final String iconPath;
+  final int price;
+
+  CustomedItemInfo({
+    required this.title,
+    required this.description,
+    required this.iconPath,
+    required this.price,
+  });
+}
+
+class AddItem extends StatefulWidget {
+  const AddItem({super.key, this.add});
+
+  final Function(CustomedItemInfo)? add;
+
+  @override
+  AddItemState createState() => AddItemState();
+}
+
+class AddItemState extends State<AddItem> {
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _priceController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    _priceController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final equipmentType = EquipmentType.fruit;
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+                  title: Text(
+                    AppLocalizations.of(context)!.addItem,
+                    textAlign: TextAlign.center,
+                  ),
+                  content: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Image(
+                            image: AssetImage(equipmentType.iconPath),
+                            width: 60,
+                            height: 60,
+                          ),
+                          TextFormField(
+                            controller: _titleController,
+                            decoration: InputDecoration(
+                                icon: Image(
+                                  image:
+                                      const AssetImage('res/icons/title.png'),
+                                  width: Theme.of(context).iconTheme.size,
+                                  height: Theme.of(context).iconTheme.size,
+                                ),
+                                labelText: AppLocalizations.of(context)!.title),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return AppLocalizations.of(context)!
+                                    .titleRequired;
+                              }
+                              return null;
+                            },
+                          ),
+                          TextFormField(
+                            controller: _descriptionController,
+                            decoration: InputDecoration(
+                                icon: Image(
+                                  image: const AssetImage(
+                                      'res/icons/description.png'),
+                                  width: Theme.of(context).iconTheme.size,
+                                  height: Theme.of(context).iconTheme.size,
+                                ),
+                                labelText:
+                                    AppLocalizations.of(context)!.description),
+                          ),
+                          TextFormField(
+                            controller: _priceController,
+                            decoration: InputDecoration(
+                                icon: Image(
+                                  image: AssetImage(MoneyType.gold.iconPath),
+                                  width: Theme.of(context).iconTheme.size,
+                                  height: Theme.of(context).iconTheme.size,
+                                ),
+                                labelText: AppLocalizations.of(context)!.price),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return AppLocalizations.of(context)!
+                                    .priceRequired;
+                              }
+                              if (int.tryParse(value) == null) {
+                                return AppLocalizations.of(context)!
+                                    .priceInvalid;
+                              }
+                              return null;
+                            },
+                          ),
+                        ],
+                      )),
+                  actions: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            // clear current state
+                            _titleController.clear();
+                            _descriptionController.clear();
+                            _priceController.clear();
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(AppLocalizations.of(context)!.cancel),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              // clear current state
+                              final newItem = CustomedItemInfo(
+                                title: _titleController.text,
+                                description: _descriptionController.text,
+                                iconPath: equipmentType.iconPath,
+                                price: int.parse(_priceController.text),
+                              );
+                              widget.add?.call(newItem);
+                              _titleController.clear();
+                              _descriptionController.clear();
+                              _priceController.clear();
+
+                              Navigator.of(context).pop();
+                            }
+                          },
+                          child: Text(AppLocalizations.of(context)!.add),
+                        ),
+                      ],
+                    )
+                  ],
+                ));
+      },
+      child: Container(
+          padding: const EdgeInsets.all(0),
+          child: Column(
+            children: <Widget>[
+              const Icon(Icons.add, size: 30),
+              Text("haha",
+                  style: Theme.of(context).textTheme.bodyLarge,
+                  textAlign: TextAlign.center),
             ],
           )),
     );
