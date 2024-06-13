@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/model/challenge/challenge_model.dart';
+import 'package:liferpg/model/common_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../database/database.dart';
@@ -36,6 +37,46 @@ class _ChallengeSelectViewState extends State<ChallengeSelectView> {
               return ListTile(
                 key: ValueKey(task.id),
                 title: Text(task.name),
+                subtitle: Column(
+                  children: [
+                    Text(task.description),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Image(
+                                image: const AssetImage(hpIconPath),
+                                height: Theme.of(context).iconTheme.size,
+                                width: Theme.of(context).iconTheme.size),
+                            const SizedBox(width: 8.0),
+                            Text("${task.curHp}/${task.totalHp}"),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Image(
+                                image: const AssetImage(attackPowerIconPath),
+                                height: Theme.of(context).iconTheme.size,
+                                width: Theme.of(context).iconTheme.size),
+                            const SizedBox(width: 8.0),
+                            Text("${task.attack}"),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Image(
+                                image: const AssetImage(defensePowerIconPath),
+                                height: Theme.of(context).iconTheme.size,
+                                width: Theme.of(context).iconTheme.size),
+                            const SizedBox(width: 8.0),
+                            Text("${task.defense}"),
+                          ],
+                        )
+                      ],
+                    )
+                  ],
+                ),
                 onTap: () async {
                   SharedPreferences prefs =
                       await SharedPreferences.getInstance();
@@ -58,8 +99,6 @@ class _ChallengeSelectViewState extends State<ChallengeSelectView> {
               Navigator.of(context).pop();
             }
           },
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          elevation: 0,
           child: const Icon(Icons.close)),
     );
   }

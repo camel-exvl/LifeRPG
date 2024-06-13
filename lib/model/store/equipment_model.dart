@@ -1,5 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:liferpg/database/database.dart';
+
 import '../common_model.dart';
 
 enum EquipmentType {
@@ -169,4 +171,26 @@ extension EquipmentTypeExtension on EquipmentType {
   String get attackPowerIconPath => 'res/icons/kyrise/sword_02c.png';
 
   String get defensePowerIconPath => 'res/icons/kyrise/shield_03b.png';
+}
+
+class StoreChallengeModel extends ChallengeModel {
+  String imageInStorePath;
+
+  int price;
+
+  StoreChallengeModel({
+    required this.imageInStorePath,
+    required this.price,
+    required super.id,
+    required super.name,
+    required super.description,
+    required super.imagePath,
+    required super.bossName,
+    required super.totalHp,
+    required super.curHp,
+    required super.attack,
+    required super.defense,
+    required super.rewardGold,
+    required super.log,
+  });
 }

@@ -142,12 +142,18 @@
   "knightHp": "Knight Health",
   "bossHp": "Boss Health",
   "dragonLair": "Dragon Lair",
-  "dragonLairDescription": "TODO",
+  "dragonLairDescription": "Deep within the heart of an ancient forest, shrouded in perpetual twilight, lies the Dragon's Lair, a formidable dungeon that beckons only the bravest of adventurers. This forsaken sanctuary, once a sacred ground for dragonkind, is now a perilous maze of crumbling stone corridors and vast, echoing caverns. The air is thick with the scent of brimstone and the low, ominous rumble of unseen dangers. Ancient runes, glowing faintly on the walls, tell tales of legendary beasts and lost treasures. Bioluminescent fungi cast eerie glows on skeletal remains of past explorers who dared to enter. At the lair's core, amidst molten lava flows and towering obsidian pillars, resides the ancient dragon, its scales shimmering with an ominous, dark aura. This lair is a place where legends are born and where only the most courageous heroes can hope to uncover the secrets and treasures guarded jealously by the dragon.",
   "dragonLairBoss": "Dragon",
   "hp": "Hp",
   "attack": "Attack",
   "defense": "Defense",
   "attackFromKnight": "Knight deals {damage} points of damage to {boss}",
   "attackFromBoss": "{boss} deals {damage} points of damage to Knight",
-  "challengeCompleted": "Challenge Completed"
+  "challengeCompleted": "Challenge Completed",
+  "mechanicalCastle": "Mechanical Castle",
+  "mechanicalCastleDescription": "In a desolate wasteland, surrounded by barren plains and under an ever-gray sky, stands the Mechanical Castle, a marvel of ancient engineering and arcane technology. This imposing fortress, constructed entirely of rusted metal and intricate clockwork, rises like a monolith from the cracked earth. Its towering spires and fortified walls hum with the ceaseless whirring of gears and the rhythmic clanking of unseen mechanisms. Once the thriving heart of a technologically advanced civilization, the castle is now a labyrinthine stronghold filled with devious traps and automatons patrolling its corridors. The air inside is thick with the scent of oil and ozone, and the constant hiss of steam pipes adds an eerie soundtrack to the adventurer's journey. Dimly lit by flickering, ancient lamps, the interiors are adorned with complex machinery, forgotten control panels, and the remnants of a bygone era's brilliance. At the castle’s core, within a grand chamber of interlocking gears and pulsing energy cores, lies the powerful artifact that keeps the entire structure alive, guarded fiercely by a mechanical guardian of unparalleled strength and cunning. Here, in the Mechanical Castle, only those with sharp wits and nimble feet can hope to unravel the secrets and harness the power that lies within.",
+  "mechanicalCastleBoss": "Mechanical Guardian",
+  "ghostShip": "Ghost Ship",
+  "ghostShipDescription": "Amidst the fog-laden seas, where the moonlight barely pierces the dense, swirling mist, drifts the Ghost Ship, an eerie dungeon that chills the bones of even the hardiest sailors. This spectral vessel, a relic of a long-lost pirate fleet, appears and vanishes without warning, its sails tattered and whispering with the voices of the damned. The deck, slick with spectral dew, creaks underfoot, and ghostly figures flit in and out of sight, their mournful wails carried on the cold, salty breeze. Below deck, cobwebbed corridors twist and turn, leading to treasure-filled holds guarded by vengeful spirits. The air is thick with the scent of old sea brine and decay, and lanterns flicker with ghostly blue flames, casting unsettling shadows. At the ship's helm, the ghostly captain, eyes glowing with malevolent intent, stands watch, forever cursed to sail the endless waters. The Ghost Ship is a place of sorrow and mystery, where adventurers must navigate spectral horrors and unravel the ship’s dark past to claim the treasures that lie within.",
+  "ghostShipBoss": "Ghost Captain"
 }
