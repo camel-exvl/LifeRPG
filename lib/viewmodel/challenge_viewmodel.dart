@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:math';
 
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
@@ -123,7 +124,7 @@ class ChallengeViewModel extends ChangeNotifier {
     }
 
     int damage =
-        ((statusViewModel.attack - curChallenge!.defense) * damageRatio)
+        ((max(statusViewModel.attack - curChallenge!.defense, 1)) * damageRatio)
             .round();
     List<Map<String, dynamic>> updatedLog = curChallenge!.log;
     updatedLog.add(
@@ -148,12 +149,20 @@ class ChallengeViewModel extends ChangeNotifier {
       return;
     }
     int damage =
-        ((curChallenge!.attack - statusViewModel.defense) * ratio).round();
+        ((max(curChallenge!.attack - statusViewModel.defense, 1)) * ratio)
+            .round();
     List<Map<String, dynamic>> updatedLog = curChallenge!.log;
     updatedLog.add(
         {"time": DateTime.now().toString(), "attack": false, "damage": damage});
     hp -= damage;
     statusViewModel.updateHP(-damage);
     await updateChallenge(curChallenge!.copyWith(log: updatedLog));
+    if (hp <= 0) {
+      hp = maxHp;
+      statusViewModel.updateHP(maxHp);
+      updateChallenge(
+          curChallenge!.copyWith(curHp: curChallenge!.totalHp, log: []));
+      setCurChallenge(null);
+    }
   }
 }

@@ -21,6 +21,12 @@ enum LanguageType { system, en, zh }
 
 enum BrightnessType { system, light, dark }
 
+const attackPowerIconPath = 'res/icons/kyrise/sword_02c.png';
+
+const defensePowerIconPath = 'res/icons/kyrise/shield_03b.png';
+
+const hpIconPath = 'res/icons/heart.png';
+
 extension DifficultyExtension on Difficulty {
   String localizedString(context) {
     switch (this) {

@@ -8,6 +8,8 @@ import 'package:liferpg/model/store/equipment_model.dart';
 import 'package:liferpg/model/store/property_model.dart';
 import 'package:liferpg/viewmodel/status_viewmodel.dart';
 
+import 'challenge_viewmodel.dart';
+
 class StoreViewModel extends ChangeNotifier {
   static final StoreViewModel _instance = StoreViewModel._internal();
 
@@ -17,13 +19,77 @@ class StoreViewModel extends ChangeNotifier {
 
   List<PropertyModel> _properties = [];
 
+  List<EquipmentModel> _equipments = [];
+
+  final List<EquipmentModel> _props = [
+    const EquipmentModel(
+        id: 4,
+        equipmentType: EquipmentType.fruit,
+        moneyType: MoneyType.gold,
+        price: 5,
+        stock: 50),
+    const EquipmentModel(
+        id: 5,
+        equipmentType: EquipmentType.secretGift,
+        moneyType: MoneyType.gold,
+        price: 1000,
+        stock: 1),
+    const EquipmentModel(
+        id: 7,
+        equipmentType: EquipmentType.key,
+        moneyType: MoneyType.gold,
+        price: 200,
+        stock: 10),
+    const EquipmentModel(
+        id: 10,
+        equipmentType: EquipmentType.potion,
+        moneyType: MoneyType.gold,
+        price: 50,
+        stock: 20),
+  ];
+
+  final List<StoreChallengeModel> _challenges = [
+    StoreChallengeModel(
+        id: 1,
+        name: "mechanicalCastle",
+        description: "",
+        imagePath: "res/icons/boss/mechanical_castle.png",
+        imageInStorePath: "res/icons/boss/mechanical_castle_store.png",
+        bossName: "",
+        totalHp: 1000,
+        attack: 100,
+        defense: 100,
+        price: 400,
+        rewardGold: 1000,
+        curHp: 1000,
+        log: []),
+    StoreChallengeModel(
+        id: 2,
+        name: "ghostShip",
+        description: "",
+        imagePath: "res/icons/boss/ghost_ship.png",
+        imageInStorePath: "res/icons/boss/ghost_ship_store.png",
+        bossName: "",
+        totalHp: 80,
+        attack: 120,
+        defense: 20,
+        price: 150,
+        rewardGold: 500,
+        curHp: 80,
+        log: []),
+  ];
+
   UnmodifiableListView<PropertyModel> get properties =>
       UnmodifiableListView(_properties);
 
-  List<EquipmentModel> _equipments = [];
-
   UnmodifiableListView<EquipmentModel> get equipments =>
       UnmodifiableListView(_equipments);
+
+  UnmodifiableListView<EquipmentModel> get props =>
+      UnmodifiableListView(_props);
+
+  UnmodifiableListView<StoreChallengeModel> get challenges =>
+      UnmodifiableListView(_challenges);
 
   final database = AppDatabase();
 
@@ -40,7 +106,7 @@ class StoreViewModel extends ChangeNotifier {
     //     PropertyModel(id: 2, moneyType: MoneyType.diamond, amount: 0),
     //   ];
     // }
-    const initalEquipments = [
+    const initialEquipments = [
       EquipmentModel(
           id: 1,
           equipmentType: EquipmentType.armor,
@@ -60,29 +126,11 @@ class StoreViewModel extends ChangeNotifier {
           price: 50,
           stock: 20),
       EquipmentModel(
-          id: 4,
-          equipmentType: EquipmentType.fruit,
-          moneyType: MoneyType.gold,
-          price: 5,
-          stock: 50),
-      EquipmentModel(
-          id: 5,
-          equipmentType: EquipmentType.secretGift,
-          moneyType: MoneyType.gold,
-          price: 1000,
-          stock: 1),
-      EquipmentModel(
           id: 6,
           equipmentType: EquipmentType.magicHat,
           moneyType: MoneyType.gold,
           price: 500,
           stock: 5),
-      EquipmentModel(
-          id: 7,
-          equipmentType: EquipmentType.key,
-          moneyType: MoneyType.gold,
-          price: 200,
-          stock: 10),
       EquipmentModel(
           id: 8,
           equipmentType: EquipmentType.magicBook,
@@ -96,12 +144,6 @@ class StoreViewModel extends ChangeNotifier {
           price: 150,
           stock: 1),
       EquipmentModel(
-          id: 10,
-          equipmentType: EquipmentType.potion,
-          moneyType: MoneyType.gold,
-          price: 50,
-          stock: 20),
-      EquipmentModel(
           id: 11,
           equipmentType: EquipmentType.sword,
           moneyType: MoneyType.gold,
@@ -109,7 +151,7 @@ class StoreViewModel extends ChangeNotifier {
           stock: 10),
     ];
     // await _insertProperties(initialProperties);
-    await _insertEquipments(initalEquipments);
+    await _insertEquipments(initialEquipments);
     // _properties = await database.getAllProperties();
     _equipments = await database.getAllEquipments();
     notifyListeners();
@@ -130,6 +172,22 @@ class StoreViewModel extends ChangeNotifier {
   //   await loadProperties();
   // }
 
+  Future<void> buyChallenge(StoreChallengeModel challenge) async {
+    final property = _properties
+        .firstWhere((property) => property.moneyType == MoneyType.gold);
+    final statusViewModel = StatusViewModel();
+    final challengeViewModel = ChallengeViewModel();
+    if (property.amount >= challenge.price) {
+      await statusViewModel.updateProperty(PropertyModel(
+          id: property.id,
+          moneyType: property.moneyType,
+          amount: property.amount - challenge.price));
+      property.amount -= challenge.price;
+      await challengeViewModel.insertChallenge(challenge);
+    }
+    notifyListeners();
+  }
+
   Future<void> buy(EquipmentModel equipment) async {
     final property = _properties
         .firstWhere((property) => property.moneyType == equipment.moneyType);
@@ -147,7 +205,7 @@ class StoreViewModel extends ChangeNotifier {
           price: equipment.price,
           stock: equipment.stock - 1));
 
-      switch(equipment.equipmentType) {
+      switch (equipment.equipmentType) {
         case EquipmentType.arrow:
         case EquipmentType.magicBook:
         case EquipmentType.sword:
