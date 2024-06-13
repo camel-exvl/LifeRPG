@@ -4,8 +4,8 @@ import 'package:liferpg/model/common_model.dart';
 import 'package:liferpg/model/reward/reward_response_model.dart';
 
 class FinishDialog {
-  Future<void> show(
-      BuildContext context, RewardResponseModel rewardResponse) async {
+  Future<void> show(BuildContext context, RewardResponseModel rewardResponse,
+      [String? description]) async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -16,6 +16,7 @@ class FinishDialog {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              if (description != null) Text(description),
               if (rewardResponse.gold != 0)
                 Row(
                   children: [

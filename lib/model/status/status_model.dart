@@ -22,4 +22,6 @@ class StatusTable extends Table {
   IntColumn get weaponIndex => integer().nullable()();
 
   IntColumn get armorIndex => integer().nullable()();
+
+  TextColumn get achievementIds => text().withDefault(const Constant(""))();
 }

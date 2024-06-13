@@ -3,19 +3,21 @@ import 'dart:math';
 
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
-import 'package:liferpg/model/store/property_model.dart';
 import 'package:liferpg/model/store/equipment_model.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqlite3/sqlite3.dart';
 import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
 
+import '../model/challenge/challenge_model.dart';
 import '../model/common_model.dart';
+import '../model/converter.dart';
+import '../model/setting/setting_model.dart';
+import '../model/status/achievement_model.dart';
 import '../model/status/attribute_model.dart';
 import '../model/status/status_model.dart';
 import '../model/target/habit_model.dart';
 import '../model/target/task_model.dart';
-import '../model/setting/setting_model.dart';
 
 part 'database.g.dart';
 
@@ -25,8 +27,9 @@ part 'database.g.dart';
   TaskTable,
   StatusTable,
   SettingTable,
-  EquipmentTable
-  // PropertyTable
+  EquipmentTable,
+  AchievementTable,
+  ChallengeTable
 ])
 class AppDatabase extends _$AppDatabase {
   static final AppDatabase instance = AppDatabase._internal();
@@ -85,6 +88,23 @@ class AppDatabase extends _$AppDatabase {
       }
     });
   }
+
+  // Challenge
+  Future<List<ChallengeModel>> getAllChallenges() =>
+      select(challengeTable).get();
+
+  Future<ChallengeModel> getChallengeById(int id) async {
+    return (select(challengeTable)..where((t) => t.id.equals(id))).getSingle();
+  }
+
+  Future<int> insertChallenge(ChallengeTableCompanion challenge) =>
+      into(challengeTable).insert(challenge);
+
+  Future<void> updateChallenge(ChallengeModel challenge) =>
+      update(challengeTable).replace(challenge);
+
+  Future<void> deleteChallenge(ChallengeModel challenge) =>
+      delete(challengeTable).delete(challenge);
 
   // Status
   Future<StatusModel> getStatus(int statusId) async {
@@ -181,6 +201,34 @@ class AppDatabase extends _$AppDatabase {
 
   Future<void> deleteSetting(SettingModel setting) =>
       delete(settingTable).delete(setting);
+
+  // Achievement
+  Future<List<AchievementModel>> getAllAchievements() async {
+    return (select(achievementTable)
+          ..orderBy([(t) => OrderingTerm(expression: t.id)]))
+        .get();
+  }
+
+  Future<AchievementModel> getAchievementById(int achievementId) async {
+    return (select(achievementTable)..where((t) => t.id.equals(achievementId)))
+        .getSingle();
+  }
+
+  Future<List<AchievementModel>> getEightAchievements() async {
+    return (select(achievementTable)
+          ..orderBy([(t) => OrderingTerm(expression: t.id)])
+          ..limit(8))
+        .get();
+  }
+
+  Future<void> insertAchievement(AchievementTableCompanion achievement) =>
+      into(achievementTable).insert(achievement);
+
+  Future<void> updateAchievement(AchievementModel achievement) =>
+      update(achievementTable).replace(achievement);
+
+  Future<void> deleteAchievement(AchievementModel achievement) =>
+      delete(achievementTable).delete(achievement);
 }
 
 LazyDatabase _openConnection() {
