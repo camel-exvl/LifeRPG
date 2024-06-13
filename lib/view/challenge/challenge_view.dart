@@ -7,6 +7,7 @@ import 'package:liferpg/viewmodel/status_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/challenge/challenge_model.dart';
+import '../../model/common_model.dart';
 
 class ChallengeView extends StatefulWidget {
   const ChallengeView({super.key});
@@ -22,15 +23,17 @@ class _ChallengeViewState extends State<ChallengeView> {
       create: (context) => ChallengeViewModel(),
       child: Consumer<ChallengeViewModel>(builder: (context, viewModel, child) {
         return Scaffold(
-          body: Column(
-            children: [
-              QuestSwitchView(viewModel: viewModel),
-              const Divider(),
-              BossInfoView(viewModel: viewModel),
-              const Divider(),
-              if (viewModel.curChallenge != null)
-                ChallengeLogView(viewModel: viewModel)
-            ],
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                QuestSwitchView(viewModel: viewModel),
+                const Divider(),
+                BossInfoView(viewModel: viewModel),
+                const Divider(),
+                if (viewModel.curChallenge != null)
+                  ChallengeLogView(viewModel: viewModel)
+              ],
+            ),
           ),
         );
       }),
@@ -112,7 +115,13 @@ class _BossInfoViewState extends State<BossInfoView> {
                             children: [
                               Row(
                                 children: [
-                                  Text('${AppLocalizations.of(context)!.hp}: '),
+                                  Image(
+                                    image:
+                                        const AssetImage('res/icons/heart.png'),
+                                    height: Theme.of(context).iconTheme.size,
+                                    width: Theme.of(context).iconTheme.size,
+                                  ),
+                                  const SizedBox(width: 8.0),
                                   Expanded(
                                     child: LinearProgressIndicator(
                                       value: widget.viewModel.hp /
@@ -136,10 +145,28 @@ class _BossInfoViewState extends State<BossInfoView> {
                                       '${widget.viewModel.hp}/${widget.viewModel.maxHp}')),
                             ],
                           ),
-                          Text(
-                              '${AppLocalizations.of(context)!.attack}: ${statusViewModel.attack}'),
-                          Text(
-                              '${AppLocalizations.of(context)!.defense}: ${statusViewModel.defense}'),
+                          Row(
+                            children: [
+                              Image(
+                                image: const AssetImage(attackPowerIconPath),
+                                height: Theme.of(context).iconTheme.size,
+                                width: Theme.of(context).iconTheme.size,
+                              ),
+                              const SizedBox(width: 8.0),
+                              Text('${statusViewModel.attack}'),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Image(
+                                image: const AssetImage(defensePowerIconPath),
+                                height: Theme.of(context).iconTheme.size,
+                                width: Theme.of(context).iconTheme.size,
+                              ),
+                              const SizedBox(width: 8.0),
+                              Text('${statusViewModel.defense}'),
+                            ],
+                          ),
                         ]),
                   ),
                   const VerticalDivider(),
@@ -158,8 +185,13 @@ class _BossInfoViewState extends State<BossInfoView> {
                               children: [
                                 Row(
                                   children: [
-                                    Text(
-                                        '${AppLocalizations.of(context)!.hp}: '),
+                                    Image(
+                                      image: const AssetImage(
+                                          'res/icons/heart.png'),
+                                      height: Theme.of(context).iconTheme.size,
+                                      width: Theme.of(context).iconTheme.size,
+                                    ),
+                                    const SizedBox(width: 8.0),
                                     Expanded(
                                       child: LinearProgressIndicator(
                                         value: widget
@@ -185,10 +217,30 @@ class _BossInfoViewState extends State<BossInfoView> {
                                         '${widget.viewModel.curChallenge!.curHp}/${widget.viewModel.curChallenge!.totalHp}')),
                               ],
                             ),
-                            Text(
-                                '${AppLocalizations.of(context)!.attack}: ${widget.viewModel.curChallenge!.attack}'),
-                            Text(
-                                '${AppLocalizations.of(context)!.defense}: ${widget.viewModel.curChallenge!.defense}'),
+                            Row(
+                              children: [
+                                Image(
+                                  image: const AssetImage(attackPowerIconPath),
+                                  height: Theme.of(context).iconTheme.size,
+                                  width: Theme.of(context).iconTheme.size,
+                                ),
+                                const SizedBox(width: 8.0),
+                                Text(
+                                    '${widget.viewModel.curChallenge!.attack}'),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Image(
+                                  image: const AssetImage(defensePowerIconPath),
+                                  height: Theme.of(context).iconTheme.size,
+                                  width: Theme.of(context).iconTheme.size,
+                                ),
+                                const SizedBox(width: 8.0),
+                                Text(
+                                    '${widget.viewModel.curChallenge!.defense}'),
+                              ],
+                            ),
                           ]),
                     )
                 ]),

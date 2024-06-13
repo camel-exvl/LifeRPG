@@ -424,6 +424,9 @@ class StatusViewModel extends ChangeNotifier {
     }
 
     totalGold = (badCoefficient * totalGold * rewardCoefficient).round();
+    if(totalGold < 0 && _status.gold + totalGold < 0) {
+      totalGold = -_status.gold;
+    }
     response.gold = totalGold;
     response.penaltyCoefficient = rewardCoefficient;
 

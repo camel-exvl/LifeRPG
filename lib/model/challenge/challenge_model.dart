@@ -38,7 +38,18 @@ ChallengeModel getChallengeLocalizedString(
       name: Value(AppLocalizations.of(context)!.dragonLair),
       description: Value(AppLocalizations.of(context)!.dragonLairDescription),
       bossName: Value(AppLocalizations.of(context)!.dragonLairBoss),
-    )
+    ),
+    "mechanicalCastle": ChallengeTableCompanion(
+      name: Value(AppLocalizations.of(context)!.mechanicalCastle),
+      description:
+          Value(AppLocalizations.of(context)!.mechanicalCastleDescription),
+      bossName: Value(AppLocalizations.of(context)!.mechanicalCastleBoss),
+    ),
+    "ghostShip": ChallengeTableCompanion(
+      name: Value(AppLocalizations.of(context)!.ghostShip),
+      description: Value(AppLocalizations.of(context)!.ghostShipDescription),
+      bossName: Value(AppLocalizations.of(context)!.ghostShipBoss),
+    ),
   };
   assert(map[challenge.name] != null,
       'Challenge name not found in localization map');
