@@ -22,84 +22,86 @@ class _ChallengeSelectViewState extends State<ChallengeSelectView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          AppBar(title: Text(AppLocalizations.of(context)!.selectChallenge)),
-      body: RefreshIndicator(
-          key: _refreshIndicatorKey,
-          onRefresh: () {
-            return widget.viewModel.loadData();
-          },
-          child: ListView.builder(
-            itemCount: widget.viewModel.challenges.length,
-            itemBuilder: (context, index) {
-              ChallengeModel task = widget.viewModel.challenges[index];
-              task = getChallengeLocalizedString(context, task);
-              return ListTile(
-                key: ValueKey(task.id),
-                title: Text(task.name),
-                subtitle: Column(
-                  children: [
-                    Text(task.description),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Image(
-                                image: const AssetImage(hpIconPath),
-                                height: Theme.of(context).iconTheme.size,
-                                width: Theme.of(context).iconTheme.size),
-                            const SizedBox(width: 8.0),
-                            Text("${task.curHp}/${task.totalHp}"),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Image(
-                                image: const AssetImage(attackPowerIconPath),
-                                height: Theme.of(context).iconTheme.size,
-                                width: Theme.of(context).iconTheme.size),
-                            const SizedBox(width: 8.0),
-                            Text("${task.attack}"),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Image(
-                                image: const AssetImage(defensePowerIconPath),
-                                height: Theme.of(context).iconTheme.size,
-                                width: Theme.of(context).iconTheme.size),
-                            const SizedBox(width: 8.0),
-                            Text("${task.defense}"),
-                          ],
-                        )
-                      ],
-                    )
-                  ],
-                ),
-                onTap: () async {
-                  SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
-                  prefs.setInt("cur_challenge", task.id);
-                  await widget.viewModel.setCurChallenge(task.id);
-                  if (context.mounted) {
-                    Navigator.of(context).pop();
-                  }
-                },
-              );
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context)!.selectChallenge),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs.remove("cur_challenge");
+                await widget.viewModel.setCurChallenge(null);
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                }
+              },
+              child: Text(AppLocalizations.of(context)!.quitChallenge),
+            ),
+          ],
+        ),
+        body: RefreshIndicator(
+            key: _refreshIndicatorKey,
+            onRefresh: () {
+              return widget.viewModel.loadData();
             },
-          )),
-      floatingActionButton: FloatingActionButton(
-          heroTag: 'ChallengeSelectView',
-          onPressed: () async {
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            prefs.remove("cur_challenge");
-            await widget.viewModel.setCurChallenge(null);
-            if (context.mounted) {
-              Navigator.of(context).pop();
-            }
-          },
-          child: const Icon(Icons.close)),
-    );
+            child: ListView.builder(
+              itemCount: widget.viewModel.challenges.length,
+              itemBuilder: (context, index) {
+                ChallengeModel task = widget.viewModel.challenges[index];
+                task = getChallengeLocalizedString(context, task);
+                return ListTile(
+                  key: ValueKey(task.id),
+                  title: Text(task.name),
+                  subtitle: Column(
+                    children: [
+                      Text(task.description),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Image(
+                                  image: const AssetImage(hpIconPath),
+                                  height: Theme.of(context).iconTheme.size,
+                                  width: Theme.of(context).iconTheme.size),
+                              const SizedBox(width: 8.0),
+                              Text("${task.curHp}/${task.totalHp}"),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Image(
+                                  image: const AssetImage(attackPowerIconPath),
+                                  height: Theme.of(context).iconTheme.size,
+                                  width: Theme.of(context).iconTheme.size),
+                              const SizedBox(width: 8.0),
+                              Text("${task.attack}"),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Image(
+                                  image: const AssetImage(defensePowerIconPath),
+                                  height: Theme.of(context).iconTheme.size,
+                                  width: Theme.of(context).iconTheme.size),
+                              const SizedBox(width: 8.0),
+                              Text("${task.defense}"),
+                            ],
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                  onTap: () async {
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    prefs.setInt("cur_challenge", task.id);
+                    await widget.viewModel.setCurChallenge(task.id);
+                    if (context.mounted) {
+                      Navigator.of(context).pop();
+                    }
+                  },
+                );
+              },
+            )));
   }
 }
