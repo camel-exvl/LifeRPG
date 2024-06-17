@@ -166,5 +166,15 @@
   "remove": "删除",
   "removeItem": "删除道具",
   "removeSuccess": "删除成功",
-  "quitChallenge": "退出副本"
+  "quitChallenge": "退出副本",
+  "taskManagementHabitBuilding": " 任务管理与习惯养成",
+  "taskManagementHabitBuildingDescription": "轻松创建、编辑和删除任务。\n按类别和难度自定义习惯和任务。\n设置自定义任务周期和截止时间。\n以可排序列表形式查看所有任务和习惯。",
+  "rewardsSystem": "奖励系统",
+  "rewardsSystemDescription": "完成难度更高的任务可获得更多奖励。\n随着任务完成次数的增加，奖励也会增加。\n防止不正常的快速完成，通过减少奖励来确保公平。",
+  "achievementsAttributes": "成就与属性",
+  "achievementsAttributesDescription": "达成目标时解锁各种成就。\n全面追踪人生等级、属性等级和已获得的成就。",
+  "shopInventoryChallengeSystem": "商店、背包与挑战系统",
+  "shopInventoryChallengeSystemDescription": "在商店购买武器、防具、道具和挑战副本。\n在背包中查看和装备已购买的物品，提升攻击力和防御力。\n开启挑战，通过完成目标来击败Boss。\n实时记录战斗日志。",
+  "done": "完成",
+  "skip": "跳过"
 }
