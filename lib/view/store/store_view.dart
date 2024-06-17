@@ -6,6 +6,7 @@ import 'package:liferpg/database/database.dart';
 import 'package:liferpg/model/challenge/challenge_model.dart';
 import 'package:liferpg/model/common_model.dart';
 import 'package:liferpg/model/store/equipment_model.dart';
+import 'package:liferpg/model/store/item_model.dart';
 import 'package:liferpg/viewmodel/store_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -24,6 +25,7 @@ class StoreViewState extends State<StoreView>
     Future.microtask(() async {
       await viewModel.loadProperties();
       await viewModel.loadEquipments();
+      await viewModel.loadItems();
     });
   }
 
@@ -44,8 +46,18 @@ class StoreViewState extends State<StoreView>
                       title: AppLocalizations.of(context)!.equipments,
                       initiallyExpanded: true,
                       children: viewModel.equipments
-                          .map((equipment) => Equipment(
-                                item: equipment,
+                          .map((equipment) => CommodityView(
+                                title: equipment.equipmentType.name(context),
+                                iconPath: equipment.equipmentType.iconPath,
+                                description: equipment.equipmentType
+                                    .description(context),
+                                price: equipment.price,
+                                moneyType: equipment.moneyType,
+                                stock: equipment.stock,
+                                attackPower:
+                                    equipment.equipmentType.attackPower,
+                                defensePower:
+                                    equipment.equipmentType.defensePower,
                                 affordable: equipment.price <=
                                         viewModel.properties
                                             .firstWhere((property) =>
@@ -86,27 +98,37 @@ class StoreViewState extends State<StoreView>
                       title: AppLocalizations.of(context)!.items,
                       initiallyExpanded: true,
                       children: [
-                        ...viewModel.props.map((equipment) => Equipment(
-                              item: equipment,
-                              affordable: equipment.price <=
+                        ...viewModel.items.map((item) => CommodityView(
+                              title: item.type?.name(context) ?? "",
+                              iconPath: item.iconPath,
+                              description:
+                                  item.type?.description(context) ?? "",
+                              price: item.price,
+                              moneyType: item.moneyType,
+                              stock: item.stock,
+                              // attackPower: item.attackPower,
+                              // defensePower: item.defensePower,
+                              affordable: item.price <=
                                       viewModel.properties
                                           .firstWhere(
                                               (property) =>
                                                   property.moneyType ==
-                                                  equipment.moneyType,
+                                                  item.moneyType,
                                               orElse: () => PropertyModel(
                                                     id: 0,
-                                                    moneyType:
-                                                        equipment.moneyType,
+                                                    moneyType: item.moneyType,
                                                     amount: 0,
                                                   ))
                                           .amount &&
-                                  equipment.stock > 0,
+                                  item.stock > 0,
                               buy: () async {
-                                await viewModel.buy(equipment);
+                                // await viewModel.buy(equipment);
                               },
                             )),
-                        AddItem(),
+                        AddItem(add: (CustomizedItemInfo info) {
+                          viewModel.addCustomizedItem(info.name,
+                              info.description, info.price, info.iconPath);
+                        }),
                       ])
                 ]),
               ));
@@ -309,24 +331,34 @@ class Challenge extends StatelessWidget {
   }
 }
 
-class CustomedItemInfo {
-  final String title;
+class CustomizedItemInfo {
+  final String name;
   final String description;
   final String iconPath;
   final int price;
 
-  CustomedItemInfo({
-    required this.title,
+  CustomizedItemInfo({
+    required this.name,
     required this.description,
     required this.iconPath,
     required this.price,
   });
 }
 
+// extension CustomizedItemInfoExtension on CustomizedItemInfo {
+//   CustomizedItemTableCompanion toCompanion() {
+//     return CustomizedItemTableCompanion(
+//       name: Value(name),
+//       description: Value(description),
+//       price: Value(price),
+//     );
+//   }
+// }
+
 class AddItem extends StatefulWidget {
   const AddItem({super.key, this.add});
 
-  final Function(CustomedItemInfo)? add;
+  final Function(CustomizedItemInfo)? add;
 
   @override
   AddItemState createState() => AddItemState();
@@ -378,7 +410,7 @@ class AddItemState extends State<AddItem> {
                                   width: Theme.of(context).iconTheme.size,
                                   height: Theme.of(context).iconTheme.size,
                                 ),
-                                labelText: AppLocalizations.of(context)!.title),
+                                labelText: AppLocalizations.of(context)!.name),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return AppLocalizations.of(context)!
@@ -440,8 +472,8 @@ class AddItemState extends State<AddItem> {
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               // clear current state
-                              final newItem = CustomedItemInfo(
-                                title: _titleController.text,
+                              final newItem = CustomizedItemInfo(
+                                name: _titleController.text,
                                 description: _descriptionController.text,
                                 iconPath: equipmentType.iconPath,
                                 price: int.parse(_priceController.text),
@@ -465,8 +497,12 @@ class AddItemState extends State<AddItem> {
           padding: const EdgeInsets.all(0),
           child: Column(
             children: <Widget>[
-              const Icon(Icons.add, size: 30),
-              Text("haha",
+              Icon(
+                Icons.add,
+                size: 30,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              Text(AppLocalizations.of(context)!.addItem,
                   style: Theme.of(context).textTheme.bodyLarge,
                   textAlign: TextAlign.center),
             ],
@@ -475,23 +511,31 @@ class AddItemState extends State<AddItem> {
   }
 }
 
-class Equipment extends StatelessWidget {
-  final EquipmentType equipmentType;
+class CommodityView extends StatelessWidget {
+  final String title;
+  final String? iconPath;
+  final String description;
   final MoneyType moneyType;
   final int price;
   final int stock;
   final bool affordable;
   final Function? buy;
+  final int attackPower;
+  final int defensePower;
 
-  Equipment(
-      {super.key,
-      required EquipmentModel item,
-      this.affordable = false,
-      this.buy})
-      : equipmentType = item.equipmentType,
-        moneyType = item.moneyType,
-        price = item.price,
-        stock = item.stock;
+  const CommodityView({
+    super.key,
+    required this.title,
+    this.iconPath,
+    required this.description,
+    required this.price,
+    this.moneyType = MoneyType.gold,
+    this.stock = 100,
+    this.affordable = false,
+    this.buy,
+    this.attackPower = 0,
+    this.defensePower = 0,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -501,18 +545,20 @@ class Equipment extends StatelessWidget {
             context: context,
             builder: (BuildContext context) => AlertDialog(
                   title: Text(
-                    equipmentType.name(context),
+                    title,
                     textAlign: TextAlign.center,
                   ),
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Image(
-                        image: AssetImage(equipmentType.iconPath),
-                        width: 60,
-                        height: 60,
-                      ),
+                      iconPath == null
+                          ? const SizedBox()
+                          : Image(
+                              image: AssetImage(iconPath!),
+                              width: 60,
+                              height: 60,
+                            ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
@@ -523,25 +569,24 @@ class Equipment extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        equipmentType.description(context),
+                        description,
                         textAlign: TextAlign.left,
                       ),
                       const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          if (equipmentType.attackPower != 0)
+                          if (attackPower != 0)
                             IconWithText(
-                              iconPath: equipmentType.attackPowerIconPath,
-                              text: " +${equipmentType.attackPower}",
+                              iconPath: attackPowerIconPath,
+                              text: " +$attackPower",
                             ),
-                          if (equipmentType.attackPower != 0 &&
-                              equipmentType.defensePower != 0)
+                          if (attackPower != 0 && defensePower != 0)
                             const SizedBox(width: 30), // 添加间距仅在attackPower非零时
-                          if (equipmentType.defensePower != 0)
+                          if (defensePower != 0)
                             IconWithText(
-                              iconPath: equipmentType.defensePowerIconPath,
-                              text: " +${equipmentType.defensePower}",
+                              iconPath: defensePowerIconPath,
+                              text: " +$defensePower",
                             ),
                         ],
                       )
@@ -593,12 +638,14 @@ class Equipment extends StatelessWidget {
           // ),
           child: Column(
             children: <Widget>[
-              Image(
-                image: AssetImage(equipmentType.iconPath),
-                width: 30,
-                height: 30,
-              ),
-              Text(equipmentType.name(context),
+              iconPath == null
+                  ? const SizedBox()
+                  : Image(
+                      image: AssetImage(iconPath!),
+                      width: 30,
+                      height: 30,
+                    ),
+              Text(title,
                   style: Theme.of(context).textTheme.bodyLarge,
                   textAlign: TextAlign.center),
               IconWithText(iconPath: moneyType.iconPath, text: price.toString())

@@ -3427,6 +3427,498 @@ class ChallengeTableCompanion extends UpdateCompanion<ChallengeModel> {
   }
 }
 
+class $ItemTableTable extends ItemTable
+    with TableInfo<$ItemTableTable, ItemModel> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ItemTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumnWithTypeConverter<ItemType?, int> type =
+      GeneratedColumn<int>('type', aliasedName, true,
+              type: DriftSqlType.int, requiredDuringInsert: false)
+          .withConverter<ItemType?>($ItemTableTable.$convertertypen);
+  static const VerificationMeta _iconPathMeta =
+      const VerificationMeta('iconPath');
+  @override
+  late final GeneratedColumn<String> iconPath = GeneratedColumn<String>(
+      'icon_path', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _moneyTypeMeta =
+      const VerificationMeta('moneyType');
+  @override
+  late final GeneratedColumnWithTypeConverter<MoneyType, int> moneyType =
+      GeneratedColumn<int>('money_type', aliasedName, false,
+              type: DriftSqlType.int,
+              requiredDuringInsert: false,
+              defaultValue: Constant(MoneyType.gold.index))
+          .withConverter<MoneyType>($ItemTableTable.$convertermoneyType);
+  static const VerificationMeta _priceMeta = const VerificationMeta('price');
+  @override
+  late final GeneratedColumn<int> price = GeneratedColumn<int>(
+      'price', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _stockMeta = const VerificationMeta('stock');
+  @override
+  late final GeneratedColumn<int> stock = GeneratedColumn<int>(
+      'stock', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _boughtNumMeta =
+      const VerificationMeta('boughtNum');
+  @override
+  late final GeneratedColumn<int> boughtNum = GeneratedColumn<int>(
+      'bought_num', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  static const VerificationMeta _isCustomizedMeta =
+      const VerificationMeta('isCustomized');
+  @override
+  late final GeneratedColumn<bool> isCustomized = GeneratedColumn<bool>(
+      'is_customized', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_customized" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        type,
+        iconPath,
+        moneyType,
+        price,
+        stock,
+        boughtNum,
+        isCustomized,
+        name,
+        description
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'item_table';
+  @override
+  VerificationContext validateIntegrity(Insertable<ItemModel> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    context.handle(_typeMeta, const VerificationResult.success());
+    if (data.containsKey('icon_path')) {
+      context.handle(_iconPathMeta,
+          iconPath.isAcceptableOrUnknown(data['icon_path']!, _iconPathMeta));
+    }
+    context.handle(_moneyTypeMeta, const VerificationResult.success());
+    if (data.containsKey('price')) {
+      context.handle(
+          _priceMeta, price.isAcceptableOrUnknown(data['price']!, _priceMeta));
+    } else if (isInserting) {
+      context.missing(_priceMeta);
+    }
+    if (data.containsKey('stock')) {
+      context.handle(
+          _stockMeta, stock.isAcceptableOrUnknown(data['stock']!, _stockMeta));
+    } else if (isInserting) {
+      context.missing(_stockMeta);
+    }
+    if (data.containsKey('bought_num')) {
+      context.handle(_boughtNumMeta,
+          boughtNum.isAcceptableOrUnknown(data['bought_num']!, _boughtNumMeta));
+    }
+    if (data.containsKey('is_customized')) {
+      context.handle(
+          _isCustomizedMeta,
+          isCustomized.isAcceptableOrUnknown(
+              data['is_customized']!, _isCustomizedMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ItemModel map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ItemModel(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      type: $ItemTableTable.$convertertypen.fromSql(attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}type'])),
+      iconPath: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}icon_path']),
+      moneyType: $ItemTableTable.$convertermoneyType.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}money_type'])!),
+      price: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}price'])!,
+      stock: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}stock'])!,
+      boughtNum: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}bought_num'])!,
+      isCustomized: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_customized'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name']),
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description']),
+    );
+  }
+
+  @override
+  $ItemTableTable createAlias(String alias) {
+    return $ItemTableTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<ItemType, int, int> $convertertype =
+      const EnumIndexConverter<ItemType>(ItemType.values);
+  static JsonTypeConverter2<ItemType?, int?, int?> $convertertypen =
+      JsonTypeConverter2.asNullable($convertertype);
+  static JsonTypeConverter2<MoneyType, int, int> $convertermoneyType =
+      const EnumIndexConverter<MoneyType>(MoneyType.values);
+}
+
+class ItemModel extends DataClass implements Insertable<ItemModel> {
+  final int id;
+  final ItemType? type;
+  final String? iconPath;
+  final MoneyType moneyType;
+  final int price;
+  final int stock;
+  final int boughtNum;
+  final bool isCustomized;
+  final String? name;
+  final String? description;
+  const ItemModel(
+      {required this.id,
+      this.type,
+      this.iconPath,
+      required this.moneyType,
+      required this.price,
+      required this.stock,
+      required this.boughtNum,
+      required this.isCustomized,
+      this.name,
+      this.description});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || type != null) {
+      map['type'] = Variable<int>($ItemTableTable.$convertertypen.toSql(type));
+    }
+    if (!nullToAbsent || iconPath != null) {
+      map['icon_path'] = Variable<String>(iconPath);
+    }
+    {
+      map['money_type'] =
+          Variable<int>($ItemTableTable.$convertermoneyType.toSql(moneyType));
+    }
+    map['price'] = Variable<int>(price);
+    map['stock'] = Variable<int>(stock);
+    map['bought_num'] = Variable<int>(boughtNum);
+    map['is_customized'] = Variable<bool>(isCustomized);
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String>(name);
+    }
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    return map;
+  }
+
+  ItemTableCompanion toCompanion(bool nullToAbsent) {
+    return ItemTableCompanion(
+      id: Value(id),
+      type: type == null && nullToAbsent ? const Value.absent() : Value(type),
+      iconPath: iconPath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(iconPath),
+      moneyType: Value(moneyType),
+      price: Value(price),
+      stock: Value(stock),
+      boughtNum: Value(boughtNum),
+      isCustomized: Value(isCustomized),
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+    );
+  }
+
+  factory ItemModel.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ItemModel(
+      id: serializer.fromJson<int>(json['id']),
+      type: $ItemTableTable.$convertertypen
+          .fromJson(serializer.fromJson<int?>(json['type'])),
+      iconPath: serializer.fromJson<String?>(json['iconPath']),
+      moneyType: $ItemTableTable.$convertermoneyType
+          .fromJson(serializer.fromJson<int>(json['moneyType'])),
+      price: serializer.fromJson<int>(json['price']),
+      stock: serializer.fromJson<int>(json['stock']),
+      boughtNum: serializer.fromJson<int>(json['boughtNum']),
+      isCustomized: serializer.fromJson<bool>(json['isCustomized']),
+      name: serializer.fromJson<String?>(json['name']),
+      description: serializer.fromJson<String?>(json['description']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'type':
+          serializer.toJson<int?>($ItemTableTable.$convertertypen.toJson(type)),
+      'iconPath': serializer.toJson<String?>(iconPath),
+      'moneyType': serializer
+          .toJson<int>($ItemTableTable.$convertermoneyType.toJson(moneyType)),
+      'price': serializer.toJson<int>(price),
+      'stock': serializer.toJson<int>(stock),
+      'boughtNum': serializer.toJson<int>(boughtNum),
+      'isCustomized': serializer.toJson<bool>(isCustomized),
+      'name': serializer.toJson<String?>(name),
+      'description': serializer.toJson<String?>(description),
+    };
+  }
+
+  ItemModel copyWith(
+          {int? id,
+          Value<ItemType?> type = const Value.absent(),
+          Value<String?> iconPath = const Value.absent(),
+          MoneyType? moneyType,
+          int? price,
+          int? stock,
+          int? boughtNum,
+          bool? isCustomized,
+          Value<String?> name = const Value.absent(),
+          Value<String?> description = const Value.absent()}) =>
+      ItemModel(
+        id: id ?? this.id,
+        type: type.present ? type.value : this.type,
+        iconPath: iconPath.present ? iconPath.value : this.iconPath,
+        moneyType: moneyType ?? this.moneyType,
+        price: price ?? this.price,
+        stock: stock ?? this.stock,
+        boughtNum: boughtNum ?? this.boughtNum,
+        isCustomized: isCustomized ?? this.isCustomized,
+        name: name.present ? name.value : this.name,
+        description: description.present ? description.value : this.description,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('ItemModel(')
+          ..write('id: $id, ')
+          ..write('type: $type, ')
+          ..write('iconPath: $iconPath, ')
+          ..write('moneyType: $moneyType, ')
+          ..write('price: $price, ')
+          ..write('stock: $stock, ')
+          ..write('boughtNum: $boughtNum, ')
+          ..write('isCustomized: $isCustomized, ')
+          ..write('name: $name, ')
+          ..write('description: $description')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, type, iconPath, moneyType, price, stock,
+      boughtNum, isCustomized, name, description);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ItemModel &&
+          other.id == this.id &&
+          other.type == this.type &&
+          other.iconPath == this.iconPath &&
+          other.moneyType == this.moneyType &&
+          other.price == this.price &&
+          other.stock == this.stock &&
+          other.boughtNum == this.boughtNum &&
+          other.isCustomized == this.isCustomized &&
+          other.name == this.name &&
+          other.description == this.description);
+}
+
+class ItemTableCompanion extends UpdateCompanion<ItemModel> {
+  final Value<int> id;
+  final Value<ItemType?> type;
+  final Value<String?> iconPath;
+  final Value<MoneyType> moneyType;
+  final Value<int> price;
+  final Value<int> stock;
+  final Value<int> boughtNum;
+  final Value<bool> isCustomized;
+  final Value<String?> name;
+  final Value<String?> description;
+  const ItemTableCompanion({
+    this.id = const Value.absent(),
+    this.type = const Value.absent(),
+    this.iconPath = const Value.absent(),
+    this.moneyType = const Value.absent(),
+    this.price = const Value.absent(),
+    this.stock = const Value.absent(),
+    this.boughtNum = const Value.absent(),
+    this.isCustomized = const Value.absent(),
+    this.name = const Value.absent(),
+    this.description = const Value.absent(),
+  });
+  ItemTableCompanion.insert({
+    this.id = const Value.absent(),
+    this.type = const Value.absent(),
+    this.iconPath = const Value.absent(),
+    this.moneyType = const Value.absent(),
+    required int price,
+    required int stock,
+    this.boughtNum = const Value.absent(),
+    this.isCustomized = const Value.absent(),
+    this.name = const Value.absent(),
+    this.description = const Value.absent(),
+  })  : price = Value(price),
+        stock = Value(stock);
+  static Insertable<ItemModel> custom({
+    Expression<int>? id,
+    Expression<int>? type,
+    Expression<String>? iconPath,
+    Expression<int>? moneyType,
+    Expression<int>? price,
+    Expression<int>? stock,
+    Expression<int>? boughtNum,
+    Expression<bool>? isCustomized,
+    Expression<String>? name,
+    Expression<String>? description,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (type != null) 'type': type,
+      if (iconPath != null) 'icon_path': iconPath,
+      if (moneyType != null) 'money_type': moneyType,
+      if (price != null) 'price': price,
+      if (stock != null) 'stock': stock,
+      if (boughtNum != null) 'bought_num': boughtNum,
+      if (isCustomized != null) 'is_customized': isCustomized,
+      if (name != null) 'name': name,
+      if (description != null) 'description': description,
+    });
+  }
+
+  ItemTableCompanion copyWith(
+      {Value<int>? id,
+      Value<ItemType?>? type,
+      Value<String?>? iconPath,
+      Value<MoneyType>? moneyType,
+      Value<int>? price,
+      Value<int>? stock,
+      Value<int>? boughtNum,
+      Value<bool>? isCustomized,
+      Value<String?>? name,
+      Value<String?>? description}) {
+    return ItemTableCompanion(
+      id: id ?? this.id,
+      type: type ?? this.type,
+      iconPath: iconPath ?? this.iconPath,
+      moneyType: moneyType ?? this.moneyType,
+      price: price ?? this.price,
+      stock: stock ?? this.stock,
+      boughtNum: boughtNum ?? this.boughtNum,
+      isCustomized: isCustomized ?? this.isCustomized,
+      name: name ?? this.name,
+      description: description ?? this.description,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (type.present) {
+      map['type'] =
+          Variable<int>($ItemTableTable.$convertertypen.toSql(type.value));
+    }
+    if (iconPath.present) {
+      map['icon_path'] = Variable<String>(iconPath.value);
+    }
+    if (moneyType.present) {
+      map['money_type'] = Variable<int>(
+          $ItemTableTable.$convertermoneyType.toSql(moneyType.value));
+    }
+    if (price.present) {
+      map['price'] = Variable<int>(price.value);
+    }
+    if (stock.present) {
+      map['stock'] = Variable<int>(stock.value);
+    }
+    if (boughtNum.present) {
+      map['bought_num'] = Variable<int>(boughtNum.value);
+    }
+    if (isCustomized.present) {
+      map['is_customized'] = Variable<bool>(isCustomized.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ItemTableCompanion(')
+          ..write('id: $id, ')
+          ..write('type: $type, ')
+          ..write('iconPath: $iconPath, ')
+          ..write('moneyType: $moneyType, ')
+          ..write('price: $price, ')
+          ..write('stock: $stock, ')
+          ..write('boughtNum: $boughtNum, ')
+          ..write('isCustomized: $isCustomized, ')
+          ..write('name: $name, ')
+          ..write('description: $description')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   _$AppDatabaseManager get managers => _$AppDatabaseManager(this);
@@ -3439,6 +3931,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $AchievementTableTable achievementTable =
       $AchievementTableTable(this);
   late final $ChallengeTableTable challengeTable = $ChallengeTableTable(this);
+  late final $ItemTableTable itemTable = $ItemTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -3451,7 +3944,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         settingTable,
         equipmentTable,
         achievementTable,
-        challengeTable
+        challengeTable,
+        itemTable
       ];
 }
 
@@ -5005,6 +5499,225 @@ class $$ChallengeTableTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
+typedef $$ItemTableTableInsertCompanionBuilder = ItemTableCompanion Function({
+  Value<int> id,
+  Value<ItemType?> type,
+  Value<String?> iconPath,
+  Value<MoneyType> moneyType,
+  required int price,
+  required int stock,
+  Value<int> boughtNum,
+  Value<bool> isCustomized,
+  Value<String?> name,
+  Value<String?> description,
+});
+typedef $$ItemTableTableUpdateCompanionBuilder = ItemTableCompanion Function({
+  Value<int> id,
+  Value<ItemType?> type,
+  Value<String?> iconPath,
+  Value<MoneyType> moneyType,
+  Value<int> price,
+  Value<int> stock,
+  Value<int> boughtNum,
+  Value<bool> isCustomized,
+  Value<String?> name,
+  Value<String?> description,
+});
+
+class $$ItemTableTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $ItemTableTable,
+    ItemModel,
+    $$ItemTableTableFilterComposer,
+    $$ItemTableTableOrderingComposer,
+    $$ItemTableTableProcessedTableManager,
+    $$ItemTableTableInsertCompanionBuilder,
+    $$ItemTableTableUpdateCompanionBuilder> {
+  $$ItemTableTableTableManager(_$AppDatabase db, $ItemTableTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$ItemTableTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$ItemTableTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$ItemTableTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<int> id = const Value.absent(),
+            Value<ItemType?> type = const Value.absent(),
+            Value<String?> iconPath = const Value.absent(),
+            Value<MoneyType> moneyType = const Value.absent(),
+            Value<int> price = const Value.absent(),
+            Value<int> stock = const Value.absent(),
+            Value<int> boughtNum = const Value.absent(),
+            Value<bool> isCustomized = const Value.absent(),
+            Value<String?> name = const Value.absent(),
+            Value<String?> description = const Value.absent(),
+          }) =>
+              ItemTableCompanion(
+            id: id,
+            type: type,
+            iconPath: iconPath,
+            moneyType: moneyType,
+            price: price,
+            stock: stock,
+            boughtNum: boughtNum,
+            isCustomized: isCustomized,
+            name: name,
+            description: description,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<int> id = const Value.absent(),
+            Value<ItemType?> type = const Value.absent(),
+            Value<String?> iconPath = const Value.absent(),
+            Value<MoneyType> moneyType = const Value.absent(),
+            required int price,
+            required int stock,
+            Value<int> boughtNum = const Value.absent(),
+            Value<bool> isCustomized = const Value.absent(),
+            Value<String?> name = const Value.absent(),
+            Value<String?> description = const Value.absent(),
+          }) =>
+              ItemTableCompanion.insert(
+            id: id,
+            type: type,
+            iconPath: iconPath,
+            moneyType: moneyType,
+            price: price,
+            stock: stock,
+            boughtNum: boughtNum,
+            isCustomized: isCustomized,
+            name: name,
+            description: description,
+          ),
+        ));
+}
+
+class $$ItemTableTableProcessedTableManager extends ProcessedTableManager<
+    _$AppDatabase,
+    $ItemTableTable,
+    ItemModel,
+    $$ItemTableTableFilterComposer,
+    $$ItemTableTableOrderingComposer,
+    $$ItemTableTableProcessedTableManager,
+    $$ItemTableTableInsertCompanionBuilder,
+    $$ItemTableTableUpdateCompanionBuilder> {
+  $$ItemTableTableProcessedTableManager(super.$state);
+}
+
+class $$ItemTableTableFilterComposer
+    extends FilterComposer<_$AppDatabase, $ItemTableTable> {
+  $$ItemTableTableFilterComposer(super.$state);
+  ColumnFilters<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnWithTypeConverterFilters<ItemType?, ItemType, int> get type =>
+      $state.composableBuilder(
+          column: $state.table.type,
+          builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
+              column,
+              joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get iconPath => $state.composableBuilder(
+      column: $state.table.iconPath,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnWithTypeConverterFilters<MoneyType, MoneyType, int> get moneyType =>
+      $state.composableBuilder(
+          column: $state.table.moneyType,
+          builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
+              column,
+              joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get price => $state.composableBuilder(
+      column: $state.table.price,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get stock => $state.composableBuilder(
+      column: $state.table.stock,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get boughtNum => $state.composableBuilder(
+      column: $state.table.boughtNum,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get isCustomized => $state.composableBuilder(
+      column: $state.table.isCustomized,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get description => $state.composableBuilder(
+      column: $state.table.description,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$ItemTableTableOrderingComposer
+    extends OrderingComposer<_$AppDatabase, $ItemTableTable> {
+  $$ItemTableTableOrderingComposer(super.$state);
+  ColumnOrderings<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get type => $state.composableBuilder(
+      column: $state.table.type,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get iconPath => $state.composableBuilder(
+      column: $state.table.iconPath,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get moneyType => $state.composableBuilder(
+      column: $state.table.moneyType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get price => $state.composableBuilder(
+      column: $state.table.price,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get stock => $state.composableBuilder(
+      column: $state.table.stock,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get boughtNum => $state.composableBuilder(
+      column: $state.table.boughtNum,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isCustomized => $state.composableBuilder(
+      column: $state.table.isCustomized,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get description => $state.composableBuilder(
+      column: $state.table.description,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
 class _$AppDatabaseManager {
   final _$AppDatabase _db;
   _$AppDatabaseManager(this._db);
@@ -5024,4 +5737,6 @@ class _$AppDatabaseManager {
       $$AchievementTableTableTableManager(_db, _db.achievementTable);
   $$ChallengeTableTableTableManager get challengeTable =>
       $$ChallengeTableTableTableManager(_db, _db.challengeTable);
+  $$ItemTableTableTableManager get itemTable =>
+      $$ItemTableTableTableManager(_db, _db.itemTable);
 }

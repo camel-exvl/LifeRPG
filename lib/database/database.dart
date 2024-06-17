@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
+import 'package:liferpg/model/store/item_model.dart';
 import 'package:liferpg/model/store/equipment_model.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -29,7 +30,8 @@ part 'database.g.dart';
   SettingTable,
   EquipmentTable,
   AchievementTable,
-  ChallengeTable
+  ChallengeTable,
+  ItemTable,
 ])
 class AppDatabase extends _$AppDatabase {
   static final AppDatabase instance = AppDatabase._internal();
@@ -229,6 +231,25 @@ class AppDatabase extends _$AppDatabase {
 
   Future<void> deleteAchievement(AchievementModel achievement) =>
       delete(achievementTable).delete(achievement);
+
+  // Item
+  Future<List<ItemModel>> getAllItems() async {
+    return (select(itemTable)..orderBy([(t) => OrderingTerm(expression: t.id)]))
+        .get();
+  }
+
+  Future<void> insertItem(ItemTableCompanion item) =>
+      into(itemTable).insert(item);
+
+  Future<void> insertItems(List<ItemTableCompanion> items) => batch((batch) {
+        for (var item in items) {
+          batch.insertAll(itemTable, [item]);
+        }
+      });
+
+  Future<void> updateItem(ItemModel item) => update(itemTable).replace(item);
+
+  Future<void> deleteItem(ItemModel item) => delete(itemTable).delete(item);
 }
 
 LazyDatabase _openConnection() {

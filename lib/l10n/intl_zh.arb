@@ -159,5 +159,6 @@
   "addItem": "添加道具",
   "price": "价格",
   "priceRequired": "价格是必须的",
-  "priceInvalid": "价格必须是自然数"
+  "priceInvalid": "价格必须是自然数",
+  "name": "名称"
 }
