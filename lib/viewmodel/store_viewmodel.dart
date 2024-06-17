@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:liferpg/database/database.dart';
 import 'package:liferpg/model/common_model.dart';
 import 'package:liferpg/model/store/equipment_model.dart';
+import 'package:liferpg/model/store/item_model.dart';
 import 'package:liferpg/model/store/property_model.dart';
 import 'package:liferpg/viewmodel/status_viewmodel.dart';
 
@@ -21,32 +22,7 @@ class StoreViewModel extends ChangeNotifier {
 
   List<EquipmentModel> _equipments = [];
 
-  final List<EquipmentModel> _props = [
-    const EquipmentModel(
-        id: 4,
-        equipmentType: EquipmentType.fruit,
-        moneyType: MoneyType.gold,
-        price: 5,
-        stock: 50),
-    const EquipmentModel(
-        id: 5,
-        equipmentType: EquipmentType.secretGift,
-        moneyType: MoneyType.gold,
-        price: 1000,
-        stock: 1),
-    const EquipmentModel(
-        id: 7,
-        equipmentType: EquipmentType.key,
-        moneyType: MoneyType.gold,
-        price: 200,
-        stock: 10),
-    const EquipmentModel(
-        id: 10,
-        equipmentType: EquipmentType.potion,
-        moneyType: MoneyType.gold,
-        price: 50,
-        stock: 20),
-  ];
+  List<ItemModel> _items = [];
 
   final List<StoreChallengeModel> _challenges = [
     StoreChallengeModel(
@@ -85,8 +61,7 @@ class StoreViewModel extends ChangeNotifier {
   UnmodifiableListView<EquipmentModel> get equipments =>
       UnmodifiableListView(_equipments);
 
-  UnmodifiableListView<EquipmentModel> get props =>
-      UnmodifiableListView(_props);
+  UnmodifiableListView<ItemModel> get items => UnmodifiableListView(_items);
 
   UnmodifiableListView<StoreChallengeModel> get challenges =>
       UnmodifiableListView(_challenges);
@@ -150,10 +125,50 @@ class StoreViewModel extends ChangeNotifier {
           price: 200,
           stock: 10),
     ];
-    // await _insertProperties(initialProperties);
+    const initialItems = [
+      ItemModel(
+          id: 1,
+          type: ItemType.fruit,
+          iconPath: "res/icons/kyrise/fruit_01a.png",
+          moneyType: MoneyType.gold,
+          price: 5,
+          stock: 100,
+          boughtNum: 0,
+          isCustomized: false),
+      ItemModel(
+          id: 2,
+          type: ItemType.secretGift,
+          iconPath: "res/icons/kyrise/gift_01e.png",
+          moneyType: MoneyType.gold,
+          price: 1000,
+          stock: 100,
+          boughtNum: 0,
+          isCustomized: false),
+      ItemModel(
+          id: 3,
+          type: ItemType.key,
+          iconPath: "res/icons/kyrise/key_01e.png",
+          moneyType: MoneyType.gold,
+          price: 200,
+          stock: 100,
+          boughtNum: 0,
+          isCustomized: false),
+      ItemModel(
+          id: 4,
+          type: ItemType.potion,
+          iconPath: "res/icons/kyrise/potion_01a.png",
+          moneyType: MoneyType.gold,
+          price: 5,
+          stock: 100,
+          boughtNum: 0,
+          isCustomized: false),
+    ];
+
     await _insertEquipments(initialEquipments);
-    // _properties = await database.getAllProperties();
+    await _insertItems(initialItems);
+
     _equipments = await database.getAllEquipments();
+    _items = await database.getAllItems();
     notifyListeners();
   }
 
@@ -274,5 +289,46 @@ class StoreViewModel extends ChangeNotifier {
   Future<void> loadEquipments() async {
     _equipments = await database.getAllEquipments();
     notifyListeners();
+  }
+
+  Future<void> addCustomizedItem(
+      String name, String description, int price, String iconPath,
+      {MoneyType moneyType = MoneyType.gold, int stock = 100}) async {
+    final item = ItemTableCompanion(
+      name: Value(name),
+      description: Value(description),
+      iconPath: Value(iconPath),
+      moneyType: Value(moneyType),
+      price: Value(price),
+      stock: Value(stock),
+      boughtNum: const Value(0),
+      isCustomized: const Value(true),
+    );
+    await database.insertItem(item);
+    await loadItems();
+  }
+
+  Future<void> loadItems() async {
+    _items = await database.getAllItems();
+    notifyListeners();
+  }
+
+  Future<void> deleteItem(ItemModel customizedItem) async {
+    await database.deleteItem(customizedItem);
+    await loadItems();
+  }
+
+  Future<void> _insertItems(List<ItemModel> items) async {
+    await database.insertItems(items
+        .map((e) => ItemTableCompanion(
+              id: Value(e.id),
+              type: Value(e.type),
+              iconPath: Value(e.iconPath),
+              moneyType: Value(e.moneyType),
+              price: Value(e.price),
+              stock: Value(e.stock),
+              boughtNum: Value(e.boughtNum),
+            ))
+        .toList());
   }
 }
