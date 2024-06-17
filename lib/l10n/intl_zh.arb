@@ -163,5 +163,6 @@
   "name": "名称",
   "remove": "删除",
   "removeItem": "删除道具",
-  "removeSuccess": "删除成功"
+  "removeSuccess": "删除成功",
+  "quitChallenge": "退出副本"
 }

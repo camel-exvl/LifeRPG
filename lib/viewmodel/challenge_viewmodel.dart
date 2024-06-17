@@ -7,6 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/model/common_model.dart';
 import 'package:liferpg/model/target/habit_model.dart';
 import 'package:liferpg/viewmodel/status_viewmodel.dart';
+import 'package:liferpg/viewmodel/store_viewmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../database/database.dart';
@@ -77,6 +78,9 @@ class ChallengeViewModel extends ChangeNotifier {
   }
 
   Future<void> insertChallenge(ChallengeModel challenge) async {
+    if (_challenges.any((element) => element.name == challenge.name)) {
+      return;
+    }
     database
         .insertChallenge(ChallengeTableCompanion(
             name: Value(challenge.name),
@@ -135,6 +139,7 @@ class ChallengeViewModel extends ChangeNotifier {
       RewardResponseModel response = RewardResponseModel();
       response.gold = curChallenge!.rewardGold;
       if (context.mounted) {
+        StoreViewModel().updateProperty(response.gold);
         await FinishDialog().show(context, response,
             "${AppLocalizations.of(context)!.challengeCompleted}: ${getChallengeLocalizedString(context, curChallenge!).name}");
         updateChallenge(

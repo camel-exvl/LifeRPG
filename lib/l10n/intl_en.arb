@@ -163,5 +163,6 @@
   "name": "Name",
   "remove": "Remove",
   "removeItem": "Remove Item",
-  "removeSuccess": "Remove Success"
+  "removeSuccess": "Remove Success",
+  "quitChallenge": "Quit Challenge"
 }
