@@ -156,6 +156,7 @@ class _BossInfoViewState extends State<BossInfoView> {
                               Text('${statusViewModel.attack}'),
                             ],
                           ),
+                          const SizedBox(height: 8.0),
                           Row(
                             children: [
                               Image(
@@ -229,6 +230,7 @@ class _BossInfoViewState extends State<BossInfoView> {
                                     '${widget.viewModel.curChallenge!.attack}'),
                               ],
                             ),
+                            const SizedBox(height: 8.0),
                             Row(
                               children: [
                                 Image(
