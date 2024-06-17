@@ -107,6 +107,8 @@
   "armorDescription": "This sturdy armor effectively protects the wearer from harm, greatly increasing your defense.",
   "arrow": "Arrow",
   "arrowDescription": "A bundle of finely crafted arrows, suitable for long-range combat, enhancing your attack range and accuracy.",
+  "bow": "Bow",
+  "bowDescription": "A powerful bow that allows you to shoot arrows with great force and precision, greatly increasing your attack power.",
   "boots": "Boot",
   "bootsDescription": "These lightweight and durable boots allow you to walk effortlessly on any terrain, boosting your movement speed and agility.",
   "fruit": "Fruit",

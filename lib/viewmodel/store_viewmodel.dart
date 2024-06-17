@@ -90,7 +90,7 @@ class StoreViewModel extends ChangeNotifier {
           stock: 10),
       EquipmentModel(
           id: 2,
-          equipmentType: EquipmentType.arrow,
+          equipmentType: EquipmentType.bow,
           moneyType: MoneyType.gold,
           price: 10,
           stock: 100),
@@ -233,7 +233,7 @@ class StoreViewModel extends ChangeNotifier {
           stock: equipment.stock - 1));
 
       switch (equipment.equipmentType) {
-        case EquipmentType.arrow:
+        case EquipmentType.bow:
         case EquipmentType.magicBook:
         case EquipmentType.sword:
           statusViewModel.addWeapon(equipment.id);

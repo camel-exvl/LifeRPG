@@ -6,7 +6,7 @@ import '../common_model.dart';
 
 enum EquipmentType {
   armor,
-  arrow,
+  bow,
   boots,
   fruit,
   secretGift,
@@ -36,8 +36,8 @@ extension EquipmentTypeExtension on EquipmentType {
     switch (this) {
       case EquipmentType.armor:
         return AppLocalizations.of(context)!.armor;
-      case EquipmentType.arrow:
-        return AppLocalizations.of(context)!.arrow;
+      case EquipmentType.bow:
+        return AppLocalizations.of(context)!.bow;
 
       case EquipmentType.boots:
         return AppLocalizations.of(context)!.boots;
@@ -64,8 +64,8 @@ extension EquipmentTypeExtension on EquipmentType {
     switch (this) {
       case EquipmentType.armor:
         return 'res/icons/kyrise/armor_01b.png';
-      case EquipmentType.arrow:
-        return 'res/icons/kyrise/arrow_01e.png';
+      case EquipmentType.bow:
+        return 'res/icons/kyrise/bow_01a.png';
       case EquipmentType.boots:
         return 'res/icons/kyrise/boots_01c.png';
       case EquipmentType.fruit:
@@ -91,8 +91,8 @@ extension EquipmentTypeExtension on EquipmentType {
     switch (this) {
       case EquipmentType.armor:
         return AppLocalizations.of(context)!.armorDescription;
-      case EquipmentType.arrow:
-        return AppLocalizations.of(context)!.arrowDescription;
+      case EquipmentType.bow:
+        return AppLocalizations.of(context)!.bowDescription;
       case EquipmentType.boots:
         return AppLocalizations.of(context)!.bootsDescription;
       case EquipmentType.fruit:
@@ -118,7 +118,7 @@ extension EquipmentTypeExtension on EquipmentType {
     switch (this) {
       case EquipmentType.armor:
         return 10;
-      case EquipmentType.arrow:
+      case EquipmentType.bow:
         return 5;
       case EquipmentType.boots:
         return 2;
@@ -145,7 +145,7 @@ extension EquipmentTypeExtension on EquipmentType {
     switch (this) {
       case EquipmentType.armor:
         return 20;
-      case EquipmentType.arrow:
+      case EquipmentType.bow:
         return 0;
       case EquipmentType.boots:
         return 5;
