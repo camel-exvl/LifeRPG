@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:liferpg/theme.dart';
 import 'package:liferpg/view/home_view.dart';
+import 'package:liferpg/view/onboarding_view.dart';
 import 'package:liferpg/viewmodel/setting_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,13 +20,15 @@ class LifeRPG extends StatefulWidget {
 
 class _LifeRPG extends State<LifeRPG> {
   final viewModel = SettingViewModel();
+  late bool isSettingInit;
+  late Future<void> _initFuture;
 
   Future<void> initOnFirstRun() async {
     WidgetsFlutterBinding.ensureInitialized(); // 确保初始化
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool? isSettingInit = prefs.getBool('is_setting_init');
+    isSettingInit = prefs.getBool('is_setting_init') ?? true;
 
-    if (isSettingInit == null || isSettingInit == true) {
+    if (isSettingInit) {
       prefs.setBool('is_setting_init', false);
       await viewModel.initOnFirstRun();
     }
@@ -39,7 +42,7 @@ class _LifeRPG extends State<LifeRPG> {
   @override
   void initState() {
     super.initState();
-    loading();
+    _initFuture = loading();
   }
 
   // This widget is the root of your application.
@@ -48,16 +51,37 @@ class _LifeRPG extends State<LifeRPG> {
     return ChangeNotifierProvider(
         create: (context) => viewModel,
         child: Consumer<SettingViewModel>(builder: (context, viewModel, child) {
-          return MaterialApp(
-            onGenerateTitle: (context) => AppLocalizations.of(context)!.appName,
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            locale: viewModel.getLocale(),
-            theme: MaterialTheme().light(),
-            darkTheme: MaterialTheme().dark(),
-            themeMode: viewModel.getThemeMode(),
-            home: const HomeView(),
-          );
+          return FutureBuilder(
+              future: _initFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return MaterialApp(
+                    theme: MaterialTheme().light(),
+                    darkTheme: MaterialTheme().dark(),
+                    themeMode: viewModel.getThemeMode(),
+                    home: const Scaffold(
+                        // body: Center(
+                        //   child: CircularProgressIndicator(),
+                        // ),
+                        ),
+                  );
+                } else {
+                  return MaterialApp(
+                    onGenerateTitle: (context) =>
+                        AppLocalizations.of(context)!.appName,
+                    localizationsDelegates:
+                        AppLocalizations.localizationsDelegates,
+                    supportedLocales: AppLocalizations.supportedLocales,
+                    locale: viewModel.getLocale(),
+                    theme: MaterialTheme().light(),
+                    darkTheme: MaterialTheme().dark(),
+                    themeMode: viewModel.getThemeMode(),
+                    home: isSettingInit
+                        ? const OnBoardingView()
+                        : const HomeView(),
+                  );
+                }
+              });
         }));
   }
 }

@@ -78,6 +78,9 @@ class ChallengeViewModel extends ChangeNotifier {
   }
 
   Future<void> insertChallenge(ChallengeModel challenge) async {
+    if (_challenges.any((element) => element.name == challenge.name)) {
+      return;
+    }
     database
         .insertChallenge(ChallengeTableCompanion(
             name: Value(challenge.name),
