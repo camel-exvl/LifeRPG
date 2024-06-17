@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -99,10 +100,12 @@ class StoreViewState extends State<StoreView>
                       initiallyExpanded: true,
                       children: [
                         ...viewModel.items.map((item) => CommodityView(
-                              title: item.type?.name(context) ?? "",
+                              title:
+                                  item.name ?? item.type?.name(context) ?? "",
                               iconPath: item.iconPath,
-                              description:
-                                  item.type?.description(context) ?? "",
+                              description: item.description ??
+                                  item.type?.description(context) ??
+                                  "",
                               price: item.price,
                               moneyType: item.moneyType,
                               stock: item.stock,
@@ -124,6 +127,11 @@ class StoreViewState extends State<StoreView>
                               buy: () async {
                                 // await viewModel.buy(equipment);
                               },
+                              remove: item.isCustomized
+                                  ? () async {
+                                      await viewModel.deleteItem(item);
+                                    }
+                                  : null,
                             )),
                         AddItem(add: (CustomizedItemInfo info) {
                           viewModel.addCustomizedItem(info.name,
@@ -378,9 +386,23 @@ class AddItemState extends State<AddItem> {
     super.dispose();
   }
 
+  String getRandomIconPath() {
+    final List<String> iconPaths = [
+      'res/icons/kyrise/gift_01a.png',
+      'res/icons/kyrise/gift_01b.png',
+      'res/icons/kyrise/gift_01c.png',
+      'res/icons/kyrise/gift_01d.png',
+      'res/icons/kyrise/gift_01e.png',
+      'res/icons/kyrise/gift_01f.png'
+    ];
+    final random = Random();
+    int index = random.nextInt(iconPaths.length);
+    return iconPaths[index];
+  }
+
   @override
   Widget build(BuildContext context) {
-    final equipmentType = EquipmentType.fruit;
+    final iconPath = getRandomIconPath();
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -397,7 +419,7 @@ class AddItemState extends State<AddItem> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Image(
-                            image: AssetImage(equipmentType.iconPath),
+                            image: AssetImage(iconPath),
                             width: 60,
                             height: 60,
                           ),
@@ -475,7 +497,7 @@ class AddItemState extends State<AddItem> {
                               final newItem = CustomizedItemInfo(
                                 name: _titleController.text,
                                 description: _descriptionController.text,
-                                iconPath: equipmentType.iconPath,
+                                iconPath: iconPath,
                                 price: int.parse(_priceController.text),
                               );
                               widget.add?.call(newItem);
@@ -522,6 +544,7 @@ class CommodityView extends StatelessWidget {
   final Function? buy;
   final int attackPower;
   final int defensePower;
+  final Function? remove;
 
   const CommodityView({
     super.key,
@@ -535,11 +558,101 @@ class CommodityView extends StatelessWidget {
     this.buy,
     this.attackPower = 0,
     this.defensePower = 0,
+    this.remove,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onLongPress: () => {
+        if (remove != null)
+          {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                      title: Text(
+                        AppLocalizations.of(context)!.removeItem,
+                        textAlign: TextAlign.center,
+                      ),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Image(
+                            image: AssetImage(iconPath!),
+                            width: 60,
+                            height: 60,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              IconWithText(
+                                  iconPath: moneyType.iconPath,
+                                  text: price.toString())
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            description,
+                            textAlign: TextAlign.left,
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              if (attackPower != 0)
+                                IconWithText(
+                                  iconPath: attackPowerIconPath,
+                                  text: " +$attackPower",
+                                ),
+                              if (attackPower != 0 && defensePower != 0)
+                                const SizedBox(
+                                    width: 30), // 添加间距仅在attackPower非零时
+                              if (defensePower != 0)
+                                IconWithText(
+                                  iconPath: defensePowerIconPath,
+                                  text: " +$defensePower",
+                                ),
+                            ],
+                          )
+                        ],
+                      ),
+                      actions: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                // Implement the purchase logic here
+                                // For example, you can deduct money from the user's account and update the stock
+                                // Then close the dialog
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(AppLocalizations.of(context)!.cancel),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                remove?.call();
+                                // show snack bar
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(AppLocalizations.of(context)!
+                                        .removeSuccess),
+                                    duration: const Duration(seconds: 1),
+                                    backgroundColor:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                );
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(AppLocalizations.of(context)!.remove),
+                            ),
+                          ],
+                        )
+                      ],
+                    ))
+          }
+      },
       onTap: () {
         showDialog(
             context: context,
