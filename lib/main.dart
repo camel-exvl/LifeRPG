@@ -60,10 +60,10 @@ class _LifeRPG extends State<LifeRPG> {
                     darkTheme: MaterialTheme().dark(),
                     themeMode: viewModel.getThemeMode(),
                     home: const Scaffold(
-                      body: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
+                        // body: Center(
+                        //   child: CircularProgressIndicator(),
+                        // ),
+                        ),
                   );
                 } else {
                   return MaterialApp(
