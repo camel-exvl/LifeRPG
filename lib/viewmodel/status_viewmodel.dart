@@ -348,6 +348,9 @@ class StatusViewModel extends ChangeNotifier {
         rewardCoefficient = lowestRewardCoefficient;
       }
     }
+    else {
+      rewardCoefficient = 1.0;
+    }
 
     switch (request.difficulty) {
       case Difficulty.easy:
