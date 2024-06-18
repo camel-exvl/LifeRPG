@@ -47,7 +47,15 @@ class DeleteDialog {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)!.delete),
+          title:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Text(AppLocalizations.of(context)!.delete),
+            Image(
+              image: const AssetImage('res/icons/warning.png'),
+              width: Theme.of(context).iconTheme.size,
+              height: Theme.of(context).iconTheme.size,
+            )
+          ]),
           content: Text(AppLocalizations.of(context)!.deleteMessage),
           actions: <Widget>[
             TextButton(
