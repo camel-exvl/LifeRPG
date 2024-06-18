@@ -168,13 +168,13 @@
   "removeSuccess": "Remove Success",
   "quitChallenge": "Quit Challenge",
   "taskManagementHabitBuilding": "Task Management & Habit Building",
-  "taskManagementHabitBuildingDescription": "Create, edit, and delete tasks with ease. \nCustomize your habits and tasks by categories and difficulty levels. \nSet custom task cycles and deadlines. \nView all your tasks and habits in a sortable list.",
+  "taskManagementHabitBuildingDescription": "Turn your daily tasks and long-term habits into game tasks.\nEasily manage to-do lists and cycle tasks with flexible task settings and an intuitive interface that helps you develop good habits and achieve each target step by step.",
   "rewardsSystem": "Rewards System",
-  "rewardsSystemDescription": "Earn more rewards for completing harder tasks.\nIncrease rewards with more task completions.\nPrevent reward abuse with reduced rewards for suspicious rapid completions.",
+  "rewardsSystemDescription": "For every target you complete, you will receive a rich reward.\nThe carefully designed reward mechanism makes every step of effort rewarding and motivates you to keep going and develop long-term habits.",
   "achievementsAttributes": "Achievements & Attributes",
-  "achievementsAttributesDescription": "Unlock various achievements as you reach your goals.\nTrack your life level, attribute levels, and earned achievements in a comprehensive list.",
+  "achievementsAttributesDescription": "Achievements will be unlocked when milestones are reached.\nYou can fully track your Life Level, Attribute Level and earned Achievements to enjoy the fun of continuous growth and improvement.",
   "shopInventoryChallengeSystem": "Shop, Inventory & Challenge System",
-  "shopInventoryChallengeSystemDescription": "Purchase weapons, armor, items, and challenge dungeons in the shop.\nView and equip your purchased items in your inventory to boost your attack and defense.\nStart challenges to defeat bosses by completing goals.\nKeep a real-time log of your battle progress.",
+  "shopInventoryChallengeSystemDescription": "Purchase your favorite equipment and props in the game store to enhance your character's abilities. Manage your loot and equipment through the backpack system.\nDefeat monsters and win tons of rewards by completing quests in the fun-filled challenges, and experience the double thrill of adventure and achievement.",
   "done": "Done",
   "skip": "Skip"
 }
